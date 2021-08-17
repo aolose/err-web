@@ -1,12 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="/favicon.png" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		%svelte.head%
-	</head>
-	<body>
-		<div id="svelte">%svelte.body%</div>
-	</body>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="icon" href="/favicon.png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <style>
+        * {
+            position: relative;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        *::-webkit-scrollbar {
+            width: 8px;
+            height: 8px
+        }
+
+        *::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, .05)
+        }
+
+        *::-webkit-scrollbar-thumb {
+            background-color: #1c93ff
+        }
+
+        html, body {
+            font-size: 13px;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue, STHeiti, Microsoft Yahei, Tahoma, Simsun, sans-serif
+        }
+
+        #svelte {
+            height: 100%;
+            width: 100%
+        }
+    </style>
+    %svelte.head%
+</head>
+<body>
+<div id="svelte">%svelte.body%</div>
+</body>
 </html>
