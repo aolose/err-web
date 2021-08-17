@@ -1,10 +1,22 @@
 export const apis = {
     post: {
-        url: (a, b) => a + '/' + b,
-        before: () => 0
+        path: ({params: {slug}}) => `post/${slug}`,
+        cacheTime: 360
     },
     posts: {
-        url: (a, b) => a + '/' + b,
-        before: () => 0
+        after: (r, o, {params: {page}}) => {
+            if (page > r.total) {
+                o.status = 302;
+                o.redirect = `/posts/${r.total}`;
+                return {}
+            }
+        },
+        cacheTime: 60,
+        path: ({params: {page = 0}}) => `posts/${page}`,
+        before() {
+            return {
+                count: 3
+            }
+        }
     },
 }
