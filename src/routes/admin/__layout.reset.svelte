@@ -15,25 +15,16 @@
     }
 </script>
 <script>
-    import {session} from '$app/stores'
-
-    async function logout() {
-        const res = await fetch('/logout', {
-            method: 'POST',
-        })
-        if (res.ok) {
-            $session.token = '';
-        }
-    }
+    import Msg from '$lib/sysmsg.svelte'
+    import Clo from '$lib/out.svelte'
 </script>
 <div class="adm">
-    <div class="btn">
-        <button on:click={logout}>logout</button>
-    </div>
+    <Clo/>
     <div class="ctx">
         <slot>
 
         </slot>
+        <Msg/>
     </div>
 </div>
 <style lang="scss">
@@ -42,7 +33,7 @@
     flex-direction: column;
     height: 100%;
     width: 100%;
-    background: #eee;
+    background: #171829;
   }
 
   .ctx {

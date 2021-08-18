@@ -32,9 +32,9 @@
     {#if f}<span>{f}</span>{/if}
     {#each pg as p}
         {#if isF}
-            <span class:act={cur===p} on:click={()=>url(p)}>{p}</span>
+            <span class="nv" class:act={cur===p} on:click={()=>url(p)}>{p}</span>
         {:else}
-            <a class:act={cur===p} href={`${url}/${p}`}>{p}</a>
+            <a class="nv" class:act={cur===p} href={`${url}/${p}`}>{p}</a>
         {/if}
     {/each}
     {#if n}<span>{n}</span>{/if}
@@ -48,20 +48,31 @@
 </nav>
 <style lang="scss">
   nav {
+    height: 50px;
+    align-items: center;
+    justify-content: center;
     display: flex;
-
-    * {
-      margin: 0 3px;
-      display: flex;
-      width: 16px;
-      height: 16px;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #eee;
+    *{
+      color: #1c93ff;
     }
-  }
-
-  .act {
-    color: red;
+    .act {
+      background: #1d314a;
+    }
+    .nv{
+      font-size: 10px;
+       cursor: pointer;
+      border: 1px solid #1c93ff;
+      border-radius: 50%;
+      height: 24px;
+      width: 24px;
+      display: flex;
+      margin: 0 5px;
+      justify-content: center;
+      align-items: center;
+      &:hover{
+        background: #1c93ff;
+        color: #fff;
+      }
+    }
   }
 </style>
