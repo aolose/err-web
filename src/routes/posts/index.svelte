@@ -1,6 +1,6 @@
 <script context="module">
     import {res} from "$lib/res";
-    import Nav from "$lib/pageNav.svelte"
+    import Nav from "$lib/pag.svelte"
     export const load = res('posts');
 </script>
 <script>

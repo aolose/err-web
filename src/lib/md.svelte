@@ -2,7 +2,7 @@
     import marked from 'marked'
 
     export let value = ''
-    $:out = marked(value)
+    $:out = marked(value||'')
 </script>
 
 <div class="md">

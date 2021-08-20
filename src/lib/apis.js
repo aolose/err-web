@@ -1,14 +1,35 @@
 export const apis = {
-    edits: {
+    edit: {
         before(_, s) {
             return {k: s, count: 8}
         },
-        path: (a) => `edits/${a}`,
-        cacheTime: 10
+        path: (a) => `edit/${a}`,
+        cacheTime: 3
     },
     post: {
         path: ({params: {slug}}) => `post/${slug}`,
-        cacheTime: 360
+        cacheTime: 30
+    },
+    savePost: {
+        path: 'edit',
+        method: 'PUT',
+        data: a => a,
+    },
+    content: {
+        path: ({params: {id, ver}}) => `his/${id}/${ver}`,
+    },
+    delPost: {
+        path: (id) => `edit/${id}`,
+        method: 'DELETE',
+    },
+    pubPost: {
+        path: 'edit',
+        method: 'POST',
+        data: a => a,
+    },
+    setVer: {
+        path: ({id,ver}) => `edit/${id}/${ver}`,
+        method: 'PATCH',
     },
     posts: {
         after: (r, o, {params: {page}}) => {

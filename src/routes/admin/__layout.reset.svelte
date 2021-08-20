@@ -33,7 +33,7 @@
     flex-direction: column;
     height: 100%;
     width: 100%;
-    background: #171829;
+    background: #121622;
   }
 
   .ctx {

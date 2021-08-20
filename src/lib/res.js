@@ -26,6 +26,11 @@ const getRes = async (ctx, name) => {
         if (a !== undefined) d = a;
     }
     if (d) {
+        Object.keys(d).forEach(a => {
+            if (d[a] === undefined || d[a] === 0 || d[a] === "" || d[a] === null) {
+                delete d[a]
+            }
+        })
         if (/post|put|patch|delete/i.test(method)) cf.body = JSON.stringify(d);
         else {
             const u = [];
@@ -74,10 +79,15 @@ const getRes = async (ctx, name) => {
         err = e
     });
     const o = {
-        status: re.status,
+        status: re && re.status,
     }
-    if (re.ok) {
-        let r = await re.json()
+    if (re && re.ok) {
+        let r = await re.text()
+        try {
+            r = JSON.parse(r)
+        } catch (e) {
+            console.log(e)
+        }
         if (after) {
             const a = after(r, o, page)
             if (a !== undefined) r = a;

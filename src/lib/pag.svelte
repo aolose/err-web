@@ -52,15 +52,18 @@
     align-items: center;
     justify-content: center;
     display: flex;
-    *{
+
+    * {
       color: #1c93ff;
     }
+
     .act {
       background: #1d314a;
     }
-    .nv{
+
+    .nv {
       font-size: 10px;
-       cursor: pointer;
+      cursor: pointer;
       border: 1px solid #1c93ff;
       border-radius: 50%;
       height: 24px;
@@ -69,7 +72,8 @@
       margin: 0 5px;
       justify-content: center;
       align-items: center;
-      &:hover{
+
+      &:hover {
         background: #1c93ff;
         color: #fff;
       }
