@@ -131,6 +131,7 @@ export const query = async (name, d, s) => {
     }
     return res
 }
+
 export const res = (name) => {
     /**
      * @type  {import('@sveltejs/kit').Load}
