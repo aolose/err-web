@@ -3,7 +3,13 @@
     export const load = res('post')
 </script>
 <script>
+    import {cacheSrvData} from "$lib/res";
+
     export let d;
+    export let s;
+    $:{
+        cacheSrvData(s,d)
+    }
 </script>
 <h1>{d.title}</h1>
 <h2>{d.author.name}</h2>

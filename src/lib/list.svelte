@@ -68,9 +68,9 @@
                     <p class="tm t1">{timeFmt(p.saved)}</p>
                     <p class="tm">{timeFmt(p.updated)}</p>
                     <div class="stu">
-                        {#if p.ver === -1||p.saved>p.ver}
+                        {#if p.ver === -1 || p.saved > p.updated}
                             <span title="draft" class="_0">D</span>
-                            {/if}
+                        {/if}
                         {#if p.ver > 0}
                             <span title="published" class="_1">P</span>
                         {/if}
@@ -117,23 +117,27 @@
     background-image: url("./img/add.svg");
     background-color: #337e1e;
   }
- .hi{
-   pointer-events: none;
-   opacity: .3;
- }
-  .tm{
+
+  .hi {
+    pointer-events: none;
+    opacity: .3;
+  }
+
+  .tm {
     font-size: 10px;
     position: absolute;
     left: 2px;
     bottom: 2px;
     color: #4f6a9f;
   }
-.t1{
-  left: auto;
-  right: 4px;
-  bottom: 2px;
-  color: #6d5d40;
-}
+
+  .t1 {
+    left: auto;
+    right: 4px;
+    bottom: 2px;
+    color: #6d5d40;
+  }
+
   p {
     padding-left: 5px;
     color: #999;

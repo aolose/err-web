@@ -99,12 +99,30 @@ const getRes = async (ctx, name) => {
             if (cacheTime) c.t = Date.now() + cacheTime * 1e3
             store[cacheKey] = JSON.stringify(c)
         }
-        o.props = {d: r}
+        o.props = {
+            d: r,
+        }
+        if (!browser) {
+            o.props.s = [cacheKey, cacheTime * 1e3, sto]
+        }
     } else {
         o.error = err && err.message || new Error(`Could not load ${url}`)
     }
     return o
 }
+
+export const cacheSrvData = (a, d) => {
+    if (browser && a && a.length && d) {
+        const [k, c, s] = a;
+        a.length = 0;
+        const o = {
+            d,
+        }
+        if (c) o.c = Date.now() + c * 1e3;
+        [localStorage, sessionStorage][s][k] = JSON.stringify(o);
+    }
+}
+
 export const query = async (name, d, s) => {
     const ctx = {fetch, page: d, session: s}
     const res = await getRes(ctx, name);

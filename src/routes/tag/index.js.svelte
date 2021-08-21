@@ -3,7 +3,13 @@
     export const load = res('tags');
 </script>
 <script>
+    import {cacheSrvData} from "$lib/res";
+
     export let d = []
+    export let s;
+    $:{
+        cacheSrvData(s,d)
+    }
 </script>
 <div>
     {#each d as tag}
