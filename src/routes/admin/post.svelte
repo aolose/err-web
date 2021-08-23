@@ -50,7 +50,7 @@
                     if (r && r.error) {
                         errorCatch(r.error)
                     } else {
-                        const [id, ver, da] = (r || "").split(":")
+                        const [id,ver, da] = (r || "").split('\u0001')
                         const old = $post.id
                         post.set({
                             ...a,

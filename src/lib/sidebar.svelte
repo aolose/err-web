@@ -51,15 +51,15 @@
     }
 
     function pub() {
-        const id = $post.id
         return query('pubPost', $post).then((a) => {
             if (a) {
                 if (a.error) {
                     errorCatch(a.error)
                 } else {
-                    const [i, v, u] = (a).split(":")
+                    const [i, s, v, u] = a.split("\u0001")
                     post.set({
                         ...$post,
+                        slug: s,
                         id: +i,
                         ver: +v,
                         updated: +u,
