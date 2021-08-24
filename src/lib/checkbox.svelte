@@ -12,16 +12,15 @@
     display: flex;
     align-items: center;
     cursor: pointer;
-    color: #355375;
+    color: #52749b;
     &:hover{
-          color: #1c93ff;
+          color: #4aa9ff;
     }
   }
   .a {
     cursor: pointer;
-    border-radius: 3px;
-    height: 18px;
-    width: 18px;
+    height: 14px;
+    width: 14px;
     border: 2px solid currentColor;
     color: #6c92b0;
     transition: .2s ease-in-out;

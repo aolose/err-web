@@ -43,6 +43,7 @@
             </div>
             <button on:click={login}>Login
             </button>
+            <a href="/">{'<  '}Home</a>
         </div>
     </div>
 </div>
@@ -54,6 +55,16 @@
     background-size: cover;
   }
 
+  a{
+    position: absolute;
+    bottom: -40px;
+    color: #626f94;
+    text-decoration: none;
+    left: 15px;
+    &:hover{
+      color: #8db2e9;
+    }
+  }
   .cc {
     height: 100%;
     width: 100%;

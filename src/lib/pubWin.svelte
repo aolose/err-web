@@ -43,14 +43,14 @@
   label {
     left: 0;
     top: 22px;
-    color: #355375;
+    color: #52749b;
     position: absolute;
     width: 180px;
     padding-right: 20px;
     display: flex;
     align-items: center;
     &:hover{
-      color: #1c93ff;
+      color: #4aa9ff;
     }
   }
 
@@ -71,14 +71,15 @@
     }
   }
 
-  input[type=text], textarea, .bn,.tgs{
+  input, textarea, .bn,.tgs{
+    width: 0;
     flex: 1;
-    color: #8db2e9;
+    color: #8ca4d7;
     line-height: 1.5;
     border: 1px solid #1d314a;
     border-radius: 6px;
     background: rgba(36, 46, 65, 0.4);
-    padding: 10px;
+    padding: 9px 10px;
     resize: none;
     display: block;
     min-height: 40px;
