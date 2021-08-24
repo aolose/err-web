@@ -16,16 +16,16 @@
 </script>
 <script>
     import Msg from '$lib/sysmsg.svelte'
-    import Clo from '$lib/out.svelte'
+    import Mu from '$lib/sidebar.svelte'
 </script>
 <div class="adm">
-    <Clo/>
     <div class="ctx">
         <slot>
 
         </slot>
         <Msg/>
     </div>
+    <Mu/>
 </div>
 <style lang="scss">
   .adm {

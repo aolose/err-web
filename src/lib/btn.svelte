@@ -9,6 +9,9 @@
         const v = () => setTimeout(() => a = 0, 1e3);
         const p = fn()
         if (p && p.then) p.then(v).catch(v)
+        else {
+            a=0
+        }
     }
 </script>
 <i class={cls} class:ld={a} on:click={f}>

@@ -1,7 +1,7 @@
 <script>
     import List from '$lib/list.svelte'
     import Md from '$lib/md.svelte'
-    import PostMu from '$lib/sidebar.svelte'
+    import Pub from '$lib/pubWin.svelte'
     import {list, post} from "$lib/store";
     import Ld from "$lib/loading.svelte";
     import Bg from "$lib/empty.svelte";
@@ -65,7 +65,7 @@
             }, 2e3)
         } else {
             if (!pid) {
-                const idx = $list.findIndex(a => !a.id)
+                const idx = $list.findIndex(a => a&&!a.id)
                 if (idx !== -1) {
                     const ls = [...$list];
                     ls[idx] = $post.id
@@ -99,13 +99,13 @@
                 <h1>{title}</h1>
                 <Md value={content}/>
             </div>
+            <Pub/>
         </div>
     </div>
     <div class="res">
 
     </div>
 </div>
-<PostMu/>
 <style lang="scss">
 
   nav {

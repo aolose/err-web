@@ -1,0 +1,112 @@
+<script>
+    import SWin from '$lib/slideWin.svelte'
+    import Ck from '$lib/checkbox.svelte'
+</script>
+
+<SWin act={1}>
+    <div slot="btn" class="btn">
+        Publish
+    </div>
+    <div class="r">
+        <label>Slug</label>
+        <input type="text" placeholder="Slug"/>
+        <span>xxx</span>
+    </div>
+    <div class="r">
+        <label>Description</label>
+        <textarea></textarea>
+    </div>
+    <div class="r">
+        <label>Tags</label>
+        <div class="tgs"></div>
+    </div>
+    <div class="r">
+        <label>Banner</label>
+        <div class="bn">
+
+        </div>
+    </div>
+    <div class="r">
+        <label>
+            <Ck>Protect</Ck>
+        </label>
+        <input type="text"/>
+    </div>
+    <div class="r">
+        <label>
+            <Ck>Allow Comment</Ck>
+        </label>
+    </div>
+
+</SWin>
+<style lang="scss">
+  label {
+    left: 0;
+    top: 22px;
+    color: #355375;
+    position: absolute;
+    width: 180px;
+    padding-right: 20px;
+    display: flex;
+    align-items: center;
+    &:hover{
+      color: #1c93ff;
+    }
+  }
+
+  .r {
+    min-height: 40px;
+    flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    width: 80%;
+    padding: 10px 10px 10px 100px;
+    margin: 10px auto;
+
+    span {
+      color: #ae893f;
+      position: absolute;
+      bottom: -10px;
+      left: 110px;
+    }
+  }
+
+  input[type=text], textarea, .bn,.tgs{
+    flex: 1;
+    color: #8db2e9;
+    line-height: 1.5;
+    border: 1px solid #1d314a;
+    border-radius: 6px;
+    background: rgba(36, 46, 65, 0.4);
+    padding: 10px;
+    resize: none;
+    display: block;
+    min-height: 40px;
+    &:focus{
+      border-color: #1c93ff;
+    }
+  }
+
+  textarea {
+    height: 100px;
+  }
+
+  .bn {
+    padding-top: 50%;
+  }
+  .btn{
+    &:hover{
+      opacity: 1;
+    }
+    opacity: .6;
+    cursor: pointer;
+    border-radius: 3px;
+    border:1.5px solid currentColor;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    color: #3cadff;
+    transition: .2s ease-in-out;
+  }
+</style>

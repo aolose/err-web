@@ -38,7 +38,7 @@
     $:{
         list.set(res.ls || [])
     }
-    $: hi = $list.find(a => !a.id)
+    $: hi = $list.find(a => a&&!a.id)
     $:total = res.total
     go(1)
 </script>

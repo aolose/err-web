@@ -1,11 +1,11 @@
 <script>
     import Msg from "./msg.svelte"
-    import Opt from "./opt.svelte"
+    import Out from "./out.svelte"
     import File from "./file.svelte"
     import Del from "./del.svelte"
     import Cmt from "./cmt.svelte"
     import Und from "./und.svelte"
-    import {post, list} from "./store";
+    import {post, list, winAct} from "./store";
     import Btn from "./btn.svelte"
     import {query} from "./res";
     import {errorCatch} from "$lib/utils";
@@ -47,34 +47,40 @@
                     }
                 }
             })
+        const ls = [...$list]
+        if(ls.length&&(!ls[0]||!ls[0].id))ls.unshift()
+        list.set([])
         post.set({})
+        winAct.set(0)
     }
 
     function pub() {
-        return query('pubPost', $post).then((a) => {
-            if (a) {
-                if (a.error) {
-                    errorCatch(a.error)
-                } else {
-                    const [i, s, v, u] = a.split("\u0001")
-                    post.set({
-                        ...$post,
-                        slug: s,
-                        id: +i,
-                        ver: +v,
-                        updated: +u,
-                    })
-                }
-            }
-        });
+        winAct.set($winAct === 1 ? 0 : 1)
+        // return query('pubPost', $post).then((a) => {
+        //     if (a) {
+        //         if (a.error) {
+        //             errorCatch(a.error)
+        //         } else {
+        //             const [i, s, v, u] = a.split("\u0001")
+        //             post.set({
+        //                 ...$post,
+        //                 slug: s,
+        //                 id: +i,
+        //                 ver: +v,
+        //                 updated: +u,
+        //             })
+        //         }
+        //     }
+        // });
     }
 
 </script>
 <div class="mu">
+    <Out/>
     {#if $post.ver}
-        <Btn cls="e">
-            <Opt/>
-        </Btn>
+<!--        <Btn cls="e">-->
+<!--            <Opt/>-->
+<!--        </Btn>-->
         <Btn cls="a" fn={pub}>
             <Cmt/>
         </Btn>
@@ -98,7 +104,7 @@
   .mu {
     position: absolute;
     right: 0;
-    top: 60px;
+    top: 0;
     width: 60px;
 
     :global {
