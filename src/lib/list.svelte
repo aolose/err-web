@@ -6,7 +6,6 @@
     import Lg from "$lib/./lg.svelte";
     import {list, post} from "$lib/store";
 
-    export let onSelect
     let res = {}
     let sc
     let sc1
@@ -36,9 +35,9 @@
     }
 
     $:{
-        list.set(res.ls || [])
+        if(res&&res.ls)list.set(res.ls || [])
     }
-    $: hi = $list.find(a => a&&!a.id)
+    $: hi = $list.find(a => a && !a.id)
     $:total = res.total
     go(1)
 </script>
@@ -59,10 +58,8 @@
         <div>
             {#each $list as p }
                 <div
-                        data-e={JSON.stringify(p)}
-                        class:act={$post.id===p.id} on:click={()=>{
-                    onSelect&&onSelect(p)
-                }} class="cd">
+                        class:act={$post.id===p.id}
+                        on:click={()=>post.set({...p})} class="cd">
                     <h3>{p.title}</h3>
                     <p>{p.content.substr(0, 64)}</p>
                     <p class="tm t1">{timeFmt(p.saved)}</p>

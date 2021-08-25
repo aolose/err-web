@@ -56,22 +56,6 @@
 
     function pub() {
         winAct.set($winAct === 1 ? 0 : 1)
-        // return query('pubPost', $post).then((a) => {
-        //     if (a) {
-        //         if (a.error) {
-        //             errorCatch(a.error)
-        //         } else {
-        //             const [i, s, v, u] = a.split("\u0001")
-        //             post.set({
-        //                 ...$post,
-        //                 slug: s,
-        //                 id: +i,
-        //                 ver: +v,
-        //                 updated: +u,
-        //             })
-        //         }
-        //     }
-        // });
     }
 
 </script>

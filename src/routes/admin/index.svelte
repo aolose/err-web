@@ -22,6 +22,7 @@
             pid = $post.id
         }
     }
+    let content = "", title = "", saved = ""
     $:content = ($post.content) || ""
     $:title = ($post.title) || ""
     $:saved = $post.saved ? `Saved at ${timeFmt($post.saved)}` : ""
@@ -50,7 +51,7 @@
                     if (r && r.error) {
                         errorCatch(r.error)
                     } else {
-                        const [id,ver, da] = (r || "").split('\u0001')
+                        const [id, ver, da] = (r || "").split('\u0001')
                         const old = $post.id
                         post.set({
                             ...a,
@@ -65,7 +66,7 @@
             }, 2e3)
         } else {
             if (!pid) {
-                const idx = $list.findIndex(a => a&&!a.id)
+                const idx = $list.findIndex(a => a && !a.id)
                 if (idx !== -1) {
                     const ls = [...$list];
                     ls[idx] = $post.id
@@ -78,7 +79,7 @@
 </script>
 
 <nav>
-    <List onSelect={(d)=>{ post.set(d)}}/>
+    <List/>
 </nav>
 <div class="ma">
     <div class="write">

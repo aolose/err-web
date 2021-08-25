@@ -1,6 +1,32 @@
 <script>
-    import SWin from '$lib/slideWin.svelte'
-    import Ck from '$lib/checkbox.svelte'
+    import SWin from './slideWin.svelte'
+    import Ck from './checkbox.svelte'
+    import Tags from './tags.svelte'
+    import {query} from "$lib/res";
+    import {post, tags} from "$lib/store";
+    import {errorCatch} from "$lib/utils";
+
+
+    function pub() {
+        return query('pubPost', $post).then((a) => {
+            if (a) {
+                if (a.error) {
+                    errorCatch(a.error)
+                } else {
+                    const [i, s, v, u,nt,ot] = a.split("\u0001")
+                    tags.add(nt).del(ot)
+                    post.set({
+                        ...$post,
+                        slug: s,
+                        id: +i,
+                        ver: +v,
+                        updated: +u,
+                    })
+                }
+            }
+        });
+    }
+
 </script>
 
 <SWin act={1}>
@@ -18,7 +44,9 @@
     </div>
     <div class="r">
         <label>Tags</label>
-        <div class="tgs"></div>
+        <div class="tgs">
+            <Tags/>
+        </div>
     </div>
     <div class="r">
         <label>Banner</label>
@@ -49,7 +77,8 @@
     padding-right: 20px;
     display: flex;
     align-items: center;
-    &:hover{
+
+    &:hover {
       color: #4aa9ff;
     }
   }
@@ -71,7 +100,7 @@
     }
   }
 
-  input, textarea, .bn,.tgs{
+  input, textarea, .bn, .tgs {
     width: 0;
     flex: 1;
     color: #8ca4d7;
@@ -83,7 +112,8 @@
     resize: none;
     display: block;
     min-height: 40px;
-    &:focus{
+
+    &:focus {
       border-color: #1c93ff;
     }
   }
@@ -95,14 +125,21 @@
   .bn {
     padding-top: 50%;
   }
-  .btn{
-    &:hover{
+
+  .tgs {
+    height: auto;
+    padding: 0;
+  }
+
+  .btn {
+    &:hover {
       opacity: 1;
     }
+
     opacity: .6;
     cursor: pointer;
     border-radius: 3px;
-    border:1.5px solid currentColor;
+    border: 1.5px solid currentColor;
     height: 28px;
     display: flex;
     align-items: center;
