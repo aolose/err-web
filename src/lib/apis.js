@@ -1,4 +1,16 @@
+import {tags} from "$lib/store";
+
 export const apis = {
+    loadTags:{
+        path:'tag/ls',
+        cacheTime:2e3,
+        done(a){
+            if(Array.isArray(a)){
+                a.sort((a,b)=>a>b?1:-1)
+                tags.set(a)
+            }
+        }
+    },
     edit: {
         before(_, s) {
             return {k: s, count: 8}

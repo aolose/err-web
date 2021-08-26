@@ -6,14 +6,17 @@
     import {post, tags} from "$lib/store";
     import {errorCatch} from "$lib/utils";
 
+    let d = 0
 
     function pub() {
+        d = 1
         return query('pubPost', $post).then((a) => {
+            setTimeout(() => d = 0, 1e3)
             if (a) {
                 if (a.error) {
                     errorCatch(a.error)
                 } else {
-                    const [i, s, v, u,nt,ot] = a.split("\u0001")
+                    const [i, s, v, u, nt, ot] = a.split("\u0001")
                     tags.add(nt).del(ot)
                     post.set({
                         ...$post,
@@ -24,13 +27,16 @@
                     })
                 }
             }
+        }).catch(e => {
+            d = 0
+            errorCatch(e)
         });
     }
 
 </script>
 
 <SWin act={1}>
-    <div slot="btn" class="btn">
+    <div slot="btn" class="btn" class:ld={d} on:click={pub}>
         Publish
     </div>
     <div class="r">
@@ -68,6 +74,19 @@
 
 </SWin>
 <style lang="scss">
+  @keyframes a {
+    0%, 50%, 100% {
+      opacity: 1;
+    }
+    25%, 75% {
+      opacity: .3;
+    }
+  }
+
+  .ld {
+    animation: a 1s infinite linear;
+  }
+
   label {
     left: 0;
     top: 22px;

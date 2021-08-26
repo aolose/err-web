@@ -12,6 +12,7 @@ const getRes = async (ctx, name) => {
         after,
         cacheTime,
         data,
+        done,
         method = 'GET'
     } = typeof cfg === 'function' ? cfg(page, session, context) : cfg;
     const p = typeof path === 'function' ? path(page, session, context) : path;
@@ -69,6 +70,9 @@ const getRes = async (ctx, name) => {
             }
         }
         if (cache) {
+            if(done){
+                done(cache)
+            }
             return {
                 status: 200,
                 props: {d: cache}
@@ -91,6 +95,9 @@ const getRes = async (ctx, name) => {
         if (after) {
             const a = after(r, o, page)
             if (a !== undefined) r = a;
+        }
+        if(done){
+            done(r)
         }
         if (cacheTime && browser) {
             const c = {

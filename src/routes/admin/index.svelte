@@ -2,7 +2,7 @@
     import List from '$lib/list.svelte'
     import Md from '$lib/md.svelte'
     import Pub from '$lib/pubWin.svelte'
-    import {list, post} from "$lib/store";
+    import {list, post, winAct} from "$lib/store";
     import Ld from "$lib/loading.svelte";
     import Bg from "$lib/empty.svelte";
     import {onDestroy} from "svelte";
@@ -36,6 +36,7 @@
         }
     }
 
+    query('loadTags')
     onDestroy(post.subscribe(p => {
         syncList(p, p.id)
         if (lock) return
@@ -47,7 +48,7 @@
                 if (v !== bf) {
                     bf = v
                     lock = 1
-                    const r = await query('savePost', a)
+                    const r = await query('savePost', {...a, tags: undefined})
                     if (r && r.error) {
                         errorCatch(r.error)
                     } else {
@@ -76,6 +77,11 @@
             pid = $post.id
         }
     }))
+    onDestroy(() => {
+        post.set({})
+        list.set([])
+        winAct.set(0)
+    })
 </script>
 
 <nav>

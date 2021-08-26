@@ -61,7 +61,7 @@
                         class:act={$post.id===p.id}
                         on:click={()=>post.set({...p})} class="cd">
                     <h3>{p.title}</h3>
-                    <p>{p.content.substr(0, 64)}</p>
+                    <p>{(p.content||"").substr(0, 64)}</p>
                     <p class="tm t1">{timeFmt(p.saved)}</p>
                     <p class="tm">{timeFmt(p.updated)}</p>
                     <div class="stu">
