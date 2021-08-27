@@ -1,12 +1,45 @@
+<script context="module">
+    import marked from "marked";
+    const resTag = '\u0005'
+    const resSp = '\u0003'
+    const resRender = {
+        name: 'resRender',
+        level: 'inline',
+        start(src) { return src.match(/^!\(\w*?\)\[\w*?]/)?.index; }, // Hint to Marked.js to stop and check for a match
+        tokenizer(src, tokens) {
+            const rule = /^!\((\w*?)\)\[(\w*?)]/;    // Regex for the complete token
+            const match = rule.exec(src);
+            if (match) {
+                const token = {
+                    type: 'resRender',
+                    raw: match[0],
+                    text: `${match[1]}${resSp}${match[2]}`,
+                    tokens: []
+                };
+                this.lexer.inline(token.text, token.tokens);
+                return token;
+            }
+        },
+        renderer(token) {
+            return `${resTag}${this.parser.parseInline(token.tokens)}${resTag}`;
+        }
+    };
+    marked.use({extensions: [resRender] })
+</script>
 <script>
-    import marked from 'marked'
-
+    import Res from './resBox.svelte';
     export let value = ''
-    $:out = marked(value||'')
+    $:out = marked(value||'').split(resTag).map(a=>a.split(resSp))
 </script>
 
 <div class="md">
-    {@html out}
+    {#each out as [u,p]}
+        {#if p}
+            <Res attr={p} src={u}/>
+            {:else }
+            {@html u}
+        {/if}
+    {/each}
 </div>
 
 <style lang="scss">
