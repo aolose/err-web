@@ -1,12 +1,14 @@
 <script>
+    import {browser} from "$app/env";
     import List from '$lib/list.svelte'
     import Md from '$lib/md.svelte'
     import Pub from '$lib/pubWin.svelte'
+    import Res from '$lib/resWin.svelte'
     import {list, post, winAct} from "$lib/store";
     import Ld from "$lib/loading.svelte";
     import Bg from "$lib/empty.svelte";
-    import {onDestroy} from "svelte";
-    import {query} from "$lib/res";
+    import {onDestroy, onMount} from "svelte";
+    import {host, query} from "$lib/res";
     import {errorCatch, timeFmt} from "$lib/utils";
 
     let res
@@ -37,6 +39,23 @@
     }
 
     query('loadTags')
+    let close = () => {
+    }
+    onMount(() => {
+        if (browser) {
+            const taskUpdater = new EventSource(host + "/msg", {withCredentials: true});
+            if (taskUpdater) {
+                taskUpdater.onmessage=ev => {
+                    console.log("--",ev.data)
+                }
+                close = () => {
+                    taskUpdater.onmessage=null;
+                    taskUpdater.close()
+                }
+            }
+        }
+    })
+    onDestroy(() => close())
     onDestroy(post.subscribe(p => {
         syncList(p, p.id)
         if (lock) return
@@ -83,7 +102,6 @@
         winAct.set(0)
     })
 </script>
-
 <nav>
     <List/>
 </nav>
@@ -107,10 +125,8 @@
                 <Md value={content}/>
             </div>
             <Pub/>
+            <Res/>
         </div>
-    </div>
-    <div class="res">
-
     </div>
 </div>
 <style lang="scss">

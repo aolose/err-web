@@ -48,7 +48,7 @@
                 }
             })
         const ls = [...$list]
-        if(ls.length&&(!ls[0]||!ls[0].id))ls.unshift()
+        if (ls.length && (!ls[0] || !ls[0].id)) ls.unshift()
         list.set([])
         post.set({})
         winAct.set(0)
@@ -62,9 +62,9 @@
 <div class="mu">
     <Out/>
     {#if $post.ver}
-<!--        <Btn cls="e">-->
-<!--            <Opt/>-->
-<!--        </Btn>-->
+        <!--        <Btn cls="e">-->
+        <!--            <Opt/>-->
+        <!--        </Btn>-->
         <Btn cls="a" fn={pub}>
             <Cmt/>
         </Btn>
@@ -77,7 +77,7 @@
             <Del/>
         </Btn>
     {/if}
-    <Btn cls="d">
+    <Btn cls="d" fn={()=> winAct.set($winAct === 2 ? 0 : 2)}>
         <File/>
     </Btn>
     <Btn cls="f">
