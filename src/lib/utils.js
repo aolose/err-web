@@ -1,3 +1,137 @@
+import wrk from './up?url';
+import SparkMD5 from 'spark-md5'
+import {host} from './res'
+import imageCompression from 'browser-image-compression';
+import {upLoadSeq} from "$lib/store";
+import {browser} from "$app/env";
+
+export const sseListener = (cb) => {
+    return () => {
+        if (browser) {
+            const taskUpdater = new EventSource(host + "/msg", {withCredentials: true});
+            if (taskUpdater) {
+                taskUpdater.onmessage = ({data}) => {
+                    const [key, p] = data.split(",")
+                    upLoadSeq.update(u => {
+                        if (u[key]) u[key][p] = 1
+                        return {...u}
+                    })
+                }
+                cb && cb(() => {
+                    taskUpdater.onmessage = null;
+                    taskUpdater.close()
+                })
+            }
+        }
+    }
+}
+
+const md5 = async file => {
+    return new Promise(resolve => {
+        const chunkSize = 2097152,
+            spark = new SparkMD5.ArrayBuffer(),
+            fileReader = new FileReader();
+        let currentChunk = 0;
+        let chunks = Math.ceil(file.size / chunkSize);
+
+        function next() {
+            const s = currentChunk * chunkSize,
+                e = ((s + chunkSize) >= file.size) ? file.size : s + chunkSize;
+            fileReader.readAsArrayBuffer(file.slice(s, e));
+        }
+
+        fileReader.onload = function (e) {
+            spark.append(e.target.result);
+            currentChunk++;
+            if (currentChunk < chunks) {
+                next();
+            } else {
+                resolve(spark.end())
+            }
+        };
+        next();
+    })
+}
+
+const tasks = {}
+
+function runTask() {
+    let n = 10
+    const ts = Object.keys(tasks).map(k => {
+        const t = tasks[k].filter(a => a)
+        if (!t.length) delete tasks[k]
+        return t
+    }).reduce((a, b) => a.concat(b), [])
+    for (const t of ts) {
+        if (!n) return
+        if (typeof t === "function") {
+            t()
+            n--
+        } else if (t.stop) {
+            n--
+        }
+    }
+}
+
+export async function upload() {
+    const chunkSize = 1 << 20;
+    const fs = [].slice.call(this.files || [])
+    const uu = {}
+    if (fs.length) {
+        this.value = '';
+        for (let f of fs) {
+            const tp = f.type
+            const nm = f.name
+            const key = await md5(f)
+            if (/image/i.test(f.type)) {
+                f = await imageCompression(f, {
+                    useWebWorker: true,
+                    initialQuality: 1
+                })
+            }
+            const s = f.size;
+            const t = Math.ceil(s / chunkSize)
+            uu[key] = []
+            for (let i = 0; i < t; i++) {
+                uu[key][i] = 0
+                uploader(key, i, t, f.slice(chunkSize * i, chunkSize * (i + 1)), nm, tp)
+            }
+        }
+    }
+    upLoadSeq.update(u => {
+        return {...u, ...uu}
+    })
+    runTask()
+}
+
+
+export const uploader = function (k, p, t, f, nm, tp) {
+    const tk = (tasks[k] = tasks[k] || [])
+    tk[p] = () => {
+        tk[p] = {
+            stop: () => {
+                wk.postMessage(0)
+            }
+        }
+        const wk = new Worker(wrk)
+        wk.onmessage = ({data}) => {
+            wk.terminate()
+            if (data === 'ok') {
+                tk[p] = 0;
+                setTimeout(runTask, 30)
+            } else if (/\d+/.test(data)) {
+                tk[p] = data
+            } else {
+                tk[p] = f
+            }
+        }
+        const v = [host, k, p, t]
+        if (!p) v.push(nm, tp)
+        wk.postMessage(v.join())
+        wk.postMessage(f)
+    }
+}
+
 export const timeFmt = function (a) {
     if (!a) return ""
     const formatter = new Intl.DateTimeFormat('zh-cn', {

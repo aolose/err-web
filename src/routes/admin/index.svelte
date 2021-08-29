@@ -9,7 +9,7 @@
     import Bg from "$lib/empty.svelte";
     import {onDestroy, onMount} from "svelte";
     import {host, query} from "$lib/res";
-    import {errorCatch, timeFmt} from "$lib/utils";
+    import {errorCatch, sseListener, timeFmt} from "$lib/utils";
 
     let res
     let t
@@ -41,20 +41,9 @@
     query('loadTags')
     let close = () => {
     }
-    onMount(() => {
-        if (browser) {
-            const taskUpdater = new EventSource(host + "/msg", {withCredentials: true});
-            if (taskUpdater) {
-                taskUpdater.onmessage=ev => {
-                    console.log("--",ev.data)
-                }
-                close = () => {
-                    taskUpdater.onmessage=null;
-                    taskUpdater.close()
-                }
-            }
-        }
-    })
+    onMount(sseListener(c => {
+        close = c
+    }))
     onDestroy(() => close())
     onDestroy(post.subscribe(p => {
         syncList(p, p.id)

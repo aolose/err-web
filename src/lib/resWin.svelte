@@ -2,13 +2,18 @@
     import SWin from './slideWin.svelte'
     import Pag from './pag.svelte'
     import Sc from './sc.svelte'
-
-
+    import P from './process.svelte'
+    import {upload} from './utils'
+    import {onDestroy} from "svelte";
+    import {upLoadSeq} from "$lib/store";
     let sc = ''
     let cur = 1;
     let total = 1;
     let showTsk = 1
-
+    let qs=[]
+    onDestroy(upLoadSeq.subscribe(u=>{
+        qs=Object.keys(u)
+    }))
     function search() {
 
     }
@@ -16,7 +21,9 @@
 <SWin act={2}>
     <div class="bn" slot="btn">
         <div class="i ins"></div>
-        <div class="i up"></div>
+        <div class="i up">
+            <input type="file" on:change={upload} multiple/>
+        </div>
         <div class="i del"></div>
         <div class="i can"></div>
         <div class="sc">
@@ -54,24 +61,24 @@
                     <div class="f"></div>
                 </div>
             </div>
-            <Pag cur={total} total={total}/>
+            <Pag cur={cur} total={total}/>
         </div>
         <div class:act={showTsk} class="tk">
-            <div class="t"></div>
-            <div class="t"></div>
-            <div class="t"></div>
-            <div class="t"></div>
+            {#each qs as q}
+                    <P id={q}/>
+            {/each}
         </div>
     </div>
 </SWin>
 <style lang="scss">
-  .t {
-    height: 60px;
-    border-radius: 8px;
-    margin: 10px 0;
-    background: #242848;
+  .f {
+    width: 140px;
+    height: 100px;
+    background: #2c3a56;
+    display: inline-block;
+    margin: 3px;
+    border-radius: 5px;
   }
-
   .tk {
     transition: .3s ease-in-out;
     transform: translate3d(100%,0,0);
@@ -87,14 +94,6 @@
     }
   }
 
-  .f {
-    width: 140px;
-    height: 100px;
-    background: #2c3a56;
-    display: inline-block;
-    margin: 3px;
-    border-radius: 5px;
-  }
 
   .re {
     height: 100%;

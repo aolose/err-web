@@ -40,34 +40,34 @@
         Publish
     </div>
     <div class="r">
-        <label>Slug</label>
-        <input type="text" placeholder="Slug"/>
+        <label for="b">Slug</label>
+        <input id="b" type="text" placeholder="Slug"/>
         <span>xxx</span>
     </div>
     <div class="r">
-        <label>Description</label>
-        <textarea></textarea>
+        <label for="a">Description</label>
+        <textarea id="a"></textarea>
     </div>
     <div class="r">
-        <label>Tags</label>
-        <div class="tgs">
+        <label for="d">Tags</label>
+        <div class="tgs" id="d">
             <Tags/>
         </div>
     </div>
     <div class="r">
-        <label>Banner</label>
+        <label for="c">Banner</label>
         <div class="bn">
-
+             <input type="file" id="c"/>
         </div>
     </div>
     <div class="r">
-        <label>
-            <Ck>Protect</Ck>
+        <label for="e">
+            <Ck >Protect</Ck>
         </label>
-        <input type="text"/>
+        <input type="text" id="e"/>
     </div>
     <div class="r">
-        <label>
+        <label for="f" id="f">
             <Ck>Allow Comment</Ck>
         </label>
     </div>
