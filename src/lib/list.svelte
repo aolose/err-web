@@ -2,6 +2,7 @@
     import Pag from './pag.svelte'
     import Ld from './loading.svelte'
     import {query} from "$lib/res";
+    import Sc from "$lib/sc.svelte";
     import {timeFmt} from "$lib/utils";
     import Lg from "$lib/./lg.svelte";
     import {list, post} from "$lib/store";
@@ -48,10 +49,7 @@
         <Ld/>
     {/await}
     <div class="sc">
-        <input
-                placeholder="search..."
-                bind:value={sc}/>
-        <button class="i-sc" on:click={search}></button>
+       <Sc bind:value={sc} search={search}/>
         <button class="add" class:hi={hi} on:click={add}></button>
     </div>
     <div class="ps">
@@ -84,18 +82,9 @@
     display: flex;
     height: 30px;
     margin: 20px 0 20px 60px;
-
-    input {
-      padding: 0 10px;
-      height: 30px;
-      width: 0;
-      flex: 1;
-      border-radius: 200px;
-      background: #1c334a;
-    }
   }
 
-  .i-sc, .add {
+   .add {
     margin-left: 5px;
     width: 24px;
     height: 24px;

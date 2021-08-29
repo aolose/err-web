@@ -33,8 +33,9 @@
     top: 40px;
     left: 0;
     right: 0;
-    bottom: 10px;
-    padding-bottom: 20px;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
   }
   .ti {
     position: absolute;
