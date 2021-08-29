@@ -1,7 +1,8 @@
 let host, title, cur, total, nm, tp
 onmessage = async function ({data,target}) {
     if (typeof data === "string") {
-        [host, title, cur, total] = data.split(',')
+        [host, title, cur, total,nm,tp] = data.split(',')
+        console.log('name',nm)
     } else {
         const fd = new FormData();
         if (nm) fd.append('name', nm)

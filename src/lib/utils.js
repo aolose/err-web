@@ -28,35 +28,22 @@ export const sseListener = (cb) => {
 
 const md5 = async file => {
     return new Promise(resolve => {
-        const chunkSize = 2097152,
-            spark = new SparkMD5.ArrayBuffer(),
-            fileReader = new FileReader();
-        let currentChunk = 0;
-        let chunks = Math.ceil(file.size / chunkSize);
-
-        function next() {
-            const s = currentChunk * chunkSize,
-                e = ((s + chunkSize) >= file.size) ? file.size : s + chunkSize;
-            fileReader.readAsArrayBuffer(file.slice(s, e));
-        }
-
-        fileReader.onload = function (e) {
+        const chunkSize = 8097152,
+            spark = new SparkMD5.ArrayBuffer();
+        const fr = new FileReader()
+        fr.onload = e => {
             spark.append(e.target.result);
-            currentChunk++;
-            if (currentChunk < chunks) {
-                next();
-            } else {
-                resolve(spark.end())
-            }
-        };
-        next();
+            resolve(spark.end())
+        }
+        fr.readAsArrayBuffer(file.slice(0, chunkSize))
     })
 }
 
 const tasks = {}
+const maxThreads = 5
 
 function runTask() {
-    let n = 10
+    let n = maxThreads
     const ts = Object.keys(tasks).map(k => {
         const t = tasks[k].filter(a => a)
         if (!t.length) delete tasks[k]
@@ -74,7 +61,7 @@ function runTask() {
 }
 
 export async function upload() {
-    const chunkSize = 1 << 20;
+    const chunkSize = 2 << 20;
     const fs = [].slice.call(this.files || [])
     const uu = {}
     if (fs.length) {
@@ -83,6 +70,9 @@ export async function upload() {
             const tp = f.type
             const nm = f.name
             const key = await md5(f)
+            upLoadSeq.update(u => {
+                return {...u, [key]: [0]}
+            })
             if (/image/i.test(f.type)) {
                 f = await imageCompression(f, {
                     useWebWorker: true,
