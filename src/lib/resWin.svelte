@@ -110,8 +110,9 @@
     bottom: 0;
     right: 0;
     width: 200px;
-    background: #121623;
-    padding: 20px;
+    background: rgba(16,19,29,.82);
+    padding: 20px 10px;
+    backdrop-filter: blur(5px);
 
     &.act {
       transform: translate3d(0, 0, 0);

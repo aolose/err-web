@@ -83,7 +83,7 @@
     width: 100%;
     height: 100px;
     background: #0e1832 center no-repeat;
-    background-size: contain;
+    background-size: cover;
     display: flex;
     align-items: center;
     justify-content: center;
