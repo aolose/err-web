@@ -1,12 +1,30 @@
 import {tags} from "$lib/store";
 
 export const apis = {
-    loadTags:{
-        path:'tag/ls',
-        cacheTime:2e3,
-        done(a){
-            if(Array.isArray(a)){
-                a.sort((a,b)=>a>b?1:-1)
+    delRes: {
+        path: 'res',
+        method: 'DELETE',
+        before(_, id) {
+            return {id: id.join()}
+        }
+    },
+    rnRes:{
+        method:'PATCH',
+        path: ({id,name})=> `res/${id}/${name}`,
+    },
+    lsRes: {
+        path: a => `res/${a}`,
+        before(_, s) {
+            return {k: s, c: 8}
+        },
+        cacheTime: 3
+    },
+    loadTags: {
+        path: 'tag/ls',
+        cacheTime: 2e3,
+        done(a) {
+            if (Array.isArray(a)) {
+                a.sort((a, b) => a > b ? 1 : -1)
                 tags.set(a)
             }
         }
@@ -40,7 +58,7 @@ export const apis = {
         data: a => a,
     },
     setVer: {
-        path: ({id,ver}) => `edit/${id}/${ver}`,
+        path: ({id, ver}) => `edit/${id}/${ver}`,
         method: 'PATCH',
     },
     posts: {
