@@ -3,85 +3,108 @@
     import Pag from './pag.svelte'
     import Sc from './sc.svelte'
     import P from './process.svelte'
+    import Item from './resItem.svelte'
     import {upload} from './utils'
     import {onDestroy} from "svelte";
-    import {upLoadSeq} from "$lib/store";
-    let sc = ''
-    let cur = 1;
-    let total = 1;
-    let showTsk = 1
-    let qs=[]
-    onDestroy(upLoadSeq.subscribe(u=>{
-        qs=Object.keys(u)
-    }))
-    function search() {
+    import {post, resList, upLoadSeq} from "$lib/store";
+    import {query} from "$lib/res";
 
+    export let ipt
+    let acts = {}
+    let sc = ''
+    let sc1 = ''
+    let cur = 1;
+    let total = 0;
+    let showTsk = 0
+    let qs = []
+    let hasP = 0
+    onDestroy(post.subscribe(p => {
+        hasP = Object.keys(p).length > 1
+    }))
+    onDestroy(upLoadSeq.subscribe(u => {
+        qs = Object.keys(u)
+        if (!qs.length) showTsk = 0
+    }))
+
+    async function search() {
+        loadList(await query('lsRes', 1, sc))
+        sc1 = sc
+    }
+
+    async function go(x) {
+        cur = x
+        loadList(await query('lsRes', x, sc1))
+    }
+
+    function loadList(res) {
+        if (res) {
+            resList.set(res.ls || [])
+            cur = res.cur || 1
+            total = res.total
+        }
+    }
+
+    let c = 0
+    let d = 0
+    $:{
+        d = Object.keys($upLoadSeq).length
+        c = Object.values(acts).filter(a => a).length
     }
 </script>
-<SWin act={2}>
+<SWin act={2} onAct={()=>go(1)}>
     <div class="bn" slot="btn">
-        <div class="i ins"></div>
+        {#if hasP && c}
+            <div class="i ins"><span>{c}</span></div>
+        {/if}
         <div class="i up">
-            <input type="file" on:change={upload} multiple/>
+            <input type="file" on:change={function (e){
+                upload.call(this,e)
+                showTsk=1
+            }} multiple/>
         </div>
-        <div class="i del"></div>
-        <div class="i can"></div>
+        {#if c}
+            <div class="i del"><span>{c}</span></div>
+            <div class="i can" on:click={()=>{
+            acts={}
+        }}></div>
+        {/if}
         <div class="sc">
             <Sc bind:value={sc} search={search}/>
         </div>
-        <div class="i tsk" on:click={()=>showTsk=1-showTsk}></div>
+        {#if d}
+            <div class="i tsk" on:click={()=>showTsk=1-showTsk}>
+                <span>{d}</span>
+            </div>
+        {/if}
     </div>
     <div class="re">
         <div class="fl">
             <div class="ls">
                 <div class="po">
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
-                    <div class="f"></div>
+                    {#each $resList as r (r.id)}
+                        <Item
+                                click={()=>acts={...acts,[r.id]:+!acts[r.id]}}
+                                tp={r.type}
+                                nm={r.name}
+                                sz={r.size}
+                                act={acts[r.id]}
+                                id={r.id}/>
+                    {/each}
                 </div>
             </div>
-            <Pag cur={cur} total={total}/>
+            <Pag url={go} cur={cur} total={total}/>
         </div>
         <div class:act={showTsk} class="tk">
             {#each qs as q}
-                    <P id={q}/>
+                <P id={q}/>
             {/each}
         </div>
     </div>
 </SWin>
 <style lang="scss">
-  .f {
-    width: 140px;
-    height: 100px;
-    background: #2c3a56;
-    display: inline-block;
-    margin: 3px;
-    border-radius: 5px;
-  }
   .tk {
     transition: .3s ease-in-out;
-    transform: translate3d(100%,0,0);
+    transform: translate3d(100%, 0, 0);
     position: absolute;
     top: 0;
     bottom: 0;
@@ -89,8 +112,9 @@
     width: 200px;
     background: #121623;
     padding: 20px;
-    &.act{
-      transform: translate3d(0,0,0);
+
+    &.act {
+      transform: translate3d(0, 0, 0);
     }
   }
 
@@ -98,7 +122,8 @@
   .re {
     height: 100%;
     margin: 0 10px 0 20px;
-   overflow:hidden;
+    overflow: hidden;
+
     :global nav {
       left: 10px;
       bottom: 0;
@@ -139,6 +164,15 @@
     background-size: 60% auto;
     cursor: pointer;
     opacity: .7;
+
+    span {
+      pointer-events: none;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 10px;
+      color: #a6a093
+    }
 
     &:hover {
       opacity: 1;

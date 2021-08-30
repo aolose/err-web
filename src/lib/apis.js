@@ -15,7 +15,7 @@ export const apis = {
     lsRes: {
         path: a => `res/${a}`,
         before(_, s) {
-            return {k: s, c: 8}
+            return {k: s, c: 15}
         },
         cacheTime: 3
     },

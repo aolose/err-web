@@ -10,7 +10,7 @@
 
     $:{
         pg = [];
-        if (2 < total) {
+        if (2< total) {
             if (cur < total && cur > 1) pg = [cur]
             for (let i = 1; i <= length && pg.length < length; i++) {
                 const pr = cur - i;
@@ -38,7 +38,7 @@
         {/if}
     {/each}
     {#if n}<span>{n}</span>{/if}
-    {#if total > 2}
+    {#if total > 1}
         {#if isF}
             <span class="nv" class:act={last} on:click={()=>url(total)}>{total}</span>
         {:else }

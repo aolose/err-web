@@ -1,10 +1,22 @@
 import {writable} from 'svelte/store';
-export const list = writable([]);
+export const artList = writable([]);
+export const resList = writable([]);
 export const msg = writable(new Date().toLocaleString());
 export const post = writable({})
 export const winAct = writable(0)
 export const tags = writable([])
+export const ipt = writable({})
 export const upLoadSeq = writable({})
+export const upLoadInfo = writable({})
+resList.add = function (re){
+    resList.update(u=>{
+        const idx = u.findIndex(a => a.id === re.id)
+        if (idx !== -1) {
+            u.splice(idx, 1)
+        }
+        return [re].concat(u)
+    })
+}
 tags.add = ne => {
     if(!ne)return tags;
     tags.update(a => {

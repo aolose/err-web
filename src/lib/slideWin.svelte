@@ -1,9 +1,15 @@
 <script>
     import {winAct} from "$lib/store";
-
+    export let onAct
     export let act
     export let title
-    $:show = $winAct === act
+    let show=false
+    $:{
+        show = $winAct === act
+        if(show&&onAct){
+            onAct()
+        }
+    }
 </script>
 <div class="s-win" class:sh={show}>
     <div class="h">
@@ -55,7 +61,7 @@
     left: -10px;
     top: 0;
     bottom: 0;
-    overflow: auto;
+    overflow: hidden;
     transform: translate3d(100%, 0, 0);
 
     &.sh {

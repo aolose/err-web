@@ -2,8 +2,9 @@ import wrk from './up?url';
 import SparkMD5 from 'spark-md5'
 import {host} from './res'
 import imageCompression from 'browser-image-compression';
-import {upLoadSeq} from "$lib/store";
+import {upLoadInfo, upLoadSeq} from "$lib/store";
 import {browser} from "$app/env";
+import {ext} from "$lib/types";
 
 export const sseListener = (cb) => {
     return () => {
@@ -73,12 +74,26 @@ export async function upload() {
             upLoadSeq.update(u => {
                 return {...u, [key]: [0]}
             })
+            let url
             if (/image/i.test(f.type)) {
                 f = await imageCompression(f, {
                     useWebWorker: true,
                     initialQuality: 1
                 })
             }
+            if(/image|svg/.test(f.type)){
+                url = URL.createObjectURL(f)
+            }
+            upLoadInfo.update(a => {
+                return {
+                    ...a, [key]: {
+                        type: tp,
+                        url,
+                        name: nm,
+                        size: f.size
+                    }
+                }
+            })
             const s = f.size;
             const t = Math.ceil(s / chunkSize)
             uu[key] = []
@@ -140,4 +155,22 @@ export const timeFmt = function (a) {
 export const errorCatch = e => {
     console.trace(e)
     alert(e)
+}
+
+export const fileSize = n => {
+    if (!n) return;
+    const x = Math.floor(Math.log10(Math.log2(n)))
+    const v = [
+        ['B', 1],
+        ['KB', 1 << 10],
+        ['MB', 1 << 20],
+        ['GB', 1 << 30]
+    ][x] || ['B', 1]
+    return parseFloat((n / [v[1]]).toFixed(2)) + v[0]
+}
+
+export const fileType = n => {
+    if (!n) return 'file'
+    n = n.replace(/\w+\//g, '')
+    return ext[n] || n
 }

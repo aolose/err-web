@@ -5,7 +5,7 @@
     import Sc from "$lib/sc.svelte";
     import {timeFmt} from "$lib/utils";
     import Lg from "$lib/./lg.svelte";
-    import {list, post} from "$lib/store";
+    import {artList, post} from "$lib/store";
 
     let res = {}
     let sc
@@ -22,7 +22,7 @@
             ver: -1
         }
         post.set(o);
-        list.set([o, ...$list])
+        artList.set([o, ...$artList])
     }
 
     async function search() {
@@ -36,9 +36,9 @@
     }
 
     $:{
-        if(res&&res.ls)list.set(res.ls || [])
+        if(res&&res.ls)artList.set(res.ls || [])
     }
-    $: hi = $list.find(a => a && !a.id)
+    $: hi = $artList.find(a => a && !a.id)
     $:total = res.total
     go(1)
 </script>
@@ -54,7 +54,7 @@
     </div>
     <div class="ps">
         <div>
-            {#each $list as p }
+            {#each $artList as p }
                 <div
                         class:act={$post.id===p.id}
                         on:click={()=>post.set({...p})} class="cd">

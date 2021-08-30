@@ -1,10 +1,9 @@
 <script>
-    import {browser} from "$app/env";
     import List from '$lib/list.svelte'
     import Md from '$lib/md.svelte'
     import Pub from '$lib/pubWin.svelte'
     import Res from '$lib/resWin.svelte'
-    import {list, post, winAct} from "$lib/store";
+    import {artList, post, winAct} from "$lib/store";
     import Ld from "$lib/loading.svelte";
     import Bg from "$lib/empty.svelte";
     import {onDestroy, onMount} from "svelte";
@@ -12,6 +11,7 @@
     import {errorCatch, sseListener, timeFmt} from "$lib/utils";
 
     let res
+    let ipt
     let t
     let pid = $post.id
     let bf
@@ -30,11 +30,11 @@
     $:saved = $post.saved ? `Saved at ${timeFmt($post.saved)}` : ""
 
     function syncList(p, old) {
-        const i = $list.findIndex(({id}) => id === old)
+        const i = $artList.findIndex(({id}) => id === old)
         if (i !== -1) {
-            const ls = [...$list]
+            const ls = [...$artList]
             ls[i] = p;
-            list.set(ls)
+            artList.set(ls)
         }
     }
 
@@ -75,11 +75,11 @@
             }, 2e3)
         } else {
             if (!pid) {
-                const idx = $list.findIndex(a => a && !a.id)
+                const idx = $artList.findIndex(a => a && !a.id)
                 if (idx !== -1) {
-                    const ls = [...$list];
+                    const ls = [...$artList];
                     ls[idx] = $post.id
-                    list.set(ls)
+                    artList.set(ls)
                 }
             }
             pid = $post.id
@@ -87,7 +87,7 @@
     }))
     onDestroy(() => {
         post.set({})
-        list.set([])
+        artList.set([])
         winAct.set(0)
     })
 </script>
@@ -102,7 +102,7 @@
                 {#await res}
                     <Ld/>
                 {/await}
-                <textarea bind:value={$post.content}></textarea>
+                <textarea bind:value={$post.content} bind:this={ipt}></textarea>
             {:else }
                 <Bg/>
             {/if}
@@ -114,7 +114,7 @@
                 <Md value={content}/>
             </div>
             <Pub/>
-            <Res/>
+            <Res ipt={ipt}/>
         </div>
     </div>
 </div>

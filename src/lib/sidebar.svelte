@@ -5,7 +5,7 @@
     import Del from "./del.svelte"
     import Cmt from "./cmt.svelte"
     import Und from "./und.svelte"
-    import {post, list, winAct} from "./store";
+    import {post, artList, winAct} from "./store";
     import Btn from "./btn.svelte"
     import {query} from "./res";
     import {errorCatch} from "$lib/utils";
@@ -35,21 +35,21 @@
                     if (a.error) {
                         errorCatch(a.error)
                     } else {
-                        const ls = [...$list]
+                        const ls = [...$artList]
                         const idx = ls.findIndex(c => c.id === +a)
                         if (idx !== -1) {
                             ls.splice(idx, 1)
                         }
-                        list.set(ls)
+                        artList.set(ls)
                         if ($post.id === +a) {
                             post.set({})
                         }
                     }
                 }
             })
-        const ls = [...$list]
+        const ls = [...$artList]
         if (ls.length && (!ls[0] || !ls[0].id)) ls.unshift()
-        list.set([])
+        artList.set([])
         post.set({})
         winAct.set(0)
     }
