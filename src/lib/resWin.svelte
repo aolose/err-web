@@ -12,7 +12,7 @@
 
     export let ipt
     let delLd = 0
-    let acts = {}
+    let acts = []
     let sc = ''
     let sc1 = ''
     let cur = 1;
@@ -20,6 +20,20 @@
     let showTsk = 0
     let qs = []
     let hasP = 0
+
+    function add(a) {
+        const v = acts.slice()
+        const x = v.findIndex(v => v.id === a.id)
+        if (x !== -1) {
+            v.splice(x, 1)
+        }else {
+            v.push(a)
+        }
+        acts =v
+    }
+
+
+
     onDestroy(post.subscribe(p => {
         hasP = Object.keys(p).length > 1
     }))
@@ -51,26 +65,26 @@
 
     async function del() {
         delLd = 1
-        await query('delRes', Object.keys(acts))
+        await query('delRes', acts.map(a => a.id))
         await tick()
         if ($resList.length) await go(cur)
-        acts = {}
+        acts = []
         delLd = 0
     }
 
     async function ins() {
         if (ipt) {
             let {value, selectionEnd: e, selectionStart: s} = ipt;
-            const a = Object.values(acts).filter(a => a).map(({id, name, ext, type, size}) => {
+            const a = acts.map(({id, name, ext, size}) => {
                 return `!(${id})\n[t:${ext}|n:${name}|s:${size}]`
             }).join('\n')
             const d = value.substr(0, s) + '\n' + a + value.substr(e)
-            const l=a.length+1
-            e+=l
+            const l = a.length + 1
+            e += l
             post.set({...$post, content: d})
             await tick()
-            ipt.setSelectionRange(e,e)
-            acts={}
+            ipt.setSelectionRange(e, e)
+            acts = []
         }
     }
 
@@ -78,23 +92,23 @@
     let d = 0
     $:{
         d = Object.keys($upLoadSeq).length
-        c = Object.values(acts).filter(a => a).length
+        c = acts.length
     }
 </script>
 <SWin act={2} onAct={()=>go(1)}>
     <div class="bn" slot="btn">
-        {#if hasP && c}
-            <div
-                    on:click={ins}
-                    transition:slide|local={{horizon:1}}
-                    class="i ins"><span>{c}</span></div>
-        {/if}
         <div class="i up">
             <input type="file" on:change={function (e){
                 upload.call(this,e)
                 showTsk=1
             }} multiple/>
         </div>
+        {#if hasP && c}
+            <div
+                    on:click={ins}
+                    transition:slide|local={{horizon:1}}
+                    class="i ins"><span>{c}</span></div>
+        {/if}
         {#if c}
             <div class="i del"
                  transition:slide|local={{horizon:1}}
@@ -104,7 +118,7 @@
             <div
                     transition:slide|local={{horizon:1}}
                     class="i can" on:click={()=>{
-            acts={}
+            acts=[]
         }}></div>
         {/if}
         <div class="sc">
@@ -124,13 +138,14 @@
                 <div class="po">
                     {#each $resList as r (r.id)}
                         <Item
-                                click={()=>acts={...acts,[r.id]:acts[r.id]?0:r}}
+                                idx={acts.indexOf(r)+1}
+                                click={()=>add(r)}
                                 tp={r.type}
                                 ext={r.ext}
                                 url={r.url}
                                 nm={r.name}
                                 sz={r.size}
-                                act={acts[r.id]}
+                                act={acts.indexOf(r)!==-1}
                                 id={r.id}/>
                     {/each}
                 </div>

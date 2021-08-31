@@ -15,6 +15,7 @@
     export let ext = ''
     export let sz = 0
     export let act
+    export let idx
     export let click
     let t = -1;
 
@@ -46,6 +47,9 @@
      style={`top:${top}px;left:${l}px`}
      transition:scale|local
      on:click={click} class:act={act}>
+    {#if idx}
+        <div class="n">{idx}</div>
+    {/if}
     {#if /svg|image/.test(tp)}
         <div class="b" style={`background-image:url('${url||(host+`/r/${id}.png`)}')`}></div>
     {:else }
@@ -68,7 +72,20 @@
       transform: translate3d(0, -2px, 0);
     }
   }
-
+  .n{
+    user-select: none;
+    position: absolute;
+    background: #162b52;
+    width: 18px;
+    text-align: center;
+    font-size: 10px;
+    color: yellow;
+    height: 14px;
+    left: 0;
+    top: 0;
+    z-index: 5;
+    border-radius: 3px;
+  }
   .f {
     width: 160px;
     height: 133px;
@@ -94,6 +111,7 @@
   }
 
   .z {
+    user-select: none;
     opacity: .5;
     color: #ffffff;
     position: absolute;
@@ -106,6 +124,7 @@
   }
 
   .b {
+    user-select: none;
     border-radius: 4px;
     width: 100%;
     height: 100px;

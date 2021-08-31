@@ -38,11 +38,12 @@
     {#if /mp3|aac|ogg/i.test(tp)}
         <audio controls>
             <source src={url} type={'audio/'+tp}>
-            Your browser does not support the audio element.
         </audio>
     {:else }
         {#if /mp4|flv/i.test(tp)}
-
+            <video controls>
+                <source src={url} type={'video/'+tp}>
+            </video>
         {/if}
         <div class="dw">
             <div class="t" style={`${col(tp)}`}>
