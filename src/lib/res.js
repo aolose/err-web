@@ -2,6 +2,7 @@ import {browser} from "$app/env";
 import {apis} from "$lib/apis";
 
 export const host = "http://localhost:8880"
+
 const getRes = async (ctx, name) => {
     const {page, fetch, session, context} = ctx;
     const cfg = apis[name] || {};
@@ -23,7 +24,7 @@ const getRes = async (ctx, name) => {
         method
     }
     if (before) {
-        const a = before(d, session)
+        const a = before(d, session, page)
         if (a !== undefined) d = a;
     }
     if (d) {
@@ -32,7 +33,7 @@ const getRes = async (ctx, name) => {
                 delete d[a]
             }
         })
-        if (/post|put|patch|delete/i.test(method)) cf.body = JSON.stringify(d);
+        if (/post|put|patch/i.test(method)) cf.body = JSON.stringify(d);
         else {
             const u = [];
             Object.keys(d).forEach(k => {
@@ -70,8 +71,8 @@ const getRes = async (ctx, name) => {
             }
         }
         if (cache) {
-            if(done){
-                done(cache)
+            if (done) {
+                done(cache, page, session, context)
             }
             return {
                 status: 200,
@@ -96,8 +97,8 @@ const getRes = async (ctx, name) => {
             const a = after(r, o, page)
             if (a !== undefined) r = a;
         }
-        if(done){
-            done(r)
+        if (done) {
+            done(r, page, session, context)
         }
         if (cacheTime && browser) {
             const c = {

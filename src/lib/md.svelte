@@ -2,12 +2,34 @@
     import marked from "marked";
     const resTag = '\u0005'
     const resSp = '\u0003'
+    const br = {
+        name: 'br',
+        level: 'block',
+        start(src) { return src.match(/^\.\.\n?/)?.index; }, // Hint to Marked.js to stop and check for a match
+        tokenizer(src, tokens) {
+            const rule = /^\.\.\n?/;    // Regex for the complete token
+            const match = rule.exec(src);
+            if (match) {
+                const token = {
+                    type: 'br',
+                    raw: match[0],
+                    text: `<br>`,
+                    tokens: []
+                };
+                this.lexer.inline(token.text, token.tokens);
+                return token;
+            }
+        },
+        renderer(token) {
+            return `<br>`;
+        }
+    };
     const resRender = {
         name: 'resRender',
         level: 'inline',
-        start(src) { return src.match(/^!\(\w*?\)\[\w*?]/)?.index; }, // Hint to Marked.js to stop and check for a match
+        start(src) { return src.match(/^!\(\w*?\)\n?\[.*?]/)?.index; }, // Hint to Marked.js to stop and check for a match
         tokenizer(src, tokens) {
-            const rule = /^!\((\w*?)\)\[(\w*?)]/;    // Regex for the complete token
+            const rule = /^!\((\w*?)\)\n?\[(.*?)]/;    // Regex for the complete token
             const match = rule.exec(src);
             if (match) {
                 const token = {
@@ -24,7 +46,7 @@
             return `${resTag}${this.parser.parseInline(token.tokens)}${resTag}`;
         }
     };
-    marked.use({extensions: [resRender] })
+    marked.use({extensions: [resRender,br] })
 </script>
 <script>
     import Res from './resBox.svelte';
@@ -36,7 +58,7 @@
     {#each out as [u,p]}
         {#if p}
             <Res attr={p} src={u}/>
-            {:else }
+        {:else }
             {@html u}
         {/if}
     {/each}
@@ -99,8 +121,12 @@
       }
 
       code, pre {
-        background: rgba(255, 255, 255, .05);
+        background: rgba(29,33,60,.4);
         padding: 2px 3px;
+        color: #d8d574;
+        code{
+          background: none;
+        }
       }
 
       pre {

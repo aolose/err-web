@@ -12,7 +12,19 @@ export const sseListener = (cb) => {
             const taskUpdater = new EventSource(host + "/msg", {withCredentials: true});
             if (taskUpdater) {
                 taskUpdater.onmessage = ({data}) => {
-                    const [key, p] = data.split(",")
+                    const [key, p, t, e] = data.split(",")
+                    if (t) {
+                        upLoadInfo.update(a => {
+                            return {
+                                ...a, [key]: {
+                                    ...(a[key] || {}),
+                                    id: key,
+                                    type: t,
+                                    ext: e,
+                                }
+                            }
+                        })
+                    }
                     upLoadSeq.update(u => {
                         if (u[key]) u[key][p] = 1
                         return {...u}
@@ -81,13 +93,15 @@ export async function upload() {
                     initialQuality: 1
                 })
             }
-            if(/image|svg/.test(f.type)){
+
+            if (/image|svg/.test(f.type)) {
                 url = URL.createObjectURL(f)
             }
             upLoadInfo.update(a => {
                 return {
                     ...a, [key]: {
                         type: tp,
+                        ext: nm.replace(/.*?\./g, ''),
                         url,
                         name: nm,
                         size: f.size
@@ -158,7 +172,7 @@ export const errorCatch = e => {
 }
 
 export const fileSize = n => {
-    if (!n) return;
+    if (!n) return '0B';
     const x = Math.floor(Math.log10(Math.log2(n)))
     const v = [
         ['B', 1],
@@ -169,8 +183,13 @@ export const fileSize = n => {
     return parseFloat((n / [v[1]]).toFixed(2)) + v[0]
 }
 
-export const fileType = n => {
-    if (!n) return 'file'
-    n = n.replace(/\w+\//g, '')
-    return ext[n] || n
-}
+const colors = [
+    '#a66565', '#c49b67',
+    '#74a468', '#58c7d2',
+    '#539dda', '#435bbd',
+    '#4e4175', '#ac56b0'
+]
+
+export const col = (v = "") => `color:${colors[v.split('').map(
+    a => a.charCodeAt(0))
+    .reduce(((a, b) => a + b), 0) % 8]}`

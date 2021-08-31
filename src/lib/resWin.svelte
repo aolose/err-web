@@ -5,11 +5,13 @@
     import P from './process.svelte'
     import Item from './resItem.svelte'
     import {upload} from './utils'
-    import {onDestroy} from "svelte";
+    import {onDestroy, tick} from "svelte";
+    import {slide} from './transition'
     import {post, resList, upLoadSeq} from "$lib/store";
     import {query} from "$lib/res";
 
     export let ipt
+    let delLd = 0
     let acts = {}
     let sc = ''
     let sc1 = ''
@@ -23,7 +25,9 @@
     }))
     onDestroy(upLoadSeq.subscribe(u => {
         qs = Object.keys(u)
-        if (!qs.length) showTsk = 0
+        if (!qs.length) setTimeout(() => {
+            showTsk = 0
+        }, 400)
     }))
 
     async function search() {
@@ -32,6 +36,7 @@
     }
 
     async function go(x) {
+        delLd = 0
         cur = x
         loadList(await query('lsRes', x, sc1))
     }
@@ -41,6 +46,31 @@
             resList.set(res.ls || [])
             cur = res.cur || 1
             total = res.total
+        }
+    }
+
+    async function del() {
+        delLd = 1
+        await query('delRes', Object.keys(acts))
+        await tick()
+        if ($resList.length) await go(cur)
+        acts = {}
+        delLd = 0
+    }
+
+    async function ins() {
+        if (ipt) {
+            let {value, selectionEnd: e, selectionStart: s} = ipt;
+            const a = Object.values(acts).filter(a => a).map(({id, name, ext, type, size}) => {
+                return `!(${id})\n[t:${ext}|n:${name}|s:${size}]`
+            }).join('\n')
+            const d = value.substr(0, s) + '\n' + a + value.substr(e)
+            const l=a.length+1
+            e+=l
+            post.set({...$post, content: d})
+            await tick()
+            ipt.setSelectionRange(e,e)
+            acts={}
         }
     }
 
@@ -54,7 +84,10 @@
 <SWin act={2} onAct={()=>go(1)}>
     <div class="bn" slot="btn">
         {#if hasP && c}
-            <div class="i ins"><span>{c}</span></div>
+            <div
+                    on:click={ins}
+                    transition:slide|local={{horizon:1}}
+                    class="i ins"><span>{c}</span></div>
         {/if}
         <div class="i up">
             <input type="file" on:change={function (e){
@@ -63,8 +96,14 @@
             }} multiple/>
         </div>
         {#if c}
-            <div class="i del"><span>{c}</span></div>
-            <div class="i can" on:click={()=>{
+            <div class="i del"
+                 transition:slide|local={{horizon:1}}
+                 class:ld={delLd}
+                 on:click={del}
+            ><span>{c}</span></div>
+            <div
+                    transition:slide|local={{horizon:1}}
+                    class="i can" on:click={()=>{
             acts={}
         }}></div>
         {/if}
@@ -72,7 +111,9 @@
             <Sc bind:value={sc} search={search}/>
         </div>
         {#if d}
-            <div class="i tsk" on:click={()=>showTsk=1-showTsk}>
+            <div
+                    transition:slide|local={{horizon:1}}
+                    class="i tsk" on:click={()=>showTsk=1-showTsk}>
                 <span>{d}</span>
             </div>
         {/if}
@@ -83,8 +124,10 @@
                 <div class="po">
                     {#each $resList as r (r.id)}
                         <Item
-                                click={()=>acts={...acts,[r.id]:+!acts[r.id]}}
+                                click={()=>acts={...acts,[r.id]:acts[r.id]?0:r}}
                                 tp={r.type}
+                                ext={r.ext}
+                                url={r.url}
                                 nm={r.name}
                                 sz={r.size}
                                 act={acts[r.id]}
@@ -110,7 +153,7 @@
     bottom: 0;
     right: 0;
     width: 200px;
-    background: rgba(16,19,29,.82);
+    background: rgba(16, 19, 29, .82);
     padding: 20px 10px;
     backdrop-filter: blur(5px);
 
@@ -151,6 +194,7 @@
     bottom: 40px;
     padding: 10px;
     overflow: auto;
+    overflow-x: hidden;
   }
 
   .bn {

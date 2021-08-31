@@ -74,17 +74,8 @@
 
 </SWin>
 <style lang="scss">
-  @keyframes a {
-    0%, 50%, 100% {
-      opacity: 1;
-    }
-    25%, 75% {
-      opacity: .3;
-    }
-  }
-
   .ld {
-    animation: a 1s infinite linear;
+    animation: ss 1s infinite linear;
   }
 
   label {

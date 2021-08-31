@@ -1,16 +1,26 @@
-import {tags} from "$lib/store";
+import {resList, tags} from "$lib/store";
 
 export const apis = {
     delRes: {
         path: 'res',
         method: 'DELETE',
-        before(_, id) {
-            return {id: id.join()}
+        before(a, b, id) {
+            return {id: id.filter(a => a).join()}
+        },
+        done(a, id) {
+            resList.update(a => {
+                const l = [];
+                a.forEach(v => {
+                    if (id.indexOf(v.id) === -1)
+                    l.push(v)
+                })
+                return l
+            })
         }
     },
-    rnRes:{
-        method:'PATCH',
-        path: ({id,name})=> `res/${id}/${name}`,
+    rnRes: {
+        method: 'PATCH',
+        path: ({id, name}) => `res/${id}/${name}`,
     },
     lsRes: {
         path: a => `res/${a}`,

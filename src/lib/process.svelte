@@ -1,42 +1,42 @@
 <script>
     import {resList, upLoadInfo, upLoadSeq} from "$lib/store";
     import {onDestroy} from "svelte";
-    import {fileType} from "$lib/utils";
+    import {slide} from './transition'
 
     export let id = ""
     let inf = {}
     let p = 0
-    let tp = '', nm = '', url = ''
+    let tp = '', nm = '', url = '', ext = ''
     onDestroy(upLoadSeq.subscribe(u => {
         const v = u[id]
         if (v) {
             inf = $upLoadInfo[id] || {}
             p = Math.floor(v.reduce((a, b) => a + b, 0) * 100 / v.length)
             tp = inf.type
+            ext = inf.ext
             nm = inf.name || ''
             url = inf.url
             if (p === 100) {
-                resList.add({
-                    ...inf,
-                    id: id,
-                })
-                setTimeout(()=>{
+                resList.add(id)
+                const _id = id
+                id = ""
+                setTimeout(() => {
                     upLoadSeq.update(a => {
-                        delete a[id]
+                        delete a[_id]
                         return {...a}
                     })
-                },1e3)
+                }, 1e3)
             }
         }
     }))
 </script>
-<div class="t">
+<div class="t" transition:slide|local>
     <span class="f">{p}%</span>
     {#if url}
         <div class="b" style={`background-image:url(${inf.url})`}></div>
     {:else }
         <div class="b">
-            <span class="c">{fileType(tp)}</span>
+            <span class="c">{ext}</span>
         </div>
     {/if}
     <div class="e">
@@ -50,6 +50,7 @@
 </div>
 <style lang="scss">
   .f {
+    transform: translate3d(0, 0, 0);
     position: absolute;
     top: 5px;
     right: 5px;
@@ -91,7 +92,7 @@
     justify-content: center;
     height: 40px;
     width: 40px;
-    background: #13152f;
+    background: #13152f center no-repeat;
     margin-right: 5px;
     margin-left: 3px;
     background-size: contain;

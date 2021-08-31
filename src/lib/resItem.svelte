@@ -1,23 +1,22 @@
 <script>
     import {host, query} from "$lib/res";
-    import {fileSize, fileType} from "$lib/utils";
+    import {col, fileSize} from "$lib/utils";
+    import {scale} from 'svelte/transition';
+    import {onDestroy} from "svelte";
+    import {resList} from "$lib/store";
 
+    let l = 0
+    let top = 0
+    let sd
     export let id
+    export let url
     export let nm = ''
     export let tp = ''
+    export let ext = ''
     export let sz = 0
     export let act
     export let click
-    const colors = [
-        '#a66565', '#c49b67',
-        '#74a468', '#58c7d2',
-        '#539dda', '#435bbd',
-        '#4e4175', '#ac56b0'
-    ]
     let t = -1;
-    const col = (v = "") => `color:${colors[v.split('').map(
-        a => a.charCodeAt(0))
-        .reduce(((a, b) => a + b), 0) % 8]}`
 
     function ch() {
         const v = nm.replace(/^\s+|\s+$/, '')
@@ -28,31 +27,59 @@
             })
         }, 2e3)
     }
+
+    function pos() {
+        setTimeout(function () {
+            if (!sd) return
+            const {offsetTop, offsetLeft} = sd;
+            l = offsetLeft
+            top = offsetTop
+        }, 500)
+    }
+
+    onDestroy(resList.subscribe(pos))
+    $:pos()
 </script>
-<div class="f" on:click={click} class:act={act}>
+<svelte:window on:resize={pos}/>
+<div class="f s" bind:this={sd}></div>
+<div class="f p"
+     style={`top:${top}px;left:${l}px`}
+     transition:scale|local
+     on:click={click} class:act={act}>
     {#if /svg|image/.test(tp)}
-        <div class="b" style={`background-image:url('${host}/r/${id}')`}></div>
+        <div class="b" style={`background-image:url('${url||(host+`/r/${id}.png`)}')`}></div>
     {:else }
-        <div class="b" style={col(tp)}>{fileType(tp).toUpperCase()}</div>
+        <div class="b" style={col(tp)}>{(ext).toUpperCase()}</div>
     {/if}
     <div class="z">{fileSize(sz)}</div>
     <input bind:value={nm} on:change={ch}/>
 </div>
 <style lang="scss">
-  .f {
+  .p {
+    position: absolute;
+    transition: .3s ease-in-out left, .3s .3s ease-in-out top, .2s ease-in-out transform;
     cursor: pointer;
-    width: 160px;
+    opacity: .8;
     background: #2c3a56;
-    display: inline-block;
-    margin: 3px;
     border-radius: 4px;
-    transition: .2s ease-in-out;
-    border: 1px solid transparent;
 
     &:hover {
-      box-shadow: rgba(36, 173, 255, .1) 0 3px 18px;
+      opacity: 1;
       transform: translate3d(0, -2px, 0);
     }
+  }
+
+  .f {
+    width: 160px;
+    height: 133px;
+    display: inline-block;
+    margin: 3px;
+    border: 2px solid transparent;
+  }
+
+  .s {
+    opacity: 0;
+    pointer-events: none;
   }
 
   input {
@@ -93,5 +120,6 @@
 
   .act {
     border-color: #61beff;
+    opacity: 1;
   }
 </style>

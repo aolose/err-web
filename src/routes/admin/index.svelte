@@ -7,7 +7,9 @@
     import Ld from "$lib/loading.svelte";
     import Bg from "$lib/empty.svelte";
     import {onDestroy, onMount} from "svelte";
-    import {host, query} from "$lib/res";
+    import {query} from "$lib/res";
+    import {slide} from '$lib/transition'
+    import {fade} from "svelte/transition";
     import {errorCatch, sseListener, timeFmt} from "$lib/utils";
 
     let res
@@ -78,8 +80,10 @@
                 const idx = $artList.findIndex(a => a && !a.id)
                 if (idx !== -1) {
                     const ls = [...$artList];
-                    ls[idx] = $post.id
-                    artList.set(ls)
+                    if(!ls.find(a=>a.id===$post.id)){
+                        ls[idx] = $post.id
+                        artList.set(ls)
+                    };
                 }
             }
             pid = $post.id
@@ -98,21 +102,27 @@
     <div class="write">
         <div class="edit">
             {#if $post.ver}
-                <input bind:value={$post.title}/>
+                <input
+                        transition:slide|local={{horizon:1}}
+                        bind:value={$post.title}/>
                 {#await res}
                     <Ld/>
                 {/await}
-                <textarea bind:value={$post.content} bind:this={ipt}></textarea>
+                <textarea
+                        transition:slide|local={{horizon:1}}
+                        bind:value={$post.content} bind:this={ipt}></textarea>
             {:else }
                 <Bg/>
             {/if}
             <div class="sv">{saved}</div>
         </div>
         <div class="prev">
-            <div>
+            {#key !Object.keys($post).length}
+            <div transition:fade >
                 <h1>{title}</h1>
                 <Md value={content}/>
             </div>
+                {/key}
             <Pub/>
             <Res ipt={ipt}/>
         </div>
@@ -139,18 +149,20 @@
     flex: 1;
     max-width: 600px;
     margin-left: 30px;
-    margin-right: 60px;
+    margin-right: 50px;
     overflow: hidden;
-
+   h1{
+     margin-bottom: 20px;
+   }
     & > div {
       overflow: auto;
       word-break: break-all;
       position: absolute;
       left: 0;
       right: 0;
-      top: 0;
-      bottom: 0;
-      padding: 20px;
+      top: 5px;
+      bottom: 5px;
+      padding: 0 20px;
     }
 
 

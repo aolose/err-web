@@ -2,7 +2,6 @@
     import {winAct} from "$lib/store";
     export let onAct
     export let act
-    export let title
     let show=false
     $:{
         show = $winAct === act

@@ -16,15 +16,21 @@
             border: none;
             outline: none;
         }
-        input[type=file]{
+        img{
+            max-width: 90%;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        input[type=file] {
             opacity: 0;
             border: 0;
             display: block;
             position: absolute;
+            width: 100%;
             left: 0;
             right: 0;
             top: 0;
-            bottom:0;
+            bottom: 0;
         }
 
         *::-webkit-scrollbar {
@@ -39,11 +45,13 @@
         *::-webkit-scrollbar-thumb {
             background-color: #075291
         }
-       i{
-           display: block;
-           background: no-repeat center;
-           background-size: contain;
-       }
+
+        i {
+            display: block;
+            background: no-repeat center;
+            background-size: contain;
+        }
+
         html, body {
             font-size: 13px;
             margin: 0;
@@ -56,6 +64,21 @@
             height: 100%;
             width: 100%
         }
+
+        @keyframes ss {
+            0%, 50%, 100% {
+                opacity: 8;
+            }
+            25%, 75% {
+                opacity: .3;
+            }
+        }
+        .ld {
+            transition: .3s ease-in-out;
+            pointer-events: none;
+            animation: ss .3s linear infinite;
+        }
+
     </style>
     %svelte.head%
 </head>

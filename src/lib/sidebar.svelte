@@ -51,7 +51,7 @@
         if (ls.length && (!ls[0] || !ls[0].id)) ls.unshift()
         artList.set([])
         post.set({})
-        winAct.set(0)
+        if($winAct===1)winAct.set(0)
     }
 
     function pub() {

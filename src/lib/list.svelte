@@ -6,7 +6,7 @@
     import {timeFmt} from "$lib/utils";
     import Lg from "$lib/./lg.svelte";
     import {artList, post} from "$lib/store";
-
+    import {slide} from '$lib/transition'
     let res = {}
     let sc
     let sc1
@@ -56,18 +56,26 @@
         <div>
             {#each $artList as p }
                 <div
+                        transition:slide|local
                         class:act={$post.id===p.id}
-                        on:click={()=>post.set({...p})} class="cd">
+                        on:click={()=>{
+                            if($post.id===p.id)post.set({})
+                            else post.set({...p})
+                        }} class="cd">
                     <h3>{p.title}</h3>
                     <p>{(p.content||"").substr(0, 64)}</p>
                     <p class="tm t1">{timeFmt(p.saved)}</p>
                     <p class="tm">{timeFmt(p.updated)}</p>
                     <div class="stu">
-                        {#if p.ver === -1 || p.saved > p.updated}
-                            <span title="draft" class="_0">D</span>
-                        {/if}
-                        {#if p.ver > 0}
-                            <span title="published" class="_1">P</span>
+                        {#if !p.id}
+                            <span title="temporary" class="_2">T</span>
+                            {:else }
+                            {#if p.ver === -1 || p.saved > p.updated}
+                                <span title="draft" class="_0">D</span>
+                            {/if}
+                            {#if p.ver > 0}
+                                <span title="published" class="_1">P</span>
+                            {/if}
                         {/if}
                     </div>
                 </div>
@@ -194,6 +202,9 @@
 
     ._1 {
       background: #1e4994;
+    }
+    ._2 {
+      background: #d03f86;
     }
   }
 
