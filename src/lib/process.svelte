@@ -12,8 +12,8 @@
         if (v) {
             inf = $upLoadInfo[id] || {}
             p = Math.floor(v.reduce((a, b) => a + b, 0) * 100 / v.length)
-            tp = inf.type
-            ext = inf.ext
+            tp = inf.type||''
+            ext = inf.ext||''
             nm = inf.name || ''
             url = inf.url
             if (p === 100) {

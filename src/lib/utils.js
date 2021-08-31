@@ -4,7 +4,6 @@ import {host} from './res'
 import imageCompression from 'browser-image-compression';
 import {upLoadInfo, upLoadSeq} from "$lib/store";
 import {browser} from "$app/env";
-import {ext} from "$lib/types";
 
 export const sseListener = (cb) => {
     return () => {
