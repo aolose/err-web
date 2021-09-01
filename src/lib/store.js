@@ -6,6 +6,7 @@ export const msg = writable(new Date().toLocaleString());
 export const post = writable({})
 export const winAct = writable(0)
 export const tags = writable([])
+export const isLogin = writable(false)
 export const upLoadSeq = writable({})
 export const upLoadInfo = writable({})
 const sq = [];

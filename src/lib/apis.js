@@ -1,6 +1,27 @@
 import {resList, tags} from "$lib/store";
 
 export const apis = {
+    auth: {
+        method: 'POST',
+        path: 'auth',
+        before(_, s, a, st) {
+            if (s.token) {
+                return s.token
+            } else st({
+                status: 200
+            })
+        },
+        after(r, o, b, sess) {
+            if (o.status === 200) {
+                o.status = 302;
+                o.redirect = `/admin`;
+                return sess.token
+            } else {
+                o.status = 200;
+                return {}
+            }
+        }
+    },
     delRes: {
         path: 'res',
         method: 'DELETE',
@@ -12,7 +33,7 @@ export const apis = {
                 const l = [];
                 a.forEach(v => {
                     if (id.indexOf(v.id) === -1)
-                    l.push(v)
+                        l.push(v)
                 })
                 return l
             })
@@ -54,9 +75,6 @@ export const apis = {
         path: 'edit',
         method: 'PUT',
         data: a => a,
-    },
-    content: {
-        path: ({params: {id, ver}}) => `his/${id}/${ver}`,
     },
     delPost: {
         path: (id) => `edit/${id}`,

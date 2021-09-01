@@ -1,33 +1,46 @@
 <script context="module">
+    import {res} from '$lib/res'
     /**
-     * @type {import('@sveltejs/kit').Load}
-     */
-    export async function load({session}) {
-        if (session.token) {
-            return {
-                status: 301,
-                redirect: '/admin'
-            }
-        }
-        return {
-            status: 200
-        }
-    }
+ * @type {import('@sveltejs/kit').Load}
+ */
+
+export const load =res('auth')
 </script>
 <script>
     import {session} from '$app/stores';
-
+    import {cacheSrvData} from "$lib/res";
+    import {browser} from "$app/env";
+    import {isLogin} from "$lib/store";
+    import {popMsg} from "$lib/utils";
+    export let d;
+    export let s;
+    $:{
+        cacheSrvData(s,d)
+        if(browser){
+            localStorage.tk=d||''
+        }
+    }
+    let w=0
     async function login() {
+        if (dis) return;
+        w=1
         const res = (await fetch('/in', {
-            method: 'POST'
+            credentials:"include",
+            method: 'POST',
+            body: '_' + btoa(btoa(usr) + '\u0001' + btoa(pwd))
         }))
-        const json = await res.json();
-        $session.token = json;
+        w=0
+        if(res.ok){
+            isLogin.set(true)
+        }else {
+            return popMsg("wrong account or password!")
+        }
     }
 
     let usr = ""
     let pwd = ""
     let pw
+    $:dis = usr.length < 2 || pwd.length < 4 || pwd.length > 30 || usr.length > 20
 </script>
 <div class="bg">
     <div class="cc">
@@ -41,30 +54,38 @@
                 <input bind:value={pwd} bind:this={pw} type="password" autocomplete="new-password"/>
                 <label>Password</label>
             </div>
-            <button on:click={login}>Login
+            <button class:dis={dis} on:click={login}>Login
             </button>
             <a href="/">{'<  '}Home</a>
         </div>
     </div>
 </div>
 <style lang="scss">
+  .dis{
+    opacity: .5;
+    pointer-events: none;
+  }
   .bg {
     width: 100%;
     height: 100%;
     background: #121622 url("$lib/img/bg.jpg") bottom center;
     background-size: cover;
   }
-
-  a{
+  label{
+    pointer-events: none;
+  }
+  a {
     position: absolute;
     bottom: -40px;
     color: #626f94;
     text-decoration: none;
     left: 15px;
-    &:hover{
+
+    &:hover {
       color: #8db2e9;
     }
   }
+
   .cc {
     height: 100%;
     width: 100%;
@@ -129,7 +150,8 @@
     width: 80%;
     height: 30px;
     border-radius: 3px;
-    &:hover{
+
+    &:hover {
       color: #000;
       background: #00bbff;
     }

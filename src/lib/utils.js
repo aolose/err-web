@@ -2,39 +2,20 @@ import wrk from './up?url';
 import SparkMD5 from 'spark-md5'
 import {host} from './res'
 import imageCompression from 'browser-image-compression';
-import {upLoadInfo, upLoadSeq} from "$lib/store";
-import {browser} from "$app/env";
+import {isLogin, upLoadInfo, upLoadSeq} from "$lib/store";
 
-export const sseListener = (cb) => {
-    return () => {
-        if (browser) {
-            const taskUpdater = new EventSource(host + "/msg", {withCredentials: true});
-            if (taskUpdater) {
-                taskUpdater.onmessage = ({data}) => {
-                    const [key, p, t, e] = data.split(",")
-                    if (t) {
-                        upLoadInfo.update(a => {
-                            return {
-                                ...a, [key]: {
-                                    ...(a[key] || {}),
-                                    id: key,
-                                    type: t,
-                                    ext: e,
-                                }
-                            }
-                        })
-                    }
-                    upLoadSeq.update(u => {
-                        if (u[key]) u[key][p] = 1
-                        return {...u}
-                    })
-                }
-                cb && cb(() => {
-                    taskUpdater.onmessage = null;
-                    taskUpdater.close()
-                })
-            }
-        }
+
+export const popMsg=async (m,yes,no,cls)=>{
+
+}
+
+export const logout = async ()=>{
+    const res = await fetch('/logout', {
+        credentials:"include",
+        method: 'POST',
+    })
+    if(res.ok){
+        isLogin.set(false)
     }
 }
 
@@ -121,7 +102,6 @@ export async function upload() {
     })
     runTask()
 }
-
 
 export const uploader = function (k, p, t, f, nm, tp) {
     const tk = (tasks[k] = tasks[k] || [])

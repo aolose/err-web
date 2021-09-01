@@ -7,8 +7,8 @@
     "preview": "svelte-kit preview"
   },
   "devDependencies": {
-    "@sveltejs/kit": "next",
-    "svelte": "^3.42.3"
+    "@sveltejs/kit": "^1.0.0-next.160",
+    "svelte": "^3.42.4"
   },
   "type": "module",
   "dependencies": {

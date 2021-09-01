@@ -1,10 +1,10 @@
 import {browser} from "$app/env";
 import {apis} from "$lib/apis";
+import {logout} from './utils'
 
 export const host = "http://localhost:8880"
-
 const getRes = async (ctx, name) => {
-    const {page, fetch, session, context} = ctx;
+    const {page, fetch, session: sess, context} = ctx;
     const cfg = apis[name] || {};
     const {
         path,
@@ -15,26 +15,31 @@ const getRes = async (ctx, name) => {
         data,
         done,
         method = 'GET'
-    } = typeof cfg === 'function' ? cfg(page, session, context) : cfg;
-    const p = typeof path === 'function' ? path(page, session, context) : path;
-    let d = typeof data === 'function' ? data(page, session, context) : data;
+    } = typeof cfg === 'function' ? cfg(page, sess, context) : cfg;
+    const p = typeof path === 'function' ? path(page, sess, context) : path;
+    let d = typeof data === 'function' ? data(page, sess, context) : data;
     let url = `${host}/${p}`;
     let err;
     const cf = {
+        credentials:"include",
         method
     }
+    let s = null;
     if (before) {
-        const a = before(d, session, page)
+        const a = before(d, sess, page, a => s = a)
         if (a !== undefined) d = a;
     }
+    if (s) return s;
     if (d) {
         Object.keys(d).forEach(a => {
             if (d[a] === undefined || d[a] === 0 || d[a] === "" || d[a] === null) {
                 delete d[a]
             }
         })
-        if (/post|put|patch/i.test(method)) cf.body = JSON.stringify(d);
-        else {
+        if (/post|put|patch/i.test(method)) {
+            if (typeof d === "string") cf.body = d;
+            else cf.body = JSON.stringify(d);
+        } else {
             const u = [];
             Object.keys(d).forEach(k => {
                 const v = d[k];
@@ -72,7 +77,7 @@ const getRes = async (ctx, name) => {
         }
         if (cache) {
             if (done) {
-                done(cache, page, session, context)
+                done(cache, page, sess, context)
             }
             return {
                 status: 200,
@@ -94,11 +99,11 @@ const getRes = async (ctx, name) => {
             console.log(e)
         }
         if (after) {
-            const a = after(r, o, page)
+            const a = after(r, o, page, sess)
             if (a !== undefined) r = a;
         }
         if (done) {
-            done(r, page, session, context)
+            done(r, page, sess, context)
         }
         if (cacheTime && browser) {
             const c = {
@@ -114,6 +119,9 @@ const getRes = async (ctx, name) => {
             o.props.s = [cacheKey, cacheTime * 1e3, sto]
         }
     } else {
+        if (re.status === 403) {
+            await logout()
+        }
         o.error = err && err.message || new Error(`Could not load ${url}`)
     }
     return o
@@ -130,7 +138,6 @@ export const cacheSrvData = (a, d) => {
         [localStorage, sessionStorage][s][k] = JSON.stringify(o);
     }
 }
-
 export const query = async (name, d, s) => {
     const ctx = {fetch, page: d, session: s}
     const res = await getRes(ctx, name);

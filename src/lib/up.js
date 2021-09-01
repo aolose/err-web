@@ -11,7 +11,7 @@ onmessage = async function ({data,target}) {
         fd.append('data', data)
         await fetch(host + '/upload', {
             method: 'POST',
-            credentials: 'same-origin',
+            credentials:"include",
             body: fd
         });
         target.postMessage("ok")

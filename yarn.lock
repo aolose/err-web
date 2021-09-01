@@ -31,20 +31,20 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@sveltejs/kit@next":
-  version "1.0.0-next.146"
-  resolved "https://registry.npmjs.org/@sveltejs/kit/-/kit-1.0.0-next.146.tgz#bb0a97a86afbf644b7c389b68a7aba885429fd55"
-  integrity sha512-MSatcaCRfjl88Prd5mW4pNOJ3Gsr525+Vjr24MoKtyTt6PZQmTfQsDVwyP93exn/6w2xl9uMCW6cFpDVBu7jSg==
+"@sveltejs/kit@^1.0.0-next.160":
+  version "1.0.0-next.160"
+  resolved "https://registry.npmjs.org/@sveltejs/kit/-/kit-1.0.0-next.160.tgz#e2764c465760cf202fd2f3d0dbd36739a7b2c305"
+  integrity sha512-JmacpK+VsppUKDQu1B3oJ70SnE9BXb/PSAP3f91K/DMnaSEGj7vtHn/3e6l7Mop12t1PkBk5lImh/ULqBO+YfA==
   dependencies:
-    "@sveltejs/vite-plugin-svelte" "^1.0.0-next.14"
+    "@sveltejs/vite-plugin-svelte" "^1.0.0-next.16"
     cheap-watch "^1.0.3"
     sade "^1.7.4"
-    vite "^2.4.3"
+    vite "^2.5.2"
 
-"@sveltejs/vite-plugin-svelte@^1.0.0-next.14":
-  version "1.0.0-next.15"
-  resolved "https://registry.npmjs.org/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-1.0.0-next.15.tgz#12e853677387aa0891b03bf69afcc678fbf8f8e2"
-  integrity sha512-8yGX7PxaqtvWw+GHiO2DV7lZ4M7DwIrFq+PgZGZ9X09PuoSeaWszm76GWQXJMKHoPPhdA9084662en9qbv4aRw==
+"@sveltejs/vite-plugin-svelte@^1.0.0-next.16":
+  version "1.0.0-next.19"
+  resolved "https://registry.npmjs.org/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-1.0.0-next.19.tgz#9646abc2cd1982146db4bb341aafdb5f32f19dd2"
+  integrity sha512-q9hHkMzodScwDq64pNaWhekpj97vWg3wO9T0rqd8bC2EsrBQs2uD1qMJvDqlNd63AbO2uSJMGo+TQ0Xt2xgyYg==
   dependencies:
     "@rollup/pluginutils" "^4.1.1"
     debug "^4.3.2"
@@ -399,10 +399,10 @@ error-ex@^1.3.1:
   dependencies:
     is-arrayish "^0.2.1"
 
-esbuild@^0.12.8:
-  version "0.12.19"
-  resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.12.19.tgz#ab849766705a5093df5acd8ec2f6ba2159a38a6c"
-  integrity sha512-5NuT1G6THW7l3fsSCDkcPepn24R0XtyPjKoqKHD8LfhqMXzCdz0mrS9HgO6hIhzVT7zt0T+JGbzCqF5AH8hS9w==
+esbuild@^0.12.17:
+  version "0.12.24"
+  resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.12.24.tgz#21966fad25a80f368ed308101e88102bce0dc68f"
+  integrity sha512-C0ibY+HsXzYB6L/pLWEiWjMpghKsIc58Q5yumARwBQsHl9DXPakW+5NI/Y9w4YXiz0PEP6XTGTT/OV4Nnsmb4A==
 
 escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -1420,10 +1420,10 @@ svelte-preprocess@^4.8.0:
     detect-indent "^6.0.0"
     strip-indent "^3.0.0"
 
-svelte@^3.42.3:
-  version "3.42.3"
-  resolved "https://registry.npmjs.org/svelte/-/svelte-3.42.3.tgz#a7687a43ff6aa12263e03cf56219cd21eff5372d"
-  integrity sha512-pbdtdNZEx2GBqSM6XEgPoHbwtvWBwFLt/1bRmzsyXZO+i424wFnPe7O5B3GOJDPFSxPRztumAW3mL5LPzecWUg==
+svelte@^3.42.4:
+  version "3.42.4"
+  resolved "https://registry.npmjs.org/svelte/-/svelte-3.42.4.tgz#838ed98fa7b26fc5fffe4df0d7ba345f1c54cf4f"
+  integrity sha512-DqC0AmDdBrrbIA+Kzl3yhBb6qCn4vZOAfxye2pTnIpinLegyagC5sLI8Pe9GPlXu9VpHBXIwpDDedpMfu++epA==
 
 tar@^6.0.2:
   version "6.1.8"
@@ -1523,12 +1523,12 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-vite@^2.4.3:
-  version "2.4.4"
-  resolved "https://registry.npmjs.org/vite/-/vite-2.4.4.tgz#8c402a07ad45f168f6eb5428bead38f3e4363e47"
-  integrity sha512-m1wK6pFJKmaYA6AeZIUXyiAgUAAJzVXhIMYCdZUpCaFMGps0v0IlNJtbmPvkUhVEyautalajmnW5X6NboUPsnw==
+vite@^2.5.2:
+  version "2.5.2"
+  resolved "https://registry.npmjs.org/vite/-/vite-2.5.2.tgz#3963a4ec1e6ecae49359eddfdd67f6cb1e6e07a1"
+  integrity sha512-JK5uhiVyMqHiAJbgBa8rCvpP8bEhAE9dKDv1gCmP+EUP2FSPmEeW3WXlCXauPB3MDa8behPW+ntyNXqnGaxslg==
   dependencies:
-    esbuild "^0.12.8"
+    esbuild "^0.12.17"
     postcss "^8.3.6"
     resolve "^1.20.0"
     rollup "^2.38.5"

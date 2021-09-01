@@ -1,16 +1,9 @@
 <script>
-    import {session} from '$app/stores'
-
-    async function logout() {
-        const res = await fetch('/logout', {
-            method: 'POST',
-        })
-        if (res.ok) {
-            $session.token = '';
-        }
-    }
+    import {logout, popMsg} from "$lib/utils";
 </script>
-<button class="out" on:click={logout}></button>
+<button class="out" on:click={()=>{
+    popMsg("Confirm to sign out?").then(logout)
+}}></button>
 <style lang="scss">
   .out {
     border-radius: 50%;
@@ -24,6 +17,7 @@
     opacity: .8;
     top: 3px;
     margin: 10px;
+
     &:hover {
       opacity: 1;
       border-color: #1076d2;

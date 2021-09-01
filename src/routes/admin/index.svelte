@@ -3,14 +3,15 @@
     import Md from '$lib/md.svelte'
     import Pub from '$lib/pubWin.svelte'
     import Res from '$lib/resWin.svelte'
-    import {artList, post, winAct} from "$lib/store";
+    import {artList, post, upLoadInfo, upLoadSeq, winAct} from "$lib/store";
     import Ld from "$lib/loading.svelte";
     import Bg from "$lib/empty.svelte";
     import {onDestroy, onMount} from "svelte";
-    import {query} from "$lib/res";
+    import {host, query} from "$lib/res";
     import {slide} from '$lib/transition'
     import {fade} from "svelte/transition";
-    import {errorCatch, sseListener, timeFmt} from "$lib/utils";
+    import {errorCatch, timeFmt} from "$lib/utils";
+    import {browser} from "$app/env";
 
     let res
     let ipt
@@ -41,11 +42,38 @@
     }
 
     query('loadTags')
-    let close = () => {
-    }
-    onMount(sseListener(c => {
-        close = c
-    }))
+    let close = () => {}
+    onMount(() => {
+            if (browser) {
+                const taskUpdater = new EventSource(host + "/msg" , {withCredentials: true});
+                if (taskUpdater) {
+                    taskUpdater.onmessage = ({data}) => {
+                        const [key, p, t, e] = data.split(",")
+                        if (t) {
+                            upLoadInfo.update(a => {
+                                return {
+                                    ...a, [key]: {
+                                        ...(a[key] || {}),
+                                        id: key,
+                                        type: t,
+                                        ext: e,
+                                    }
+                                }
+                            })
+                        }
+                        upLoadSeq.update(u => {
+                            if (u[key]) u[key][p] = 1
+                            return {...u}
+                        })
+                    }
+                    close=() => {
+                        taskUpdater.onmessage = null;
+                        taskUpdater.close()
+                    }
+                }
+            }
+        }
+    )
     onDestroy(() => close())
     onDestroy(post.subscribe(p => {
         syncList(p, p.id)
@@ -80,10 +108,11 @@
                 const idx = $artList.findIndex(a => a && !a.id)
                 if (idx !== -1) {
                     const ls = [...$artList];
-                    if(!ls.find(a=>a.id===$post.id)){
+                    if (!ls.find(a => a.id === $post.id)) {
                         ls[idx] = $post.id
                         artList.set(ls)
-                    };
+                    }
+                    ;
                 }
             }
             pid = $post.id
@@ -118,11 +147,11 @@
         </div>
         <div class="prev">
             {#key !Object.keys($post).length}
-            <div transition:fade >
-                <h1>{title}</h1>
-                <Md value={content}/>
-            </div>
-                {/key}
+                <div transition:fade>
+                    <h1>{title}</h1>
+                    <Md value={content}/>
+                </div>
+            {/key}
             <Pub/>
             <Res ipt={ipt}/>
         </div>
@@ -151,9 +180,11 @@
     margin-left: 30px;
     margin-right: 50px;
     overflow: hidden;
-   h1{
-     margin-bottom: 20px;
-   }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
     & > div {
       overflow: auto;
       word-break: break-all;
