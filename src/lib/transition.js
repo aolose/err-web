@@ -1,4 +1,20 @@
-import {cubicOut, cubicInOut} from 'svelte/easing'
+import {quadInOut,cubicInOut} from 'svelte/easing'
+
+export function jump(node,{
+    y = 20,
+    duration = 200,
+    easing = quadInOut
+}){
+    const style = getComputedStyle(node);
+    let [,a,b,c,d,e,f]= (style.transform.match(/matrix\(([\-0-9.]+), ([\-0-9.]+), ([\-0-9.]+), ([\-0-9.]+), ([\-0-9.]+), ([\-0-9.]+)\)/)||[]).map(a=>+a)
+    return {
+        duration,
+        easing,
+        css:t=>{
+            return `transform: matrix(${a}, ${b}, ${c}, ${d}, ${e}, ${f+(1-t)*y})`
+        }
+    }
+}
 
 export function slide(
     node,

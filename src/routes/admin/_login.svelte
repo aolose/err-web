@@ -1,5 +1,6 @@
 <script context="module">
     import {res} from '$lib/res'
+    import {jump} from '$lib/transition'
     /**
  * @type {import('@sveltejs/kit').Load}
  */
@@ -7,19 +8,8 @@
 export const load =res('auth')
 </script>
 <script>
-    import {session} from '$app/stores';
-    import {cacheSrvData} from "$lib/res";
-    import {browser} from "$app/env";
     import {isLogin} from "$lib/store";
     import {popMsg} from "$lib/utils";
-    export let d;
-    export let s;
-    $:{
-        cacheSrvData(s,d)
-        if(browser){
-            localStorage.tk=d||''
-        }
-    }
     let w=0
     async function login() {
         if (dis) return;
@@ -39,19 +29,56 @@ export const load =res('auth')
 
     let usr = ""
     let pwd = ""
-    let pw
+    let iu,ip
     $:dis = usr.length < 2 || pwd.length < 4 || pwd.length > 30 || usr.length > 20
+    function nx(e){
+        if(e.code==='Enter'){
+            if(this===iu){
+                ip.focus()
+            }else {
+                if(!dis){
+                    login()
+                }
+            }
+        }
+    }
+
+    let ke=1,bk=0,br
+    let ft
+    function go(){
+        ke=Math.random()
+        const {offsetLeft:lf,offsetWidth:w0,offsetParent:{offsetWidth:w1}}=br;
+        const lft = +getComputedStyle(br).left.replace('px','');
+        const step=20;
+        if(!bk){
+            ft=lft-step
+            if(lf<=w0)bk=1
+        }else {
+            ft=lft+step
+            if(lf+w0>w1)bk=0
+        }
+    }
 </script>
 <div class="bg">
     <div class="cc">
         <div class="bx">
-            <i></i>
+           <div class="br"  style={`left:${ft}px`} class:bk={bk} bind:this={br}>
+               {#key ke}<i in:jump={{y:-18,duration:150}}></i>{/key}
+           </div>
             <div class="r" class:a={usr}>
-                <input bind:value={usr} type="text"/>
+                <input
+                        on:input={go}
+                        bind:value={usr}
+                       bind:this={iu}
+                       on:keydown={nx}
+                       type="text" />
                 <label>Username</label>
             </div>
             <div class="r" class:a={pwd}>
-                <input bind:value={pwd} bind:this={pw} type="password" autocomplete="new-password"/>
+                <input bind:value={pwd}
+                       bind:this={ip}
+                       on:keydown={nx}
+                       type="password" autocomplete="new-password" on:input={go}/>
                 <label>Password</label>
             </div>
             <button class:dis={dis} on:click={login}>Login
@@ -156,17 +183,26 @@ export const load =res('auth')
       background: #00bbff;
     }
   }
-
-  i {
+  .br{
     transform: translate3d(-50%, 0, 0);
-    border-radius: 50%;
     left: 50%;
     top: -75px;
-    pointer-events: none;
-    background: url("$lib/img/fav.png") center no-repeat;
-    background-size: 100% auto;
+    &.bk{
+      transform: translate3d(-50%, 0, 0) rotateY(180deg);
+    }
     width: 80px;
     height: 80px;
     position: absolute;
+    transition: .1s ease-in-out;
+  }
+  i {
+    transform: translate3d(0, 0, 0);
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background: url("$lib/img/fav.png") center no-repeat;
+    background-size: 100% auto;
+    width: inherit;
+    height: inherit;
   }
 </style>

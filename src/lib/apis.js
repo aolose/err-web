@@ -1,4 +1,4 @@
-import {resList, tags} from "$lib/store";
+import {isLogin, resList, tags} from "$lib/store";
 
 export const apis = {
     auth: {
@@ -11,15 +11,13 @@ export const apis = {
                 status: 200
             })
         },
-        after(r, o, b, sess) {
+        after(r, o) {
             if (o.status === 200) {
-                o.status = 302;
-                o.redirect = `/admin`;
-                return sess.token
+                isLogin.set(true)
             } else {
-                o.status = 200;
-                return {}
+                isLogin.set(false)
             }
+            o.status = 200;
         }
     },
     delRes: {
