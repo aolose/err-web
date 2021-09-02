@@ -4,7 +4,7 @@
     import {timeFmt} from "$lib/utils";
 
     export let title
-    export let type=0
+    export let type = 0
     export let content
     export let show
     export let ipt
@@ -13,11 +13,18 @@
 </script>
 <div class="edit">
     {#if show}
-        <input
-                transition:slide|local={{horizon:1}}
-                bind:value={title}/>
+        {#if type === 0}
+            <input
+                    transition:slide={{horizon:1}}
+                    bind:value={title}/>
+        {/if}
+        {#if type === 1}
+            <textarea class="h"
+                      transition:slide={{horizon:1}}
+                    bind:value={title}></textarea>
+        {/if}
         <textarea
-                transition:slide|local={{horizon:1}}
+                transition:slide={{horizon:1}}
                 bind:value={content} bind:this={ipt}></textarea>
     {:else }
         <Bg type={type}/>
@@ -38,12 +45,10 @@
       flex: 1;
       overflow: auto;
     }
-
     input {
       height: 40px;
       margin-bottom: 10px;
     }
-
     input, textarea {
       color: #8db2e9;
       line-height: 1.5;
@@ -53,6 +58,11 @@
       padding: 10px;
       resize: none;
       display: block;
+    }
+    .h{
+      flex: 0.5;
+      margin-bottom: 20px;
+      margin-top: 10px;
     }
   }
 
