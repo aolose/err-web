@@ -50,10 +50,12 @@
 
     let ke = 1, bk = 0, br
     let ft
-
+    let mf
+    let ftt=''
     function go() {
         ke = Math.random()
         const {offsetLeft: lf, offsetWidth: w0, offsetParent: {offsetWidth: w1}} = br;
+        mf=120*lf/220
         const lft = +getComputedStyle(br).left.replace('px', '');
         const step = 20;
         if (!bk) {
@@ -63,7 +65,9 @@
             ft = lft + step
             if (lf + w0 > w1) bk = 0
         }
+        ftt = `transform:translate3d(${mf}px,0,0)`
     }
+
 </script>
 <div class="bg">
     <div class="cc">
@@ -71,10 +75,10 @@
             {#if w}
                 <LD/>
             {/if}
+            <div class="msg" style={ftt}>
+                <Tm defaultText="Have a nice day !"/>
+            </div>
             <div class="br" style={`left:${ft}px`} class:bk={bk} bind:this={br}>
-                <div class="msg">
-                    <Tm defaultText="Have a nice day !"/>
-                </div>
                 {#if $msg}<div class="v"></div>{/if}
                 {#key ke}<i in:jump={{y:-18,duration:150}}></i>{/key}
             </div>
@@ -109,21 +113,38 @@
     height: 1px;
     width: 13px;
     border-radius: 3px;
-    bottom: 95px;
-    left: 70px;
+    bottom: 102px;
+    left: 50px;
   }
   .msg {
-    margin-left: 30px;
+    transition: .3s ease-in-out;
     color: white;
     width: 200px;
+    transform:translate3d(50px,0,0) ;
     text-align: center;
-    left: 50%;
-    transform: translate3d(-50%, 0, 0);
-    bottom: 110px;
+    bottom: 328px;
     position: absolute;
     font-size: 20px;
   }
 
+  .br {
+    transform: translate3d(-50%, 0, 0);
+    left: 50%;
+    top: -75px;
+
+    &.bk {
+      transform: translate3d(-50%, 0, 0) rotateY(180deg);
+      .v{
+        left: 10px;
+        transform: rotate(50deg)
+      }
+    }
+
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    transition: .1s ease-in-out;
+  }
   .dis {
     opacity: .5;
     pointer-events: none;
@@ -221,25 +242,6 @@
       color: #000;
       background: #00bbff;
     }
-  }
-
-  .br {
-    transform: translate3d(-50%, 0, 0);
-    left: 50%;
-    top: -75px;
-
-    &.bk {
-      transform: translate3d(-50%, 0, 0) rotateY(180deg);
-
-      .msg {
-        transform: translate3d(-50%, 0, 0) rotateY(180deg);
-      }
-    }
-
-    width: 80px;
-    height: 80px;
-    position: absolute;
-    transition: .1s ease-in-out;
   }
 
   i {

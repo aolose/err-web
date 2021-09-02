@@ -9,32 +9,38 @@
     let pr = '';
     let a = 0;
     let t = -1;
+    let start=0
     export let defaultText = ""
     onDestroy(msg.subscribe(() => {
         pv = ''
     }));
+
     $:{
-        clearTimeout(t);
-        if ($msg && ($msg + ' ' !== pv)) {
-            t = setTimeout(function () {
-                if (a++ < 3) {
-                    pr = base[Math.floor(Math.random() * l)];
-                } else {
-                    clearTimeout(t);
-                    t = -1;
-                    a = 0;
-                    pr = '';
-                    pv = $msg.substr(0, pv.length + 1) + ' ';
-                }
-            }, 30)
-        } else {
-            if ($msg !== defaultText)
+        if(defaultText&&!start){
+            msg.set(defaultText)
+            start=1
+        }
+        if(start){
+            clearTimeout(t);
+            if ($msg && ($msg + ' ' !== pv)) {
                 t = setTimeout(function () {
-                    setTimeout(function () {
+                    if (a++ < 3) {
+                        pr = base[Math.floor(Math.random() * l)];
+                    } else {
+                        clearTimeout(t);
+                        t = -1;
+                        a = 0;
+                        pr = '';
+                        pv = $msg.substr(0, pv.length + 1) + ' ';
+                    }
+                }, 30)
+            } else {
+                if ($msg !== defaultText)
+                    t = setTimeout(function () {
                         msg.set(defaultText)
                         pv = ''
-                    }, 800)
-                }, 5000)
+                    }, 5000)
+            }
         }
     }
 </script>
