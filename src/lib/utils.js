@@ -9,14 +9,17 @@ export const popMsg=async (m,yes,no,cls)=>{
 
 }
 
-export const logout = async ()=>{
-    const res = await fetch('/logout', {
+export const logout = ()=>{
+    fetch('/logout', {
         credentials:"include",
         method: 'POST',
+    }).then(res=>{
+        if(res.ok){
+            isLogin.set(false)
+        }
+    }).catch(e=>{
+       console.error(e)
     })
-    if(res.ok){
-        isLogin.set(false)
-    }
 }
 
 const md5 = async file => {

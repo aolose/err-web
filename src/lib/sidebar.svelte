@@ -1,14 +1,16 @@
 <script>
     import Msg from "./msg.svelte"
     import Out from "./out.svelte"
+    import SF from "./safe.svelte"
     import File from "./file.svelte"
     import Del from "./del.svelte"
     import Cmt from "./cmt.svelte"
     import Und from "./und.svelte"
-    import {post, artList, winAct} from "./store";
+    import {post, artList, winAct, isLogin} from "./store";
     import Btn from "./btn.svelte"
     import {query} from "./res";
     import {errorCatch} from "$lib/utils";
+    import {goto} from "$app/navigation";
 
     function upu() {
         if ($post.id)
@@ -80,7 +82,10 @@
     <Btn cls="d" fn={()=> winAct.set($winAct === 2 ? 0 : 2)}>
         <File/>
     </Btn>
-    <Btn cls="f">
+    <Btn cls="g">
+        <SF/>
+    </Btn>
+    <Btn cls="f" fn={()=>isLogin.set(2)}>
         <Msg/>
     </Btn>
 </div>
@@ -113,6 +118,9 @@
       }
 
       .f {
+        color: #cb9647
+      }
+      .g {
         color: #0ea701
       }
 

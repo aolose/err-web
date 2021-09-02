@@ -7,12 +7,3 @@ export async function getSession({headers}) {
           token:tk
     }
 }
-
-/** @type {import('@sveltejs/kit').ServerFetch} */
-export async function serverFetch(request) {
-    request = new Request(
-        request.url,
-        request
-    );
-    return fetch(request);
-}
