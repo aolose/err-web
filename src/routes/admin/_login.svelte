@@ -1,77 +1,90 @@
 <script context="module">
     import {res} from '$lib/res'
     import {jump} from '$lib/transition'
-    /**
- * @type {import('@sveltejs/kit').Load}
- */
+    import LD from '$lib/loading.svelte'
 
-export const load =res('auth')
+    /**
+     * @type {import('@sveltejs/kit').Load}
+     */
+
+    export const load = res('auth')
 </script>
 <script>
-    import {isLogin} from "$lib/store";
-    import {popMsg} from "$lib/utils";
-    let w=0
+    import {isLogin, msg} from "$lib/store";
+    import Tm from "$lib/typeMsg.svelte";
+
+    let w = 0
+
     async function login() {
         if (dis) return;
-        w=1
+        w = 1
         const res = (await fetch('/in', {
-            credentials:"include",
+            credentials: "include",
             method: 'POST',
             body: '_' + btoa(btoa(usr) + '\u0001' + btoa(pwd))
         }))
-        w=0
-        if(res.ok){
+        if (res.ok) {
             isLogin.set(true)
-        }else {
-            return popMsg("wrong account or password!")
+        } else {
+            msg.set("username or password is incorrect !")
         }
+        setTimeout(() => w = 0, 1e3)
     }
 
     let usr = ""
     let pwd = ""
-    let iu,ip
+    let iu, ip
     $:dis = usr.length < 2 || pwd.length < 4 || pwd.length > 30 || usr.length > 20
-    function nx(e){
-        if(e.code==='Enter'){
-            if(this===iu){
+
+    function nx(e) {
+        if (e.code === 'Enter') {
+            if (this === iu) {
                 ip.focus()
-            }else {
-                if(!dis){
+            } else {
+                if (!dis) {
                     login()
                 }
             }
         }
     }
 
-    let ke=1,bk=0,br
+    let ke = 1, bk = 0, br
     let ft
-    function go(){
-        ke=Math.random()
-        const {offsetLeft:lf,offsetWidth:w0,offsetParent:{offsetWidth:w1}}=br;
-        const lft = +getComputedStyle(br).left.replace('px','');
-        const step=20;
-        if(!bk){
-            ft=lft-step
-            if(lf<=w0)bk=1
-        }else {
-            ft=lft+step
-            if(lf+w0>w1)bk=0
+
+    function go() {
+        ke = Math.random()
+        const {offsetLeft: lf, offsetWidth: w0, offsetParent: {offsetWidth: w1}} = br;
+        const lft = +getComputedStyle(br).left.replace('px', '');
+        const step = 20;
+        if (!bk) {
+            ft = lft - step
+            if (lf <= w0) bk = 1
+        } else {
+            ft = lft + step
+            if (lf + w0 > w1) bk = 0
         }
     }
 </script>
 <div class="bg">
     <div class="cc">
         <div class="bx">
-           <div class="br"  style={`left:${ft}px`} class:bk={bk} bind:this={br}>
-               {#key ke}<i in:jump={{y:-18,duration:150}}></i>{/key}
-           </div>
+            {#if w}
+                <LD/>
+            {/if}
+            <div class="br" style={`left:${ft}px`} class:bk={bk} bind:this={br}>
+                <div class="msg">
+                    <Tm defaultText="Have a nice day !"/>
+                </div>
+                {#if $msg}<div class="v"></div>{/if}
+                {#key ke}<i in:jump={{y:-18,duration:150}}></i>{/key}
+            </div>
             <div class="r" class:a={usr}>
                 <input
                         on:input={go}
                         bind:value={usr}
-                       bind:this={iu}
-                       on:keydown={nx}
-                       type="text" />
+                        bind:this={iu}
+                        on:keydown={nx}
+                        type="text"/>
                 <label>Username</label>
             </div>
             <div class="r" class:a={pwd}>
@@ -88,19 +101,45 @@ export const load =res('auth')
     </div>
 </div>
 <style lang="scss">
-  .dis{
+  .v{
+    position: absolute;
+    opacity: .8;
+    transform: rotate(-50deg);
+    background: white;
+    height: 1px;
+    width: 13px;
+    border-radius: 3px;
+    bottom: 95px;
+    left: 70px;
+  }
+  .msg {
+    margin-left: 30px;
+    color: white;
+    width: 200px;
+    text-align: center;
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+    bottom: 110px;
+    position: absolute;
+    font-size: 20px;
+  }
+
+  .dis {
     opacity: .5;
     pointer-events: none;
   }
+
   .bg {
     width: 100%;
     height: 100%;
     background: #121622 url("$lib/img/bg.jpg") bottom center;
     background-size: cover;
   }
-  label{
+
+  label {
     pointer-events: none;
   }
+
   a {
     position: absolute;
     bottom: -40px;
@@ -183,18 +222,26 @@ export const load =res('auth')
       background: #00bbff;
     }
   }
-  .br{
+
+  .br {
     transform: translate3d(-50%, 0, 0);
     left: 50%;
     top: -75px;
-    &.bk{
+
+    &.bk {
       transform: translate3d(-50%, 0, 0) rotateY(180deg);
+
+      .msg {
+        transform: translate3d(-50%, 0, 0) rotateY(180deg);
+      }
     }
+
     width: 80px;
     height: 80px;
     position: absolute;
     transition: .1s ease-in-out;
   }
+
   i {
     transform: translate3d(0, 0, 0);
     position: absolute;

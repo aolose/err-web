@@ -1,11 +1,13 @@
 <script>
-    import Msg from '$lib/sysmsg.svelte'
+    import Msg from '$lib/typeMsg.svelte'
     import Mu from '$lib/sidebar.svelte'
 </script>
 <div class="adm">
     <div class="ctx">
         <slot/>
-        <Msg/>
+        <div class="msg">
+            <Msg defaultText="version 0.0.1"/>
+        </div>
     </div>
     <Mu/>
 </div>
@@ -16,6 +18,18 @@
     height: 100%;
     width: 100%;
     background: #121622;
+  }
+
+  .msg {
+    position: absolute;
+    right: 30px;
+    bottom: 15px;
+    max-width: 70%;
+    color: #00a1ff;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .ctx {

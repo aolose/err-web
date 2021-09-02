@@ -1,14 +1,69 @@
-<span class="ld">Loading...</span>
-<style>
-    .ld{
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        top: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255,255,255,.7);
+<script>
+    import {fade} from "svelte/transition";
+    import {onDestroy} from "svelte";
+
+    let s = 0
+    let v = 1
+    const t = setInterval(function () {
+        s = s + v
+        if (s === 0 || s === 3) v = -v;
+    }, 1e3)
+    onDestroy(() => {
+        return () => clearInterval(t)
+    })
+    export let text = "loading"
+</script>
+<span
+        transition:fade
+        class="load">
+     <i></i>
+    <span class="a">
+        {text}
+        <span class="b">{'.'.repeat(s)}</span>
+    </span>
+</span>
+<style lang="scss">
+  @keyframes rd {
+    0%, 100% {
+      opacity: .8;
+      transform-origin: 50% 50.5%;
     }
+    50% {
+      opacity: .5;
+    }
+    0% {
+      transform: rotate(0);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  i {
+    margin-bottom: 10px;
+    width: 30px;
+    height: 30px;
+    background: url("./img/ld.svg") no-repeat center;
+    background-size: 80% auto;
+    animation: rd .8s linear infinite;
+  }
+
+  .load {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background: transparentize(#09192a, .2);
+    backdrop-filter: blur(1px);
+    border-radius: inherit;
+    z-index: 100;
+  }
+  span{
+    color: #2d9bc5;
+  }
 </style>

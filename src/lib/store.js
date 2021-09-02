@@ -2,7 +2,7 @@ import {writable} from 'svelte/store';
 
 export const artList = writable([]);
 export const resList = writable([]);
-export const msg = writable(new Date().toLocaleString());
+export const msg = writable("");
 export const post = writable({})
 export const winAct = writable(0)
 export const tags = writable([])

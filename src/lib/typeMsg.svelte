@@ -3,14 +3,13 @@
     import {onDestroy} from "svelte";
 
     const base = 'abcdefghijklmnopqrstuvwxyz齉齾爩鱻' +
-        '麤龗灪吁龖厵滟爨癵籱饢驫鲡鹂鸾麣纞虋讟钃骊郁鸜' +
-        '麷鞻韽韾响顟顠饙饙騳騱饶饐ㄅㄧㄥㄒㄧㄢㄘㄨ';
+        '癵籱饢驫鲡鹂鸾麣纞虋讟麷鞻韽韾响顟顠饙ㄅㄧㄥㄒㄧㄢㄘㄨ';
     const l = base.length;
     let pv = '';
     let pr = '';
     let a = 0;
     let t = -1;
-    const defaultText = "version 0.0.1"
+    export let defaultText = ""
     onDestroy(msg.subscribe(() => {
         pv = ''
     }));
@@ -27,14 +26,14 @@
                     pr = '';
                     pv = $msg.substr(0, pv.length + 1) + ' ';
                 }
-            }, 50)
+            }, 30)
         } else {
             if ($msg !== defaultText)
                 t = setTimeout(function () {
                     setTimeout(function () {
                         msg.set(defaultText)
                         pv = ''
-                    }, 1000)
+                    }, 800)
                 }, 5000)
         }
     }
@@ -42,16 +41,15 @@
 <p>
     {pv}{pr}
 </p>
-<style>
-    p {
-        white-space: nowrap;
-        position: absolute;
-        right: 30px;
-        bottom: 15px;
-        max-width: 70%;
-        overflow: hidden;
-        text-align: right;
-        text-overflow: ellipsis;
-        color: #00a1ff;
-    }
+<style lang="scss">
+  @import "./font/font.css";
+
+  p {
+    font-size: inherit;
+    font-family: 'Architects Daughter', -apple-system,
+    BlinkMacSystemFont, PingFang SC, Helvetica Neue, STHeiti,
+    Microsoft Yahei, Tahoma, Simsun, sans-serif;
+    color: inherit;
+    text-align: inherit;
+  }
 </style>
