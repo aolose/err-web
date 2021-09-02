@@ -5,9 +5,10 @@
     export let search
     export let add
     export let hi
+    export let icon =0
 </script>
 
-<Lg/>
+<Lg type={icon}/>
 <div class="sc">
     <Sc bind:value={value} search={search}/>
     <button class="add" class:hi={hi} on:click={add}></button>

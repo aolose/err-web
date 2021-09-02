@@ -4,9 +4,9 @@
 import {isLogin} from "$lib/store";
 export async function load({session}) {
         if (!session.token) {
-            isLogin.set(false)
+            isLogin.set(0)
         }else {
-            isLogin.set(true)
+            isLogin.set(1)
         }
         return {
             status: 200

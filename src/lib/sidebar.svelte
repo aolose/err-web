@@ -5,12 +5,12 @@
     import File from "./file.svelte"
     import Del from "./del.svelte"
     import Cmt from "./cmt.svelte"
+    import Art from "./art.svelte"
     import Und from "./und.svelte"
     import {post, artList, winAct, isLogin} from "./store";
     import Btn from "./btn.svelte"
     import {query} from "./res";
     import {errorCatch} from "$lib/utils";
-    import {goto} from "$app/navigation";
 
     function upu() {
         if ($post.id)
@@ -53,7 +53,7 @@
         if (ls.length && (!ls[0] || !ls[0].id)) ls.unshift()
         artList.set([])
         post.set({})
-        if($winAct===1)winAct.set(0)
+        if ($winAct === 1) winAct.set(0)
     }
 
     function pub() {
@@ -63,29 +63,36 @@
 </script>
 <div class="mu">
     <Out/>
-    {#if $post.ver}
-        <!--        <Btn cls="e">-->
-        <!--            <Opt/>-->
-        <!--        </Btn>-->
-        <Btn cls="a" fn={pub}>
-            <Cmt/>
-        </Btn>
-        {#if $post.ver > 0}
-            <Btn cls="b" fn={upu}>
-                <Und/>
+    {#if $isLogin === 1}
+        {#if $post.ver}
+            <!--        <Btn cls="e">-->
+            <!--            <Opt/>-->
+            <!--        </Btn>-->
+            <Btn cls="a" fn={pub}>
+                <Cmt/>
+            </Btn>
+            {#if $post.ver > 0}
+                <Btn cls="b" fn={upu}>
+                    <Und/>
+                </Btn>
+            {/if}
+            <Btn cls="c" fn={del}>
+                <Del/>
             </Btn>
         {/if}
-        <Btn cls="c" fn={del}>
-            <Del/>
+        <Btn cls="d" fn={()=> winAct.set($winAct === 2 ? 0 : 2)}>
+            <File/>
+        </Btn>
+        <Btn cls="g" fn={()=>isLogin.set(2)}>
+            <SF/>
         </Btn>
     {/if}
-    <Btn cls="d" fn={()=> winAct.set($winAct === 2 ? 0 : 2)}>
-        <File/>
-    </Btn>
-    <Btn cls="g">
-        <SF/>
-    </Btn>
-    <Btn cls="f" fn={()=>isLogin.set(2)}>
+    {#if $isLogin === 2}
+        <Btn cls="j" fn={()=>isLogin.set(1)}>
+            <Art/>
+        </Btn>
+    {/if}
+    <Btn cls="f">
         <Msg/>
     </Btn>
 </div>
@@ -117,9 +124,14 @@
         color: #ff760e
       }
 
+      .j {
+        color: #d75bd4
+      }
+
       .f {
         color: #cb9647
       }
+
       .g {
         color: #0ea701
       }

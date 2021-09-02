@@ -13,9 +13,9 @@ export const apis = {
         },
         after(r, o) {
             if (o.status === 200) {
-                isLogin.set(true)
+                isLogin.set(1)
             } else {
-                isLogin.set(false)
+                isLogin.set(0)
             }
             o.status = 200;
         }

@@ -15,7 +15,7 @@ export const logout = ()=>{
         method: 'POST',
     }).then(res=>{
         if(res.ok){
-            isLogin.set(false)
+            isLogin.set(0)
         }
     }).catch(e=>{
        console.error(e)

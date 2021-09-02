@@ -1,30 +1,35 @@
 <script>
     import Ck from '$lib/checkbox.svelte'
+    import List from '$lib/list.svelte'
+    import Qa from '$lib/qCard.svelte'
     import {fade} from "svelte/transition";
-    import Hd from '$lib/listHead.svelte'
-    let hi
-    let sc
-    function search(){}
-    function add(){}
+    import {qaList} from "$lib/store";
+    import {qa} from "$lib/store";
+    import Edit from '$lib/edit.svelte'
 </script>
 <div class="qa" transition:fade>
-    <div class="ls">
-        <Hd
-                bind:value={sc}
-                search={search}
-                add={add}
-                hi={hi}
+    <nav>
+        <List
+                icon={1}
+                api={'qa'}
+                cpm={Qa}
+                listStore={qaList}
+                curStore={qa}
+                baseItem={{
+                    id:0,
+                    q:"write your question",
+                    a:"write your code / answer"
+                }}
         />
-    </div>
-    <div class="ne">
-        <div class="r">
-            <label>Question</label>
-            <input/>
-        </div>
-        <div class="r">
-            <label>Answer</label>
-            <textarea></textarea>
-        </div>
+    </nav>
+    <div class="ma">
+        <Edit
+                type={1}
+                saved={$qa.saved}
+                show={'id' in $qa}
+                bind:title={$qa.q}
+                bind:content={$qa.a}
+        />
     </div>
     <div class="ts">
         <div class="opt">
@@ -52,17 +57,24 @@
     left: 0;
     right: 60px;
     top: 0;
-    bottom: 50px;
+    bottom: 0;
     display: flex;
   }
 
-  .ne {
+  .ma {
+    padding: 10px 0 40px 10px;
     flex: 1;
-    background: #00bbff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
-  .ls {
-    width: 300px;
+  nav {
+    width: 250px;
+    display: block;
+    height: 100%;
+    background: #121622;
+    padding: 0 11px 5px 6px;
   }
 
   .ts {

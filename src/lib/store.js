@@ -1,9 +1,11 @@
 import {writable} from 'svelte/store';
 
 export const artList = writable([]);
+export const qaList = writable([]);
 export const resList = writable([]);
 export const msg = writable("");
 export const post = writable({})
+export const qa = writable({})
 export const winAct = writable(0)
 export const tags = writable([])
 export const isLogin = writable(0)

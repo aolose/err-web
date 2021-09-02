@@ -24,7 +24,7 @@
             body: '_' + btoa(btoa(usr) + '\u0001' + btoa(pwd))
         }))
         if (res.ok) {
-            isLogin.set(true)
+            isLogin.set(1)
         } else {
             msg.set("username or password is incorrect !")
         }

@@ -1,16 +1,17 @@
 <script>
     import List from '$lib/list.svelte'
+    import PItem from '$lib/pCard.svelte'
     import Md from '$lib/md.svelte'
     import Pub from '$lib/pubWin.svelte'
     import Res from '$lib/resWin.svelte'
-    import Ld from "$lib/loading.svelte";
-    import Bg from "$lib/empty.svelte";
+    import Edit from '$lib/edit.svelte'
     import {onDestroy} from "svelte";
-    import {slide} from '$lib/transition'
+
     import {fade} from "svelte/transition";
     import {artList, post, winAct} from "$lib/store";
     import {query} from "$lib/res";
     import {errorCatch, timeFmt} from "$lib/utils";
+
     let res
     let ipt
     let t
@@ -25,10 +26,11 @@
             pid = $post.id
         }
     }
-    let content = "", title = "", saved = ""
+    let content = "", title = ""
     $:content = ($post.content) || ""
     $:title = ($post.title) || ""
-    $:saved = $post.saved ? `Saved at ${timeFmt($post.saved)}` : ""
+
+
     function syncList(p, old) {
         const i = $artList.findIndex(({id}) => id === old)
         if (i !== -1) {
@@ -37,6 +39,7 @@
             artList.set(ls)
         }
     }
+
     onDestroy(post.subscribe(p => {
         syncList(p, p.id)
         if (lock) return
@@ -74,7 +77,6 @@
                         ls[idx] = $post.id
                         artList.set(ls)
                     }
-                    ;
                 }
             }
             pid = $post.id
@@ -87,26 +89,29 @@
     })
 </script>
 <nav>
-    <List/>
+    <List
+            api={'edit'}
+            cpm={PItem}
+            listStore={artList}
+            curStore={post}
+            baseItem={ {
+            id: 0,
+            title: "A new article",
+            desc: "",
+            content: "Write something",
+            ver: -1
+        }}
+    />
 </nav>
 <div class="ma">
     <div class="write">
-        <div class="edit">
-            {#if $post.ver}
-                <input
-                        transition:slide|local={{horizon:1}}
-                        bind:value={$post.title}/>
-                {#await res}
-                    <Ld/>
-                {/await}
-                <textarea
-                        transition:slide|local={{horizon:1}}
-                        bind:value={$post.content} bind:this={ipt}></textarea>
-            {:else }
-                <Bg/>
-            {/if}
-            <div class="sv">{saved}</div>
-        </div>
+        <Edit
+                saved={$post.saved}
+                show={$post.ver}
+                bind:title={$post.title}
+                bind:content={$post.content}
+                bind:ipt={ipt}
+        />
         <div class="prev">
             {#key !Object.keys($post).length}
                 <div transition:fade>
@@ -165,35 +170,6 @@
     }
   }
 
-  .edit {
-    max-width: 600px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 50%;
-
-    textarea {
-      flex: 1;
-      overflow: auto;
-    }
-
-    input {
-      height: 40px;
-      margin-bottom: 10px;
-    }
-
-    input, textarea {
-      color: #8db2e9;
-      line-height: 1.5;
-      border: 1px solid #1d314a;
-      border-radius: 6px;
-      background: rgba(36, 46, 65, .4);
-      padding: 10px;
-      resize: none;
-      display: block;
-    }
-  }
 
   .ma {
     padding: 10px 0 40px 10px;
