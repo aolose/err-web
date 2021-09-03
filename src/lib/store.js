@@ -6,6 +6,9 @@ export const resList = writable([]);
 export const msg = writable("");
 export const post = writable({})
 export const qa = writable({})
+export const impTags = writable([
+    "math","time","strconv","fmt"
+])
 export const oldQa = writable({})
 export const winAct = writable(0)
 export const tags = writable([])

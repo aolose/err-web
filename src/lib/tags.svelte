@@ -1,7 +1,7 @@
 <script>
     import {onDestroy, tick} from "svelte";
-    import {post, tags} from "$lib/store";
-
+    export let curStore
+    export let tagsStore
     let ts = []
     let pr = ""
     let idx = 0
@@ -14,7 +14,7 @@
     let w
     let db = []
 
-    onDestroy(post.subscribe(({tags = ""}) => ts = tags.split(" ").filter(a => a)))
+    onDestroy(curStore.subscribe(({tags = ""}) => ts = tags.split(" ").filter(a => a)))
 
     function pos() {
         if (!ipt) return
@@ -25,7 +25,7 @@
     }
 
     function change() {
-        post.set({...$post, tags: ts.join(" ")})
+        curStore.set({...$curStore, tags: ts.join(" ")})
     }
 
     async function ps(en) {
@@ -129,7 +129,7 @@
 
     $:{
         pos()
-        db = $tags.filter(a => v && a !== v &&ts.indexOf(a)===-1 &&!a.indexOf(v.toLowerCase()))
+        db = $tagsStore.filter(a => v && a !== v &&ts.indexOf(a)===-1 &&!a.indexOf(v.toLowerCase()))
         pr = db[idx] || ''
     }
 </script>

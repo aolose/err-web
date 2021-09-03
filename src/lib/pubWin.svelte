@@ -51,7 +51,7 @@
     <div class="r">
         <label for="d">Tags</label>
         <div class="tgs" id="d">
-            <Tags/>
+            <Tags curStore={post} tagsStore={tags}/>
         </div>
     </div>
     <div class="r">

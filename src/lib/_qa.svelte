@@ -1,9 +1,10 @@
 <script>
     import List from './list.svelte'
     import Qa from './qCard.svelte'
+    import Tags from './tags.svelte'
     import {fade} from "svelte/transition";
     import {slide} from './transition'
-    import {qaList} from "./store";
+    import {impTags, qaList} from "./store";
     import {qa} from "./store";
     import Edit from './edit.svelte'
 
@@ -55,6 +56,7 @@
                     id:0,
                     act:0,
                     params:{},
+                    tags:" ",
                     q:"write your question",
                     a:"write your code / answer"
                 }}
@@ -84,23 +86,49 @@
             </div>
         </Edit>
         <div class="pms">
-            {#each Object.keys($qa.params).map(k=>[k,$qa.params[k]]) as [k,p]}
-                <div class="pm" transition:slide|local>
-                    <label>{k}</label>
-                    <div class="l">
-                        <span>Min</span>
-                        <span>Max</span>
-                    </div>
-                    <div class="s">
-                        <input type="text" bind:value={p[0]}>
-                        <input type="text" bind:value={p[1]}/>
-                    </div>
+            {#if $qa.tags}
+                <div transition:fade class="tgs">
+                    <label>Import</label>
+                   <div class="tg">
+                       <Tags curStore={qa} tagsStore={impTags}/>
+                   </div>
                 </div>
-            {/each}
+            {/if}
+          <div class="pl">
+              {#each Object.keys($qa.params).map(k=>[k,$qa.params[k]]) as [k,p]}
+                  <div class="pm" transition:slide|local>
+                      <label>{k}</label>
+                      <div class="l">
+                          <span>Min</span>
+                          <span>Max</span>
+                      </div>
+                      <div class="s">
+                          <input type="text" bind:value={p[0]}>
+                          <input type="text" bind:value={p[1]}/>
+                      </div>
+                  </div>
+              {/each}
+          </div>
         </div>
     </div>
 </div>
 <style lang="scss">
+  .tgs{
+    width: 240px;
+    margin: 0 10px;
+    label{
+      display: flex;
+      align-items: center;
+      height: 20px;
+      padding-left: 5px;
+      color: #866529;
+      font-size: 14px;
+    }
+    .tg{
+      padding: 5px;
+      border-bottom: 1px solid #1a3149;
+    }
+  }
   .tl {
     flex: 1;
     display: flex;
