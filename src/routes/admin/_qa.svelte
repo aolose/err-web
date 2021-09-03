@@ -1,11 +1,11 @@
 <script>
-    import Ck from '$lib/checkbox.svelte'
     import List from '$lib/list.svelte'
     import Qa from '$lib/qCard.svelte'
     import {fade} from "svelte/transition";
     import {qaList} from "$lib/store";
     import {qa} from "$lib/store";
     import Edit from '$lib/edit.svelte'
+    let params=[]
 </script>
 <div class="qa" transition:fade>
     <nav>
@@ -17,6 +17,8 @@
                 curStore={qa}
                 baseItem={{
                     id:0,
+                    act:0,
+                    params:'',
                     q:"write your question",
                     a:"write your code / answer"
                 }}
@@ -29,29 +31,61 @@
                 show={'id' in $qa}
                 bind:title={$qa.q}
                 bind:content={$qa.a}
-        />
-    </div>
-    <div class="ts">
-        <div class="opt">
-            <Ck>Login Protect</Ck>
-            <Ck>Comment Protect</Ck>
-        </div>
-        <div class="st">
-
-        </div>
-        <div class="q">
-            <label>Q?</label>
-            <p>
-                sadsad sadsadwada ?
-            </p>
-        </div>
-        <div class="q">
-            <label>A:</label>
-            <input/>
+        >
+            <div  class="r" slot="title">
+                <h3 transition:fade>Question:</h3>
+                <div class="tl">
+                    <i class="del"></i>
+                    <i class="sav"></i>
+                    <i class="act"></i>
+                    <i class="dis"></i>
+                </div>
+            </div>
+            <div class="r" slot="content">
+                <h3 transition:fade>Answer:</h3>
+            </div>
+        </Edit>
+        <div class="pms">
+            {#each params as p,i}
+                <div>
+                    <label>i</label>
+                    <div>
+                        <span>Min</span>
+                        <span>Max</span>
+                    </div>
+                    <div>
+                        <input type="tel" bind:value={p.min}>
+                        <input type="tel" bind:value={p.max}/>
+                    </div>
+                </div>
+            {/each}
         </div>
     </div>
 </div>
 <style lang="scss">
+  .tl{
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+  i{
+    background: red;
+    height: 20px;
+    width: 20px;
+    margin-left: 10px;
+  }
+  h3{
+    font-size: 20px;
+    font-weight: 200;
+    color: #233e5d;
+    line-height: 1;
+    font-style: italic;
+  }
+  .r{
+    height: 60px;
+    display: flex;
+    align-items: center;
+  }
   .qa {
     position: absolute;
     left: 0;
@@ -75,10 +109,5 @@
     height: 100%;
     background: #121622;
     padding: 0 11px 5px 6px;
-  }
-
-  .ts {
-    background: #f8ca9e;
-    width: 300px;
   }
 </style>

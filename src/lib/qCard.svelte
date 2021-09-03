@@ -3,6 +3,21 @@
     import {timeFmt} from "$lib/utils";
     import {slide} from '$lib/transition'
     export let data = {}
+    let before=""
+    let dr
+    let hd = data.q||''
+    let params=[]
+    $:{
+        dr = JSON.stringify(data)===before
+        if(data.saved){
+            before=JSON.stringify(data)
+        };
+
+        (data.q||'').replace(/%[dws]/g,function (a,b,c){
+            debugger
+        });
+    }
+
 </script>
 
 <div
@@ -16,7 +31,17 @@
     <p class="tm t1">{timeFmt(data.saved)}</p>
     <div class="stu">
         {#if !data.id}
-            <span title="temporary" class="_2">T</span>
+            <span title="temporary" class="_0">T</span>
+        {/if}
+        {#if dr}
+            <span title="unsaved" class="_3">U</span>
+            {:else }
+            <span title="saved" class="_4">S</span>
+        {/if}
+        {#if data.active}
+            <span title="active" class="_1">A</span>
+        {:else }
+            <span title="disable" class="_2">D</span>
         {/if}
     </div>
 </div>
@@ -47,7 +72,7 @@
 
   .cd {
     border: 1px solid #153049;
-    height: 90px;
+    min-height: 90px;
     padding: 5px 5px 14px;
     margin: 5px 3px;
     cursor: pointer;
@@ -74,8 +99,6 @@
       padding-left: 5px;
       white-space: nowrap;
       width: 70%;
-      overflow: hidden;
-      text-overflow: ellipsis;
       font-weight: normal;
       color: #2290b0;
       font-size: 14px;
@@ -101,8 +124,20 @@
       font-size: 10px;
     }
 
+    ._0 {
+      background: #6f3fd0;
+    }
+    ._1 {
+      background: #3fd083;
+    }
     ._2 {
-      background: #d03f86;
+      background: #6b6b64;
+    }
+    ._3 {
+      background: #3f98d0;
+    }
+    ._4 {
+      background: #d05a3f;
     }
   }
 

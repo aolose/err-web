@@ -10,9 +10,12 @@
     export let ipt
     export let saved
     $:update = saved ? `update at ${timeFmt(saved)}` : ""
+
+
 </script>
 <div class="edit">
     {#if show}
+        <slot name="title"/>
         {#if type === 0}
             <input
                     transition:slide={{horizon:1}}
@@ -23,6 +26,7 @@
                       transition:slide={{horizon:1}}
                     bind:value={title}></textarea>
         {/if}
+        <slot name="content"/>
         <textarea
                 transition:slide={{horizon:1}}
                 bind:value={content} bind:this={ipt}></textarea>
@@ -62,7 +66,6 @@
     .h{
       flex: 0.5;
       margin-bottom: 20px;
-      margin-top: 10px;
     }
   }
 

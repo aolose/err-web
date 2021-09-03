@@ -17,7 +17,7 @@
 
     function add() {
         const o = {...baseItem}
-        curStore.set(o);
+        curStore.set({o});
         listStore.set([o, ...$listStore])
     }
 
