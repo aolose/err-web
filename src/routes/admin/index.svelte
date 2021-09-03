@@ -3,7 +3,7 @@
     import {host, query} from "$lib/res";
     import {browser} from "$app/env";
     import Art from './_art.svelte'
-    import Qa from './_qa.svelte'
+    import Qa from '$lib/_qa.svelte'
     import {isLogin, upLoadInfo, upLoadSeq} from "$lib/store";
 
     query('loadTags')

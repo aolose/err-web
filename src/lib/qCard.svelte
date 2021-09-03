@@ -4,11 +4,12 @@
     import {slide} from '$lib/transition'
     export let data = {}
     let before=""
-    let dr
+    let dr =false
     let hd = data.q||''
     let params=[]
     $:{
-        dr = JSON.stringify(data)===before
+        dr = JSON.stringify(data)!==before
+
         if(data.saved){
             before=JSON.stringify(data)
         };
@@ -96,9 +97,9 @@
     }
 
     h3 {
+      margin-top: 15px;
+      white-space: pre-wrap;
       padding-left: 5px;
-      white-space: nowrap;
-      width: 70%;
       font-weight: normal;
       color: #2290b0;
       font-size: 14px;

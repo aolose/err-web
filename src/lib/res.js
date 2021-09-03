@@ -5,7 +5,10 @@ import {logout} from './utils'
 export const host = "http://localhost:8880"
 const getRes = async (ctx, name) => {
     const {page, fetch, session: sess, context} = ctx;
-    const cfg = apis[name] || {};
+    const cfg = apis[name];
+    if (!cfg) return {
+        status: 404
+    };
     const {
         path,
         before,
@@ -21,7 +24,7 @@ const getRes = async (ctx, name) => {
     let url = `${host}/${p}`;
     let err;
     const cf = {
-        credentials:"include",
+        credentials: "include",
         method
     }
     let s = null;
