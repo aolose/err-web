@@ -1,20 +1,26 @@
 <script>
 
-import {post} from "$lib/store";
-import {timeFmt} from "$lib/utils";
-import {slide} from '$lib/transition'
-export let data={}
+    import {initEdit, post} from "$lib/store";
+    import {timeFmt} from "$lib/utils";
+    import {slide} from '$lib/transition'
+    import {tick} from "svelte";
+
+    export let data = {}
 </script>
 
 <div
         transition:slide|local
         class:act={$post.id===data.id}
-        on:click={()=>{
-                            if($post.id===data.id)post.set({})
-                            else post.set({...data})
+        on:click={async ()=>{
+               const v={}
+                            let o=v
+                            if($post.id!==data.id)o={...data}
+                            post.set(o)
+                              await tick()
+                              initEdit.set(+(v!==o))
                         }} class="cd">
     <h3>{data.title}</h3>
-    <p>{(data.content||"").substr(0, 64)}</p>
+    <p>{(data.content || "").substr(0, 64)}</p>
     <p class="tm t1">{timeFmt(data.saved)}</p>
     <p class="tm">{timeFmt(data.updated)}</p>
     <div class="stu">
@@ -119,6 +125,7 @@ export let data={}
     ._1 {
       background: #1e4994;
     }
+
     ._2 {
       background: #d03f86;
     }

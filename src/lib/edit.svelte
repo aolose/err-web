@@ -1,35 +1,47 @@
 <script>
-    import Bg from "$lib/empty.svelte";
     import {slide} from '$lib/transition'
     import {timeFmt} from "$lib/utils";
+    import D from "./debug.svelte"
     import {onDestroy, tick} from "svelte";
+    import {extraHis, initEdit} from "$lib/store";
 
     export let title
     export let type = 0
     export let content
     export let show
     export let ipt
-    export let re
     export let saved
-    const bf = {
-        content,
-        title,
-    }
     $:update = saved ? `update at ${timeFmt(saved)}` : ""
-    let history = [];
-    let cur = -1;
-    if (re) {
-        onDestroy(re.subscribe(() => {
-            cur = -1
-            history = []
-            bf.content = content
-            bf.title = title
-        }))
+    let editHis = {};
+    onDestroy(extraHis.subscribe(a=>{
+        if(a.length){
+            pushHis("content",...a)
+        }
+    }))
+    function initHis() {
+        editHis = {
+            old: {
+                content,
+                title,
+            },
+            next: {
+                content: [[content, -1, -1]],
+                title: [[title, -1, -1]],
+            },
+            pre: {
+                content: [],
+                title: []
+            }
+        }
     }
+
+    onDestroy(initEdit.subscribe((c) => {
+        if (c) initHis()
+        else editHis = {}
+    }))
     const kt = nm => async function kd(en) {
-        let sv = 0
         const {code, altKey, ctrlKey} = en;
-        let {value, selectionEnd: e, selectionStart: s} = this
+        const {value, selectionEnd: e, selectionStart: s} = this
         if (/arrow(up|down)/i.test(code)) {
             if (altKey) {
                 en.preventDefault();
@@ -55,7 +67,6 @@
                         v = v.slice(0, i0).concat(cr, v.slice(i0, i1), v.slice(i1 + 1))
                     }
                 }
-                sv = [content, s, e]
                 content = v.join('\n')
                 await tick()
                 this.setSelectionRange(s + ch, e + ch)
@@ -67,44 +78,57 @@
                 let i0 = value.substring(0, s).split('\n').length - 1
                 let i1 = i0 + value.substring(s, e).split('\n').length
                 const ch = v.slice(0, i0).join().length;
-                sv = [content, s, e]
                 content = v.slice(0, i0).concat(v.slice(i1)).join('\n');
                 await tick()
                 const n = ch + 1;
                 this.setSelectionRange(n, n);
             } else if (/key[yz]/i.test(code)) {
-                const nx = +(code[3] === 'Y');
-                const c = history[cur + nx];
-                if (c !== undefined) {
-                    cur = cur + (nx ? 1 : -1)
-                    if (c) {
-                        en.preventDefault();
-                        content = c[0]
-                        await tick()
-                        this.setSelectionRange(c[1], c[2])
-                        return
-                    }
-                } else {
-                    en.preventDefault()
+                en.preventDefault()
+                const forward = code[3] === 'Y'
+                const c = hisBack(nm, forward)
+                if (c) {
+                    content = c[0]
+                    await tick()
+                    this.setSelectionRange(c[1], c[2])
                 }
             } else if (/keys/i.test(code)) {
                 e.preventDefault()
             }
         } else if (/Tab/i.test(code)) {
             en.preventDefault()
-            sv = [content, s, e]
             content = value.substring(0, s) + "    " + content.subscribe(e);
             await tick()
             this.setSelectionRange(e + 4, e + 4)
         }
-        if ((bf[nm] !== this.value && !ctrlKey) || sv) {
-            bf[nm] = this.value
-            history.push(sv);
-            cur++;
-            history.length = cur + 1
+    }
+
+    const kp = nm => async function ku() {
+        pushHis(nm, this.value, this.selectionStart, this.selectionEnd);
+    }
+
+    function pushHis(nm, sv, s, e) {
+        const {old, pre, next} = editHis;
+        if (sv !== old[nm]) {
+            next[nm].push([sv, s, e]);
+            pre[nm].length = 0;
+            old[nm] = sv;
         }
     }
+
+    function hisBack(nm, forward) {
+        forward = +forward
+        const {old, pre: {[nm]: pre}, next: {[nm]: next}} = editHis;
+        if ((forward && !pre.length) || (!forward && next.length < 2)) return;
+        const v = [next, pre][forward].pop();
+        if (v) {
+            [pre, next][forward].push(v);
+        }
+        const cur = next[next.length - 1]
+        old[nm] = cur[0];
+        return cur
+    }
 </script>
+<D d={editHis}/>
 <div class="edit">
     {#if show}
         <slot name="title"/>
@@ -116,16 +140,17 @@
         {#if type === 1}
             <textarea class="h"
                       on:keydown={kt('title')}
+                      on:keyup={kp('title')}
                       transition:slide={{horizon:1}}
                       bind:value={title}></textarea>
         {/if}
         <slot name="content"/>
         <textarea
                 on:keydown={kt('content')}
+                on:keyup={kp('content')}
                 transition:slide={{horizon:1}}
                 bind:value={content} bind:this={ipt}></textarea>
     {:else }
-        <Bg type={type}/>
     {/if}
     <div class="sv">{update}</div>
 </div>

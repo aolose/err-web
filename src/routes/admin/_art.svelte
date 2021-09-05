@@ -10,7 +10,7 @@
     import {fade} from "svelte/transition";
     import {artList, post, winAct} from "$lib/store";
     import {query} from "$lib/res";
-    import {errorCatch, timeFmt} from "$lib/utils";
+    import {errorCatch} from "$lib/utils";
 
     let res
     let ipt

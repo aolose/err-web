@@ -3,6 +3,8 @@
     import Ld from './loading.svelte'
     import {query} from "$lib/res";
     import Hd from './listHead.svelte'
+    import {initEdit} from "$lib/store";
+    import {tick} from "svelte";
 
     export let listStore
     export let curStore
@@ -15,10 +17,12 @@
     let sc1
     let page = 1
 
-    function add() {
+    async function add() {
         const o = {...baseItem}
         curStore.set({...o});
         listStore.set([o, ...$listStore])
+        await  tick()
+        initEdit.set(1)
     }
 
     async function search() {

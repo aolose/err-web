@@ -1,18 +1,22 @@
 <script>
-    import {oldQa, qa} from "$lib/store";
+    import {oldQa, qa, initEdit} from "$lib/store";
     import {timeFmt} from "$lib/utils";
     import {slide} from '$lib/transition'
+    import {tick} from "svelte";
     export let data = {}
 </script>
 
 <div
         transition:slide|local
         class:act={$qa.id===data.id}
-        on:click={()=>{
-                            let o={}
+        on:click={async ()=>{
+                            const v={}
+                            let o=v
                             if($qa.id!==data.id)o={...data}
                             qa.set(o)
                             if($qa.saved)oldQa.set({...$oldQa,[$qa.id]:{...o}})
+                            await tick()
+                            initEdit.set(+(v!==o))
                         }} class="cd">
     <h3>{data.q}</h3>
     <p class="tm t1">{timeFmt(data.saved)}</p>

@@ -4,7 +4,7 @@
     import Ld from './loading.svelte'
     import {fade} from "svelte/transition";
     import {slide} from './transition'
-    import {qaList} from "./store";
+    import {initEdit, qaList} from "./store";
     import {qa} from "./store";
     import Edit from './edit.svelte'
     import {query} from "$lib/res";

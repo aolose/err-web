@@ -7,7 +7,7 @@
     import {upload} from './utils'
     import {onDestroy, tick} from "svelte";
     import {slide} from './transition'
-    import {post, resList, upLoadSeq} from "$lib/store";
+    import {extraHis, post, resList, upLoadSeq} from "$lib/store";
     import {query} from "$lib/res";
 
     export let ipt
@@ -26,12 +26,11 @@
         const x = v.findIndex(v => v.id === a.id)
         if (x !== -1) {
             v.splice(x, 1)
-        }else {
+        } else {
             v.push(a)
         }
-        acts =v
+        acts = v
     }
-
 
 
     onDestroy(post.subscribe(p => {
@@ -75,9 +74,18 @@
     async function ins() {
         if (ipt) {
             let {value, selectionEnd: e, selectionStart: s} = ipt;
-            const a = acts.map(({id, name, ext, size}) => {
+            const ls = acts.map(({id, name, ext, size}) => {
                 return `!(${id})\n[t:${ext}|n:${name}|s:${size}]`
-            }).join('\n')
+            })
+            let is = "";
+            ls.forEach(v => extraHis.update(() => {
+                is = is + v + '\n\n';
+                const lt = e+is.length + 1;
+                const d = value.substr(0, s) + '\n' + is + value.substr(e);
+                return [d, lt, lt]
+            }));
+
+            const a = ls.join('\n\n')
             const d = value.substr(0, s) + '\n' + a + value.substr(e)
             const l = a.length + 1
             e += l
