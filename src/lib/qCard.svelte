@@ -1,32 +1,18 @@
 <script>
-    import {qa} from "$lib/store";
+    import {oldQa, qa} from "$lib/store";
     import {timeFmt} from "$lib/utils";
     import {slide} from '$lib/transition'
     export let data = {}
-    let before=""
-    let dr =false
-    let hd = data.q||''
-    let params=[]
-    $:{
-        dr = JSON.stringify(data)!==before
-
-        if(data.saved){
-            before=JSON.stringify(data)
-        };
-
-        (data.q||'').replace(/%[dws]/g,function (a,b,c){
-            debugger
-        });
-    }
-
 </script>
 
 <div
         transition:slide|local
         class:act={$qa.id===data.id}
         on:click={()=>{
-                            if($qa.id===data.id)qa.set({})
-                            else qa.set({...data})
+                            let o={}
+                            if($qa.id!==data.id)o={...data}
+                            qa.set(o)
+                            if($qa.saved)oldQa.set({...$oldQa,[$qa.id]:{...o}})
                         }} class="cd">
     <h3>{data.q}</h3>
     <p class="tm t1">{timeFmt(data.saved)}</p>
@@ -34,15 +20,10 @@
         {#if !data.id}
             <span title="temporary" class="_0">T</span>
         {/if}
-        {#if dr}
-            <span title="unsaved" class="_3">U</span>
-            {:else }
+        {#if $qa.saved}
             <span title="saved" class="_4">S</span>
-        {/if}
-        {#if data.active}
-            <span title="active" class="_1">A</span>
-        {:else }
-            <span title="disable" class="_2">D</span>
+            {:else }
+            <span title="unsaved" class="_3">U</span>
         {/if}
     </div>
 </div>
@@ -126,19 +107,13 @@
     }
 
     ._0 {
-      background: #6f3fd0;
-    }
-    ._1 {
-      background: #3fd083;
-    }
-    ._2 {
-      background: #6b6b64;
+      background: #494f67;
     }
     ._3 {
-      background: #3f98d0;
+      background: #cb9647;
     }
     ._4 {
-      background: #d05a3f;
+      background: #3f88d0;
     }
   }
 

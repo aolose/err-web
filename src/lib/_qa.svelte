@@ -1,12 +1,13 @@
 <script>
     import List from './list.svelte'
     import Qa from './qCard.svelte'
-    import Tags from './tags.svelte'
+    import Ld from './loading.svelte'
     import {fade} from "svelte/transition";
     import {slide} from './transition'
-    import {impTags, qaList} from "./store";
+    import {qaList} from "./store";
     import {qa} from "./store";
     import Edit from './edit.svelte'
+    import {query} from "$lib/res";
 
     $:{
         const newPa = {}
@@ -29,20 +30,19 @@
     }
 
     function sav() {
-
+         query('addQ',$qa)
     }
 
     function del() {
-
+        query('delQ',$qa.id)
     }
 
-    function active() {
-
+    function tesQ(){
+        query('tesQ',$qa.id)
     }
 
-    function disable() {
 
-    }
+
 </script>
 <div class="qa" transition:fade>
     <nav>
@@ -54,9 +54,7 @@
                 curStore={qa}
                 baseItem={{
                     id:0,
-                    act:0,
                     params:{},
-                    tags:" ",
                     q:"write your question",
                     a:"write your code / answer"
                 }}
@@ -86,14 +84,12 @@
             </div>
         </Edit>
         <div class="pms">
-            {#if $qa.tags}
-                <div transition:fade class="tgs">
-                    <label>Import</label>
-                   <div class="tg">
-                       <Tags curStore={qa} tagsStore={impTags}/>
-                   </div>
+            <div class="pre">
+                <label>Preview</label>
+                <div >
+                    <Ld/>
                 </div>
-            {/if}
+            </div>
           <div class="pl">
               {#each Object.keys($qa.params).map(k=>[k,$qa.params[k]]) as [k,p]}
                   <div class="pm" transition:slide|local>
@@ -113,9 +109,10 @@
     </div>
 </div>
 <style lang="scss">
-  .tgs{
+  .pre{
     width: 240px;
     margin: 0 10px;
+    min-height: 100px;
     label{
       display: flex;
       align-items: center;
@@ -124,10 +121,7 @@
       color: #866529;
       font-size: 14px;
     }
-    .tg{
-      padding: 5px;
-      border-bottom: 1px solid #1a3149;
-    }
+
   }
   .tl {
     flex: 1;

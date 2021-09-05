@@ -1,6 +1,36 @@
 import {isLogin, resList, tags} from "$lib/store";
 
 export const apis = {
+    qs:{
+        path: a => `qa/${a}`,
+        before(_, s) {
+            return {q: s, c: 15}
+        },
+        cacheTime: 3
+    },
+    addQ:{
+        method: 'POST',
+        before(a,b,c){
+            debugger
+        },
+        done(a,b,c){
+            debugger
+        }
+    },
+    delQ:{
+        path: (id) => `qa/${id}`,
+        method: 'DELETE',
+    },
+    tesQ:{
+        path:'qa',
+        method: 'POST',
+        before(a,b,c){
+            debugger
+        },
+        after(a,b,c){
+
+        }
+    },
     auth: {
         method: 'POST',
         path: 'auth',

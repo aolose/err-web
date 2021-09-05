@@ -51,11 +51,12 @@
     let ke = 1, bk = 0, br
     let ft
     let mf
-    let ftt=''
+    let ftt = ''
+
     function go() {
         ke = Math.random()
         const {offsetLeft: lf, offsetWidth: w0, offsetParent: {offsetWidth: w1}} = br;
-        mf=120*lf/220
+        mf = 120 * lf / 220
         const lft = +getComputedStyle(br).left.replace('px', '');
         const step = 20;
         if (!bk) {
@@ -72,14 +73,14 @@
 <div class="bg">
     <div class="cc">
         <div class="bx">
-            {#if w}
-                <LD/>
-            {/if}
+            <LD act={w}/>
             <div class="msg" style={ftt}>
                 <Tm defaultText="Have a nice day !"/>
             </div>
             <div class="br" style={`left:${ft}px`} class:bk={bk} bind:this={br}>
-                {#if $msg}<div class="v"></div>{/if}
+                {#if $msg}
+                    <div class="v"></div>
+                {/if}
                 {#key ke}<i in:jump={{y:-18,duration:150}}></i>{/key}
             </div>
             <div class="r" class:a={usr}>
@@ -105,7 +106,7 @@
     </div>
 </div>
 <style lang="scss">
-  .v{
+  .v {
     position: absolute;
     opacity: .8;
     transform: rotate(-50deg);
@@ -116,11 +117,12 @@
     bottom: 102px;
     left: 50px;
   }
+
   .msg {
     transition: .3s ease-in-out;
     color: white;
     width: 200px;
-    transform:translate3d(50px,0,0) ;
+    transform: translate3d(50px, 0, 0);
     text-align: center;
     bottom: 328px;
     position: absolute;
@@ -134,7 +136,8 @@
 
     &.bk {
       transform: translate3d(-50%, 0, 0) rotateY(180deg);
-      .v{
+
+      .v {
         left: 10px;
         transform: rotate(50deg)
       }
@@ -145,6 +148,7 @@
     position: absolute;
     transition: .1s ease-in-out;
   }
+
   .dis {
     opacity: .5;
     pointer-events: none;

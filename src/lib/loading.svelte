@@ -1,7 +1,7 @@
 <script>
     import {fade} from "svelte/transition";
     import {onDestroy} from "svelte";
-
+     let act = 0
     let s = 0
     let v = 1
     const t = setInterval(function () {
@@ -13,15 +13,17 @@
     })
     export let text = "loading"
 </script>
-<span
-        transition:fade
-        class="load">
+{#if act}
+    <span
+            transition:fade
+            class="load">
      <i></i>
     <span class="a">
         {text}
         <span class="b">{'.'.repeat(s)}</span>
     </span>
 </span>
+{/if}
 <style lang="scss">
   @keyframes rd {
     0%, 100% {

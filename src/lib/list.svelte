@@ -22,7 +22,7 @@
     }
 
     async function search() {
-        res = await query(api, 1, sc)||[]
+        res = await query(api, 1, sc) || []
         sc1 = sc
     }
 
@@ -35,7 +35,7 @@
         if (res && res.ls) listStore.set(res.ls || [])
     }
     let hi;
-    $:hi = ($listStore||[]).find(a => a && !a.id)
+    $:hi = ($listStore || []).find(a => a && !a.id)
     $:total = res.total
     go(1)
 </script>
@@ -48,9 +48,7 @@
             add={add}
             hi={hi}
     />
-    {#await res}
-        <Ld/>
-    {/await}
+    <Ld/>
 
     <div class="ps">
         <div>
