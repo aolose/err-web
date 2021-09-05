@@ -1,7 +1,7 @@
 <script>
+    import Bg from "$lib/empty.svelte";
     import {slide} from '$lib/transition'
     import {timeFmt} from "$lib/utils";
-    import D from "./debug.svelte"
     import {onDestroy, tick} from "svelte";
     import {extraHis, initEdit} from "$lib/store";
 
@@ -128,7 +128,6 @@
         return cur
     }
 </script>
-<D d={editHis}/>
 <div class="edit">
     {#if show}
         <slot name="title"/>
@@ -151,6 +150,7 @@
                 transition:slide={{horizon:1}}
                 bind:value={content} bind:this={ipt}></textarea>
     {:else }
+        <Bg type={type}/>
     {/if}
     <div class="sv">{update}</div>
 </div>

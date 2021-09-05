@@ -4,10 +4,11 @@
     import Ld from './loading.svelte'
     import {fade} from "svelte/transition";
     import {slide} from './transition'
-    import {initEdit, qaList} from "./store";
+    import {qaList, qState} from "./store";
     import {qa} from "./store";
     import Edit from './edit.svelte'
     import {query} from "$lib/res";
+    import {onDestroy} from "svelte";
 
     $:{
         const newPa = {}
@@ -19,8 +20,8 @@
         }
 
         const {params = {}, a = "", q: b = ""} = q;
-        (a.match(/\{\w+\}/g)||[]).forEach(syncParam);
-        (b.match(/\{\w+\}/g)||[]).forEach(syncParam);
+        (a.match(/\{\w+\}/g) || []).forEach(syncParam);
+        (b.match(/\{\w+\}/g) || []).forEach(syncParam);
         Object.values(newPa).forEach(o => {
             o[0] = +((o[0] + '').replace(/[^0-9]/g, ''));
             o[1] = +((o[1] + '').replace(/[^0-9]/g, ''));
@@ -30,19 +31,29 @@
     }
 
     function sav() {
-         query('addQ',$qa)
+        query('addQ', $qa)
     }
 
     function del() {
-        query('delQ',$qa.id)
+        query('delQ', $qa.id)
+    }
+    let tm=-1;
+    function tesQ() {
+       clearTimeout(tm)
+        tm=setTimeout(function (){
+            query('tesQ', $qa)
+        },1e3)
     }
 
-    function tesQ(){
-        query('tesQ',$qa.id)
-    }
-
-
-
+    onDestroy(qa.subscribe(async q => {
+        if (q.q) {
+            if (/{\w+}/.test(q)) {
+                tesQ()
+            } else {
+                qState.set({q: q.q, e: "", pending: 0})
+            }
+        }
+    }))
 </script>
 <div class="qa" transition:fade>
     <nav>
@@ -84,36 +95,44 @@
             </div>
         </Edit>
         <div class="pms">
-            <div class="pre">
-                <label>Preview</label>
-                <div >
-                    <Ld/>
+            {#if 'id' in $qa}
+                <div
+                        transition:fade
+                        class="pre">
+                    <h3>Preview</h3>
+                    <div class="pq">
+                        <p>{$qState.q}</p>
+                        <Ld act={$qState.pending} text="question build"/>
+                    </div>
                 </div>
+            {/if}
+            <div class="pl">
+                {#each Object.keys($qa.params).map(k => [k, $qa.params[k]]) as [k, p]}
+                    <div class="pm" transition:slide|local>
+                        <label>{k}</label>
+                        <div class="l">
+                            <span>Min</span>
+                            <span>Max</span>
+                        </div>
+                        <div class="s">
+                            <input type="text" bind:value={p[0]}>
+                            <input type="text" bind:value={p[1]}/>
+                        </div>
+                    </div>
+                {/each}
             </div>
-          <div class="pl">
-              {#each Object.keys($qa.params).map(k=>[k,$qa.params[k]]) as [k,p]}
-                  <div class="pm" transition:slide|local>
-                      <label>{k}</label>
-                      <div class="l">
-                          <span>Min</span>
-                          <span>Max</span>
-                      </div>
-                      <div class="s">
-                          <input type="text" bind:value={p[0]}>
-                          <input type="text" bind:value={p[1]}/>
-                      </div>
-                  </div>
-              {/each}
-          </div>
         </div>
     </div>
 </div>
 <style lang="scss">
-  .pre{
+  .pq {
+  }
+
+  .pre {
     width: 240px;
     margin: 0 10px;
-    min-height: 100px;
-    label{
+
+    label {
       display: flex;
       align-items: center;
       height: 20px;
@@ -123,6 +142,7 @@
     }
 
   }
+
   .tl {
     flex: 1;
     display: flex;

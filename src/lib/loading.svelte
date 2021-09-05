@@ -1,7 +1,7 @@
 <script>
     import {fade} from "svelte/transition";
     import {onDestroy} from "svelte";
-     let act = 0
+     export let act = 0
     let s = 0
     let v = 1
     const t = setInterval(function () {
