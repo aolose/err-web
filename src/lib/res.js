@@ -88,13 +88,22 @@ const getRes = async (ctx, name) => {
             };
         }
     }
-    const re = await fetch(url, cf).catch(e => {
-        err = e
-    });
+    let re
+    await new Promise((resolve) => {
+        fetch(url, cf).then(async r => {
+            re = r
+            resolve()
+        }).catch(e => {
+            err = e
+            resolve()
+        })
+    })
+
     const o = {
         status: re && re.status,
     }
-    if (re && re.ok) {
+    if (re) {
+        const {ok} = re;
         let r = await re.text()
         try {
             r = JSON.parse(r)
@@ -105,28 +114,32 @@ const getRes = async (ctx, name) => {
             const a = after(r, o, page, sess)
             if (a !== undefined) r = a;
         }
-        if (done) {
-            done(r, page, sess, context)
-        }
-        if (cacheTime && browser) {
-            const c = {
-                d: r
+        if (ok) {
+            if (done) {
+                done(r, page, sess, context)
             }
-            if (cacheTime) c.t = Date.now() + cacheTime * 1e3
-            store[cacheKey] = JSON.stringify(c)
+            if (cacheTime && browser) {
+                const c = {
+                    d: r
+                }
+                if (cacheTime) c.t = Date.now() + cacheTime * 1e3
+                store[cacheKey] = JSON.stringify(c)
+            }
+            o.props = {
+                d: r,
+            }
+            if (!browser) {
+                o.props.s = [cacheKey, cacheTime * 1e3, sto]
+            }
+            return o
+        }else {
+            err= new Error(r)
         }
-        o.props = {
-            d: r,
-        }
-        if (!browser) {
-            o.props.s = [cacheKey, cacheTime * 1e3, sto]
-        }
-    } else {
-        if (re.status === 403) {
-            await logout()
-        }
-        o.error = err && err.message || new Error(`Could not load ${url}`)
     }
+    if (re && re.status === 403) {
+        await logout()
+    }
+    o.error = err && err.message || new Error(`Could not load ${url}`)
     return o
 }
 

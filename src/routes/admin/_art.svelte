@@ -106,10 +106,9 @@
 <div class="ma">
     <div class="write">
         <Edit
+                store={post}
                 saved={$post.saved}
                 show={$post.ver}
-                bind:title={$post.title}
-                bind:content={$post.content}
                 bind:ipt={ipt}
         />
         <div class="prev">

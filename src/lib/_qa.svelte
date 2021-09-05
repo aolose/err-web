@@ -4,7 +4,7 @@
     import Ld from './loading.svelte'
     import {fade} from "svelte/transition";
     import {slide} from './transition'
-    import {qaList, qState} from "./store";
+    import {oldQa, qaList, qState} from "./store";
     import {qa} from "./store";
     import Edit from './edit.svelte'
     import {query} from "$lib/res";
@@ -44,22 +44,35 @@
             query('tesQ', $qa)
         },1e3)
     }
-
+    function ku(){
+        qa.update(a=>a)
+    }
     onDestroy(qa.subscribe(async q => {
-        if (q.q) {
-            if (/{\w+}/.test(q)) {
+        const idx = $qaList.findIndex(a=>a.id===q.id)
+        if(idx!==-1){
+            $qaList[idx]={...q}
+            qaList.set($qaList.slice())
+        }
+        if (q.q&&q.a) {
+            if (/{\w+}|[a-z]+\.|[()]/i.test(q.a)) {
                 tesQ()
             } else {
-                qState.set({q: q.q, e: "", pending: 0})
+                qState.set({q: q.q, e: "",a:q.a, pending: 0})
             }
         }
     }))
+    onDestroy(()=>{
+        qa.set({})
+        qaList.set([])
+        qState.init()
+        oldQa.set({})
+    })
 </script>
 <div class="qa" transition:fade>
     <nav>
         <List
                 icon={1}
-                api={'qa'}
+                api={'qs'}
                 cpm={Qa}
                 listStore={qaList}
                 curStore={qa}
@@ -72,13 +85,13 @@
         />
     </nav>
     <div class="ma">
-
         <Edit
+                store={qa}
                 type={1}
                 saved={$qa.saved}
                 show={'id' in $qa}
-                bind:title={$qa.q}
-                bind:content={$qa.a}
+                title={'q'}
+                content={'a'}
         >
             <div class="r" slot="title">
                 <h3 transition:fade>Question:</h3>
@@ -101,7 +114,12 @@
                         class="pre">
                     <h3>Preview</h3>
                     <div class="pq">
-                        <p>{$qState.q}</p>
+                        {#if $qState.e}
+                            <p class="er"><label>E</label> {$qState.e}</p>
+                            {:else }
+                            <p><label>Q</label> {$qState.q}</p>
+                            <p class="as"><label>A</label> {$qState.a}</p>
+                        {/if}
                         <Ld act={$qState.pending} text="question build"/>
                     </div>
                 </div>
@@ -115,8 +133,8 @@
                             <span>Max</span>
                         </div>
                         <div class="s">
-                            <input type="text" bind:value={p[0]}>
-                            <input type="text" bind:value={p[1]}/>
+                            <input type="text" bind:value={p[0]} on:keyup={ku}>
+                            <input type="text" bind:value={p[1]} on:keyup={ku}/>
                         </div>
                     </div>
                 {/each}
@@ -126,19 +144,37 @@
 </div>
 <style lang="scss">
   .pq {
+    p{
+      display: flex;
+      font-size: 16px;
+      color: #ccb38d;
+      white-space:pre-wrap;
+      word-break: break-word;
+    }
+    .as{
+      color: #0ea701;
+    }
+    .er{
+      color: #53758d;
+    }
   }
 
   .pre {
     width: 240px;
     margin: 0 10px;
-
     label {
+      opacity: .5;
+      top: -6px;
+      color: inherit;
+      margin-right: 6px;
       display: flex;
       align-items: center;
       height: 20px;
-      padding-left: 5px;
-      color: #866529;
-      font-size: 14px;
+      font-size: 13px;
+      font-weight: 200;
+      &:after{
+        content:':';
+      }
     }
 
   }
@@ -223,6 +259,7 @@
   }
 
   .pms {
+    width: 240px;
     margin: 20px;
     white-space: pre-wrap;
   }

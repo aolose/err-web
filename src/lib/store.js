@@ -9,11 +9,18 @@ export const extraHis = writable([]);
 export const post = writable({})
 export const qa = writable({})
 export const oldQa = writable({})
-export const qState = writable({
-    pending:0,
-    q:"question preview",
-    e:""
-})
+export const qState = writable({})
+qState.init = ()=>{
+    qState.update(()=>{
+        return {
+            pending:0,
+            a:"",
+            q:"question preview",
+            e:""
+        }
+    })
+}
+qState.init()
 export const winAct = writable(0)
 export const tags = writable([])
 export const isLogin = writable(0)

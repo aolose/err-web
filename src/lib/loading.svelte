@@ -60,7 +60,7 @@
     right: 0;
     bottom: 0;
     top: 0;
-    background: transparentize(#09192a, .2);
+    background: transparentize(rgb(18,22,34), .2);
     backdrop-filter: blur(1px);
     border-radius: inherit;
     z-index: 100;

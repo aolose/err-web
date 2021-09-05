@@ -58,7 +58,7 @@
 
   .cd {
     border: 1px solid #153049;
-    min-height: 90px;
+    min-height: 60px;
     padding: 5px 5px 14px;
     margin: 5px 3px;
     cursor: pointer;

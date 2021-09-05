@@ -5,9 +5,10 @@
     import {onDestroy, tick} from "svelte";
     import {extraHis, initEdit} from "$lib/store";
 
-    export let title
+    export let store
+    export let title="title"
     export let type = 0
-    export let content
+    export let content="content"
     export let show
     export let ipt
     export let saved
@@ -15,22 +16,22 @@
     let editHis = {};
     onDestroy(extraHis.subscribe(a=>{
         if(a.length){
-            pushHis("content",...a)
+            pushHis(content,...a)
         }
     }))
     function initHis() {
         editHis = {
             old: {
-                content,
-                title,
+                [content]:$store[content],
+                [title]:$store[title],
             },
             next: {
-                content: [[content, -1, -1]],
-                title: [[title, -1, -1]],
+                [content]: [[$store[content], -1, -1]],
+                [title]: [[$store[title], -1, -1]],
             },
             pre: {
-                content: [],
-                title: []
+                [content]: [],
+                [title]: []
             }
         }
     }
@@ -67,7 +68,7 @@
                         v = v.slice(0, i0).concat(cr, v.slice(i0, i1), v.slice(i1 + 1))
                     }
                 }
-                content = v.join('\n')
+                $store[nm] = v.join('\n')
                 await tick()
                 this.setSelectionRange(s + ch, e + ch)
             }
@@ -78,7 +79,7 @@
                 let i0 = value.substring(0, s).split('\n').length - 1
                 let i1 = i0 + value.substring(s, e).split('\n').length
                 const ch = v.slice(0, i0).join().length;
-                content = v.slice(0, i0).concat(v.slice(i1)).join('\n');
+                $store[nm] = v.slice(0, i0).concat(v.slice(i1)).join('\n');
                 await tick()
                 const n = ch + 1;
                 this.setSelectionRange(n, n);
@@ -87,7 +88,7 @@
                 const forward = code[3] === 'Y'
                 const c = hisBack(nm, forward)
                 if (c) {
-                    content = c[0]
+                    $store[nm] = c[0]
                     await tick()
                     this.setSelectionRange(c[1], c[2])
                 }
@@ -96,7 +97,7 @@
             }
         } else if (/Tab/i.test(code)) {
             en.preventDefault()
-            content = value.substring(0, s) + "    " + content.subscribe(e);
+            $store[nm] = value.substring(0, s) + "    " + $store[nm].subscribe(e);
             await tick()
             this.setSelectionRange(e + 4, e + 4)
         }
@@ -134,21 +135,21 @@
         {#if type === 0}
             <input
                     transition:slide={{horizon:1}}
-                    bind:value={title}/>
+                    bind:value={$store[title]}/>
         {/if}
         {#if type === 1}
             <textarea class="h"
-                      on:keydown={kt('title')}
-                      on:keyup={kp('title')}
+                      on:keydown={kt(title)}
+                      on:keyup={kp(title)}
                       transition:slide={{horizon:1}}
-                      bind:value={title}></textarea>
+                      bind:value={$store[title]}></textarea>
         {/if}
         <slot name="content"/>
         <textarea
-                on:keydown={kt('content')}
-                on:keyup={kp('content')}
+                on:keydown={kt(content)}
+                on:keyup={kp(content)}
                 transition:slide={{horizon:1}}
-                bind:value={content} bind:this={ipt}></textarea>
+                bind:value={$store[content]} bind:this={ipt}></textarea>
     {:else }
         <Bg type={type}/>
     {/if}

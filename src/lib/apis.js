@@ -1,34 +1,44 @@
-import {isLogin, resList, tags} from "$lib/store";
+import {isLogin, qState, resList, tags} from "$lib/store";
 
 export const apis = {
-    qs:{
+    qs: {
         path: a => `qa/${a}`,
         before(_, s) {
             return {q: s, c: 15}
         },
         cacheTime: 3
     },
-    addQ:{
+    addQ: {
         method: 'POST',
-        before(a,b,c){
+        before(a, b, c) {
             debugger
         },
-        done(a,b,c){
+        done(a, b, c) {
             debugger
         }
     },
-    delQ:{
+    delQ: {
         path: (id) => `qa/${id}`,
         method: 'DELETE',
     },
-    tesQ:{
-        path:'qa',
+    tesQ: {
+        path: 'qa/test',
         method: 'POST',
-        before(a,b,c){
-            debugger
+        before(_, b, {params, a, q}) {
+            qState.set({pending: 1, e: "", q: "", a: ""})
+            const p = Object.keys(params).map(k => [k, ...[params[k]]])
+                .reduce((a, b) => a.concat(b), [])
+                .join()
+            return {
+                q, a, p
+            }
         },
-        after(a,b,c){
-
+        after(a, b, c) {
+            if (b.status === 200) {
+                qState.set({pending: 0, e: "", q: a.q||"", a: a.a||""})
+            } else {
+                qState.set({pending: 0, e: a, q: "".q, a: ""})
+            }
         }
     },
     auth: {
