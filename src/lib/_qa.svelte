@@ -4,12 +4,12 @@
     import Ld from './loading.svelte'
     import {fade} from "svelte/transition";
     import {slide} from './transition'
-    import {oldQa, qaList, qState} from "./store";
+    import { qaList, qState} from "./store";
     import {qa} from "./store";
     import Edit from './edit.svelte'
     import {query} from "$lib/res";
     import {onDestroy} from "svelte";
-
+     let last=""
     $:{
         const newPa = {}
         const q = $qa
@@ -30,19 +30,37 @@
         qa.set({...q})
     }
 
-    function sav() {
-        query('addQ', $qa)
-    }
-
-    function del() {
-        query('delQ', $qa.id)
+    let ld=0
+    async function del() {
+        if(ld)return
+        const {id} = $qa
+        if(id){
+            ld=1
+            await query('delQ', id)
+            setTimeout(()=>ld=0,1e3)
+        }
+        qa.set({})
+        qaList.update(c=>{
+            const idx = c.findIndex(a=>a.id===id)
+            if(idx!==-1){
+                c=c.splice(idx,1)
+                return c.slice()
+            }
+        })
     }
     let tm=-1;
     function tesQ() {
-       clearTimeout(tm)
+        clearTimeout(tm)
         tm=setTimeout(function (){
             query('tesQ', $qa)
         },1e3)
+    }
+
+    function svQ() {
+       clearTimeout(tm)
+        tm=setTimeout(function (){
+            query('svQ', $qa)
+        },2e3)
     }
     function ku(){
         qa.update(a=>a)
@@ -53,11 +71,17 @@
             $qaList[idx]={...q}
             qaList.set($qaList.slice())
         }
-        if (q.q&&q.a) {
-            if (/{\w+}|[a-z]+\.|[()]/i.test(q.a)) {
-                tesQ()
-            } else {
-                qState.set({q: q.q, e: "",a:q.a, pending: 0})
+        const l =JSON.stringify(q)
+        if (q.q&&q.a&&last!==l) {
+            if(q.saved||!q.id){
+                if (/{\w+}|[a-z]+\.|[()]/i.test(q.a)) {
+                    tesQ()
+                } else {
+                    qState.set({q: q.q, e: "",a:q.a, pending: 0})
+                }
+            }else {
+                last=l;
+                svQ()
             }
         }
     }))
@@ -65,7 +89,6 @@
         qa.set({})
         qaList.set([])
         qState.init()
-        oldQa.set({})
     })
 </script>
 <div class="qa" transition:fade>
@@ -96,11 +119,10 @@
             <div class="r" slot="title">
                 <h3 transition:fade>Question:</h3>
                 <div class="tl">
-                    <i transition:slide|local={{horizon:1}} class="del"></i>
-                    <i transition:slide|local={{horizon:1}} class="rec"></i>
-                    <i transition:slide|local={{horizon:1}} class="sav"></i>
-                    <i transition:slide|local={{horizon:1}} class="act"></i>
-                    <i transition:slide|local={{horizon:1}} class="dis"></i>
+                    <i
+                            class:ld={ld}
+                            on:click={del}
+                            transition:slide|local={{horizon:1}} class="del"></i>
                 </div>
             </div>
             <div class="r" slot="content">
@@ -144,7 +166,9 @@
 </div>
 <style lang="scss">
   .pq {
+    padding: 0 20px;
     p{
+      margin-top: 10px;
       display: flex;
       font-size: 16px;
       color: #ccb38d;
@@ -163,8 +187,10 @@
     width: 240px;
     margin: 0 10px;
     label {
+      left: -20px;
+      position: absolute;
       opacity: .5;
-      top: -6px;
+      top: -18px;
       color: inherit;
       margin-right: 6px;
       display: flex;
@@ -176,7 +202,6 @@
         content:':';
       }
     }
-
   }
 
   .tl {
@@ -198,26 +223,8 @@
     }
   }
 
-
   .del {
     background-image: url("./img/del.svg");
-  }
-
-  .dis {
-    background-image: url("./img/dis.svg");
-  }
-
-  .act {
-    background-image: url("./img/act.svg");
-  }
-
-  .rec {
-    background-image: url("./img/rec.svg");
-  }
-
-  .sav {
-    background-image: url("./img/sav.svg");
-    background-size: 100% auto;
   }
 
   h3 {

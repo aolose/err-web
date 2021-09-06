@@ -8,7 +8,6 @@ export const initEdit = writable(0);
 export const extraHis = writable([]);
 export const post = writable({})
 export const qa = writable({})
-export const oldQa = writable({})
 export const qState = writable({})
 qState.init = ()=>{
     qState.update(()=>{

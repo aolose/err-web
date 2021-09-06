@@ -1,5 +1,5 @@
 <script>
-    import {oldQa, qa, initEdit} from "$lib/store";
+    import { qa, initEdit} from "$lib/store";
     import {timeFmt} from "$lib/utils";
     import {slide} from '$lib/transition'
     import {tick} from "svelte";
@@ -14,17 +14,17 @@
                             let o=v
                             if($qa.id!==data.id)o={...data}
                             qa.set(o)
-                            if($qa.saved)oldQa.set({...$oldQa,[$qa.id]:{...o}})
                             await tick()
                             initEdit.set(+(v!==o))
                         }} class="cd">
+    <label>ID:{data.id||""}</label>
     <h3>{data.q}</h3>
     <p class="tm t1">{timeFmt(data.saved)}</p>
     <div class="stu">
         {#if !data.id}
             <span title="temporary" class="_0">T</span>
         {/if}
-        {#if $qa.saved}
+        {#if data.saved}
             <span title="saved" class="_4">S</span>
             {:else }
             <span title="unsaved" class="_3">U</span>
@@ -32,6 +32,11 @@
     </div>
 </div>
 <style lang="scss">
+  label{
+    font-size: 12px;
+    padding:  0 3px;
+    color: #0ea701;
+  }
   .tm {
     font-size: 10px;
     position: absolute;

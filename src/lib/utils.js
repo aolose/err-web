@@ -149,8 +149,10 @@ export const timeFmt = function (a) {
 
 
 export const errorCatch = e => {
-    console.trace(e)
-    alert(e)
+    if(e){
+        console.trace(e)
+        alert(e)
+    }
 }
 
 export const fileSize = n => {

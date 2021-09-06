@@ -1,6 +1,6 @@
 import {browser} from "$app/env";
 import {apis} from "$lib/apis";
-import {logout} from './utils'
+import {errorCatch, logout} from './utils'
 
 export const host = "http://localhost:8880"
 const getRes = async (ctx, name) => {
@@ -10,6 +10,7 @@ const getRes = async (ctx, name) => {
         status: 404
     };
     const {
+        fail,
         path,
         before,
         storage: sto = 0,
@@ -138,6 +139,13 @@ const getRes = async (ctx, name) => {
     }
     if (re && re.status === 403) {
         await logout()
+        err=null
+    }else {
+        o.status=408
+    }
+    if(err){
+        if(fail)fail(err)
+        console.trace(err)
     }
     o.error = err && err.message || new Error(`Could not load ${url}`)
     return o

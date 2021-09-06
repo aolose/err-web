@@ -1,27 +1,36 @@
-import {isLogin, qState, resList, tags} from "$lib/store";
+import {isLogin, qa, qaList, qState, resList, tags} from "$lib/store";
+import {get} from "svelte/store";
+import {tick} from "svelte";
 
+const ok = c => c && c.status === 200
 export const apis = {
     qs: {
         path: a => `qa/${a}`,
         before(_, s) {
             return {q: s, c: 15}
         },
-        cacheTime: 3
-    },
-    addQ: {
-        method: 'POST',
-        before(a, b, c) {
-            debugger
+        after(a, b, d) {
+            if (ok(b)) {
+                a.ls = a.ls.map(c => {
+                    const {id, q, a, p, saved} = c;
+                    const params = {}
+                    const ps = p.split(',')
+                    for (let i = 0, l = ps.length / 3; i < l; i++) {
+                        const n = i * 3;
+                        params[ps[n]] = [ps[n + 1], p[n + 2]]
+                    }
+                    return {id, q, a, saved, params}
+                })
+            }
         },
-        done(a, b, c) {
-            debugger
-        }
+        cacheTime: 3
     },
     delQ: {
         path: (id) => `qa/${id}`,
         method: 'DELETE',
     },
     tesQ: {
+        cacheTime: 1e5,
         path: 'qa/test',
         method: 'POST',
         before(_, b, {params, a, q}) {
@@ -33,9 +42,49 @@ export const apis = {
                 q, a, p
             }
         },
-        after(a, b, c) {
-            if (b.status === 200) {
-                qState.set({pending: 0, e: "", q: a.q||"", a: a.a||""})
+        fail(e) {
+            qState.set({pending: 0, e: e, q: "".q, a: ""})
+        },
+        done(a) {
+            qState.set({pending: 0, e: "", q: a.q || "", a: a.a || ""})
+        }
+    },
+    svQ: {
+        path: 'qa',
+        method: 'POST',
+        before(_, b, {params, a, q, id}) {
+            qState.set({pending: 1, e: "", q: "", a: ""})
+            const p = Object.keys(params).map(k => [k, ...[params[k]]])
+                .reduce((a, b) => a.concat(b), [])
+                .join()
+            return {
+                q, a, p, id
+            }
+        },
+        async after(a, b, c) {
+            if (ok(b)) {
+                const ls = get(qaList)
+                let q = get(qa)
+                let _q = ls.find(e => e.id === c.id)
+                const isCu = q && q.id === c.id
+                if (_q) {
+                    q = _q
+                }
+                if (q) {
+                    q.saved = a.saved
+                    q.id = a.id
+                    q.q = c.q
+                    q.a = c.a
+                    q.params = c.params
+                    if (isCu) {
+                        qa.set({...q})
+                        await tick()
+                    }
+                    if (_q) {
+                        qaList.set(ls.slice())
+                    }
+                }
+                qState.set({pending: 0, e: "", q: a.q || "", a: a.a || ""})
             } else {
                 qState.set({pending: 0, e: a, q: "".q, a: ""})
             }

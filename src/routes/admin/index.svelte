@@ -13,6 +13,9 @@
         if (browser) {
             const taskUpdater = new EventSource(host + "/msg", {withCredentials: true});
             if (taskUpdater) {
+                taskUpdater.onerror=e=>{
+                    console.log("msg connect err:",e)
+                }
                 taskUpdater.onmessage = ({data}) => {
                     const [key, p, t, e] = data.split(",")
                     if (t) {

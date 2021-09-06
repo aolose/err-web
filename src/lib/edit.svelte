@@ -110,6 +110,7 @@
     function pushHis(nm, sv, s, e) {
         const {old, pre, next} = editHis;
         if (sv !== old[nm]) {
+            $store.saved=0
             next[nm].push([sv, s, e]);
             pre[nm].length = 0;
             old[nm] = sv;

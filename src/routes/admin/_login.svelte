@@ -14,7 +14,7 @@
     import Tm from "$lib/typeMsg.svelte";
 
     let w = 0
-
+    let question=0
     async function login() {
         if (dis) return;
         w = 1
@@ -30,7 +30,11 @@
         }
         setTimeout(() => w = 0, 1e3)
     }
-
+    let dis;
+    let ke = 1, bk = 0, br
+    let ft
+    let mf
+    let ftt = ''
     let usr = ""
     let pwd = ""
     let iu, ip
@@ -48,11 +52,6 @@
         }
     }
 
-    let ke = 1, bk = 0, br
-    let ft
-    let mf
-    let ftt = ''
-
     function go() {
         ke = Math.random()
         const {offsetLeft: lf, offsetWidth: w0, offsetParent: {offsetWidth: w1}} = br;
@@ -68,6 +67,8 @@
         }
         ftt = `transform:translate3d(${mf}px,0,0)`
     }
+
+
 
 </script>
 <div class="bg">
