@@ -14,22 +14,41 @@
     import Tm from "$lib/typeMsg.svelte";
 
     let w = 0
-    let question=0
+    let key = ""
+    let ans = ""
+    let showQ = 0
+    let question = 0
+
+    function next() {
+        if(question){
+            msg.set("Please answer the question blow!")
+            showQ=1
+        }else login()
+    }
+
     async function login() {
         if (dis) return;
         w = 1
         const res = (await fetch('/in', {
             credentials: "include",
             method: 'POST',
-            body: '_' + btoa(btoa(usr) + '\u0001' + btoa(pwd))
+            body: '_' + btoa([usr, pwd, key, ans].map(a => btoa(a)).join("\u0001"))
         }))
         if (res.ok) {
             isLogin.set(1)
         } else {
+            let t = res.text();
+            try {
+                t=JSON.parse(t)
+            }catch (e){
+                console.log(e)
+            }
+            debugger;
             msg.set("username or password is incorrect !")
         }
         setTimeout(() => w = 0, 1e3)
     }
+
     let dis;
     let ke = 1, bk = 0, br
     let ft
@@ -69,12 +88,25 @@
     }
 
 
-
 </script>
 <div class="bg">
     <div class="cc">
         <div class="bx">
             <LD act={w}/>
+            {#if showQ && question}
+                <div class="qs">
+                    <label>Q</label>
+                    <p>{question}</p>
+                    <div class="r" class:a={ans}>
+                        <input bind:value={ans} type="text"/>
+                    </div>
+                    <button
+                            class:dis={!ans}
+                            on:click={next}>
+                        {question ? 'Next' : 'Login'}
+                    </button>
+                </div>
+            {/if}
             <div class="msg" style={ftt}>
                 <Tm defaultText="Have a nice day !"/>
             </div>
@@ -100,8 +132,7 @@
                        type="password" autocomplete="new-password" on:input={go}/>
                 <label>Password</label>
             </div>
-            <button class:dis={dis} on:click={login}>Login
-            </button>
+            <button class:dis={dis} on:click={login}>{question ? 'Next' : 'Login'}</button>
             <a href="/">{'<  '}Home</a>
         </div>
     </div>
