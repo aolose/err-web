@@ -7,9 +7,11 @@
     import { qaList, qState} from "./store";
     import {qa} from "./store";
     import Edit from './edit.svelte'
+    import BW from './blWin.svelte'
     import {query} from "$lib/res";
     import {onDestroy} from "svelte";
      let last=""
+    let curQ=-1
     $:{
         const newPa = {}
         const q = $qa
@@ -52,6 +54,7 @@
     function tesQ() {
         clearTimeout(tm)
         tm=setTimeout(function (){
+            curQ= $qa.id
             query('tesQ', $qa)
         },1e3)
     }
@@ -59,6 +62,7 @@
     function svQ() {
        clearTimeout(tm)
         tm=setTimeout(function (){
+            curQ= $qa.id
             query('svQ', $qa)
         },2e3)
     }
@@ -74,6 +78,7 @@
         const l =JSON.stringify(q)
         if (q.q&&q.a&&last!==l) {
             if(q.saved||!q.id){
+                if(curQ===q.id)return;
                 if (/{\w+}|[a-z]+\.|[()]/i.test(q.a)) {
                     tesQ()
                 } else {
@@ -129,42 +134,50 @@
                 <h3 transition:fade>Answer:</h3>
             </div>
         </Edit>
-        <div class="pms">
-            {#if 'id' in $qa}
-                <div
-                        transition:fade
-                        class="pre">
-                    <h3>Preview</h3>
-                    <div class="pq">
-                        {#if $qState.e}
-                            <p class="er"><label>E</label> {$qState.e}</p>
+        <div class="ra">
+            <div class="pms">
+                {#if 'id' in $qa}
+                    <div
+                            transition:fade
+                            class="pre">
+                        <h3>Preview</h3>
+                        <div class="pq">
+                            {#if $qState.e}
+                                <p class="er"><label>E</label> {$qState.e}</p>
                             {:else }
-                            <p><label>Q</label> {$qState.q}</p>
-                            <p class="as"><label>A</label> {$qState.a}</p>
-                        {/if}
-                        <Ld act={$qState.pending} text="question build"/>
+                                <p><label>Q</label> {$qState.q}</p>
+                                <p class="as"><label>A</label> {$qState.a}</p>
+                            {/if}
+                            <Ld act={$qState.pending} text="question build"/>
+                        </div>
                     </div>
+                {/if}
+                <div class="pl">
+                    {#each Object.keys($qa.params).map(k => [k, $qa.params[k]]) as [k, p]}
+                        <div class="pm" transition:slide|local>
+                            <label>{k}</label>
+                            <div class="l">
+                                <span>Min</span>
+                                <span>Max</span>
+                            </div>
+                            <div class="s">
+                                <input type="text" bind:value={p[0]} on:keyup={ku}>
+                                <input type="text" bind:value={p[1]} on:keyup={ku}/>
+                            </div>
+                        </div>
+                    {/each}
                 </div>
-            {/if}
-            <div class="pl">
-                {#each Object.keys($qa.params).map(k => [k, $qa.params[k]]) as [k, p]}
-                    <div class="pm" transition:slide|local>
-                        <label>{k}</label>
-                        <div class="l">
-                            <span>Min</span>
-                            <span>Max</span>
-                        </div>
-                        <div class="s">
-                            <input type="text" bind:value={p[0]} on:keyup={ku}>
-                            <input type="text" bind:value={p[1]} on:keyup={ku}/>
-                        </div>
-                    </div>
-                {/each}
             </div>
+            <BW/>
         </div>
     </div>
 </div>
 <style lang="scss">
+  .ra{
+    margin-top: 10px;
+    margin-left: 20px;
+    flex: 1;
+  }
   .pq {
     padding: 0 20px;
     p{
@@ -251,6 +264,7 @@
   }
 
   .ma {
+    overflow: hidden;
     padding: 10px 0 40px 10px;
     flex: 1;
     height: 100%;
@@ -267,7 +281,7 @@
 
   .pms {
     width: 240px;
-    margin: 20px;
+    margin: 10px 20px;
     white-space: pre-wrap;
   }
 

@@ -137,6 +137,13 @@ export const apis = {
         },
         cacheTime: 3
     },
+    lsBk: {
+        path: a => `bk/${a}`,
+        before(_, s) {
+            return {ip: s, tp: [0,1][get(isLogin)], c: 15}
+        },
+        cacheTime: 3
+    },
     loadTags: {
         path: 'tag/ls',
         cacheTime: 2e3,

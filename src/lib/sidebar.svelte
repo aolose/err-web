@@ -3,11 +3,12 @@
     import Out from "./out.svelte"
     import SF from "./safe.svelte"
     import File from "./file.svelte"
+    import Blk from "./blk.svelte"
     import Del from "./del.svelte"
     import Cmt from "./cmt.svelte"
     import Art from "./art.svelte"
     import Und from "./und.svelte"
-    import {post, artList, winAct, isLogin} from "./store";
+    import {post, artList, winAct, isLogin, openWin} from "./store";
     import Btn from "./btn.svelte"
     import {query} from "./res";
     import {errorCatch} from "$lib/utils";
@@ -56,10 +57,6 @@
         if ($winAct === 1) winAct.set(0)
     }
 
-    function pub() {
-        winAct.set($winAct === 1 ? 0 : 1)
-    }
-
 </script>
 <div class="mu">
     <Out/>
@@ -68,7 +65,7 @@
             <!--        <Btn cls="e">-->
             <!--            <Opt/>-->
             <!--        </Btn>-->
-            <Btn cls="a" fn={pub}>
+            <Btn cls="a" fn={openWin(1)}>
                 <Cmt/>
             </Btn>
             {#if $post.ver > 0}
@@ -80,21 +77,24 @@
                 <Del/>
             </Btn>
         {/if}
-        <Btn cls="d" fn={()=> winAct.set($winAct === 2 ? 0 : 2)}>
+        <Btn cls="d" fn={openWin(2)}>
             <File/>
         </Btn>
         <Btn cls="g" fn={()=>isLogin.set(2)}>
             <SF/>
+        </Btn>
+        <Btn cls="f">
+            <Msg/>
         </Btn>
     {/if}
     {#if $isLogin === 2}
         <Btn cls="j" fn={()=>isLogin.set(1)}>
             <Art/>
         </Btn>
+        <Btn cls="h" fn={openWin(3)}>
+            <Blk/>
+        </Btn>
     {/if}
-    <Btn cls="f">
-        <Msg/>
-    </Btn>
 </div>
 <style lang="scss">
   .mu {
@@ -125,15 +125,19 @@
       }
 
       .j {
-        color: #d75bd4
+        color: #76d75b
       }
 
       .f {
-        color: #cb9647
+        color: #738ae5
       }
 
       .g {
         color: #0ea701
+      }
+
+      .h {
+        color: #e7aa04;
       }
 
       i {

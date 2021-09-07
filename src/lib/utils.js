@@ -177,3 +177,4 @@ const colors = [
 export const col = (v = "") => `color:${colors[v.split('').map(
     a => a.charCodeAt(0))
     .reduce(((a, b) => a + b), 0) % 8]}`
+

@@ -1,6 +1,7 @@
 import {writable} from 'svelte/store';
 
 export const artList = writable([]);
+export const bkList = writable([]);
 export const qaList = writable([]);
 export const resList = writable([]);
 export const msg = writable("");
@@ -76,4 +77,10 @@ tags.del = od => {
         }
     })
     return tags
+}
+
+export function openWin(i) {
+    return ()=>winAct.update(a=>{
+        return a===i ? 0 : i
+    })
 }
