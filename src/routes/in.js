@@ -11,9 +11,7 @@ export async function post({body}) {
     if(!res.ok){
         return {
             status: 403,
-            body: {
-                message: 'auth fail',
-            }
+            body: tk||'auth fail'
         }
     }
     const headers = {

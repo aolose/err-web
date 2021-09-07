@@ -2,6 +2,7 @@
     import {res} from '$lib/res'
     import {jump} from '$lib/transition'
     import LD from '$lib/loading.svelte'
+    import {fade} from 'svelte/transition'
 
     /**
      * @type {import('@sveltejs/kit').Load}
@@ -12,43 +13,73 @@
 <script>
     import {isLogin, msg} from "$lib/store";
     import Tm from "$lib/typeMsg.svelte";
+    import {onDestroy} from "svelte";
 
+    let wt = 0
     let w = 0
     let key = ""
     let ans = ""
     let showQ = 0
     let question = 0
+    const t = setInterval(() => {
+        if (wt > 0) {
+            wt = wt - 1
+        }
+    }, 1e3)
+    onDestroy(() => clearInterval(t))
 
     function next() {
-        if(question){
+        if (wt) return;
+        ans = ''
+        if (question) {
             msg.set("Please answer the question blow!")
-            showQ=1
-        }else login()
+            showQ = 1
+        } else login()
     }
 
     async function login() {
-        if (dis) return;
+        if (dis||wt) return;
         w = 1
+        question = ""
+        showQ = 0
         const res = (await fetch('/in', {
             credentials: "include",
             method: 'POST',
             body: '_' + btoa([usr, pwd, key, ans].map(a => btoa(a)).join("\u0001"))
         }))
         if (res.ok) {
+            w = 0
+            question = ""
+            showQ = 0
             isLogin.set(1)
         } else {
-            let t = res.text();
+            let t = await res.text();
             try {
-                t=JSON.parse(t)
-            }catch (e){
-                console.log(e)
+                t = JSON.parse(t)
+                if (t) {
+                    const h = !key
+                    key = t.k
+                    question = t.q
+                    wt = t.w
+                    if (t.m === 'incorrect') {
+                        setTimeout(() => w = 0, 500)
+                        if (h) {
+                            return next()
+                        } else {
+                            return msg.set(`incorrect answer!`)
+                        }
+                    }
+                }
+            } catch (e) {
+                setTimeout(() => w = 0, 1e3)
+                return msg.set(t)
             }
-            debugger;
             msg.set("username or password is incorrect !")
         }
         setTimeout(() => w = 0, 1e3)
     }
 
+    let st = ""
     let dis;
     let ke = 1, bk = 0, br
     let ft
@@ -58,6 +89,8 @@
     let pwd = ""
     let iu, ip
     $:dis = usr.length < 2 || pwd.length < 4 || pwd.length > 30 || usr.length > 20
+    $:st = wt === -1 ? 'Your are blocked\n' +
+        'Please try again later' : `Please wait ${wt}s`
 
     function nx(e) {
         if (e.code === 'Enter') {
@@ -93,20 +126,6 @@
     <div class="cc">
         <div class="bx">
             <LD act={w}/>
-            {#if showQ && question}
-                <div class="qs">
-                    <label>Q</label>
-                    <p>{question}</p>
-                    <div class="r" class:a={ans}>
-                        <input bind:value={ans} type="text"/>
-                    </div>
-                    <button
-                            class:dis={!ans}
-                            on:click={next}>
-                        {question ? 'Next' : 'Login'}
-                    </button>
-                </div>
-            {/if}
             <div class="msg" style={ftt}>
                 <Tm defaultText="Have a nice day !"/>
             </div>
@@ -116,28 +135,100 @@
                 {/if}
                 {#key ke}<i in:jump={{y:-18,duration:150}}></i>{/key}
             </div>
-            <div class="r" class:a={usr}>
-                <input
-                        on:input={go}
-                        bind:value={usr}
-                        bind:this={iu}
-                        on:keydown={nx}
-                        type="text"/>
-                <label>Username</label>
-            </div>
-            <div class="r" class:a={pwd}>
-                <input bind:value={pwd}
-                       bind:this={ip}
-                       on:keydown={nx}
-                       type="password" autocomplete="new-password" on:input={go}/>
-                <label>Password</label>
-            </div>
-            <button class:dis={dis} on:click={login}>{question ? 'Next' : 'Login'}</button>
+            {#if wt}
+                <p transition:fade
+                   class="ti">{st}</p>
+            {:else }
+                {#if showQ && question}
+                    <div class="qs" transition:fade>
+                        <div class="q">
+                            <label>Q</label>
+                            <p>{question}</p>
+                        </div>
+                        <div class="r" class:a={ans}>
+                            <input bind:value={ans} type="text"/>
+                            <label>Your answer</label>
+                        </div>
+                        <button
+                                class:dis={!ans}
+                                on:click={login}>
+                            Login
+                        </button>
+                    </div>
+                {:else }
+                    <div class="l">
+                        <div class="r" class:a={usr}>
+                            <input
+                                    on:input={go}
+                                    bind:value={usr}
+                                    bind:this={iu}
+                                    on:keydown={nx}
+                                    type="text"/>
+                            <label>Username</label>
+                        </div>
+                        <div class="r" class:a={pwd}>
+                            <input bind:value={pwd}
+                                   bind:this={ip}
+                                   on:keydown={nx}
+                                   type="password" autocomplete="new-password" on:input={go}/>
+                            <label>Password</label>
+                        </div>
+                        <button class:dis={dis} on:click={next}>{question ? 'Next' : 'Login'}</button>
+                    </div>
+                {/if}
+            {/if}
             <a href="/">{'<  '}Home</a>
         </div>
     </div>
 </div>
 <style lang="scss">
+  .l {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    padding: inherit;
+  }
+
+  .qs {
+    .q {
+      p {
+        padding: 0 8px;
+        color: #0ea701;
+        font-size: 16px;
+      }
+
+      label {
+        opacity: .2;
+        transform: rotate(10deg);
+        top: -65px;
+        left: -40px;
+        font-weight: 100;
+        font-size: 40px;
+        color: #fff;
+        width: auto;
+        margin-right: 10px;
+      }
+
+      width: 80%;
+      margin: 20px auto 30px;
+      display: flex;
+    }
+  }
+
+  .ti {
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translate3d(0, -50%, 0);
+    position: absolute;
+    color: #5d6879;
+    white-space: pre-wrap;
+    font-size: 16px;
+    text-align: center;
+  }
+
   .v {
     position: absolute;
     opacity: .8;
@@ -222,6 +313,7 @@
   .bx {
     padding: 20px 0;
     width: 300px;
+    min-height: 210px;
     border-radius: 10px;
     background: #121622;
     box-shadow: rgba(0, 0, 0, .3) 0 20px 40px -10px;
