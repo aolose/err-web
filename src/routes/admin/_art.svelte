@@ -178,10 +178,4 @@
     flex-direction: column;
   }
 
-  .sv {
-    position: absolute;
-    color: #334271;
-    bottom: -30px;
-    left: 12px;
-  }
 </style>

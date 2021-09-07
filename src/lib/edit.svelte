@@ -192,5 +192,10 @@
       margin-bottom: 20px;
     }
   }
-
+  .sv {
+    position: absolute;
+    color: #334271;
+    bottom: -30px;
+    left: 12px;
+  }
 </style>
