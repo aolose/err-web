@@ -7,7 +7,7 @@
     import {upload} from './utils'
     import {onDestroy, tick} from "svelte";
     import {slide} from './transition'
-    import {extraHis, post, resList, upLoadSeq} from "$lib/store";
+    import {bannerMod, extraHis, post, resList, upLoadSeq, winAct} from "$lib/store";
     import {query} from "$lib/res";
 
     export let ipt
@@ -21,7 +21,18 @@
     let qs = []
     let hasP = 0
 
+    const bakPub = () => {
+        bannerMod.set(0)
+        winAct.set(1)
+    }
+
     function add(a) {
+        if ($bannerMod) {
+            bannerMod.set(0)
+            if ($post) $post.banner = a.id
+            bakPub()
+            return
+        }
         const v = acts.slice()
         const x = v.findIndex(v => v.id === a.id)
         if (x !== -1) {
@@ -80,7 +91,7 @@
             let is = "";
             ls.forEach(v => extraHis.update(() => {
                 is = is + v + '\n\n';
-                const lt = e+is.length + 1;
+                const lt = e + is.length + 1;
                 const d = value.substr(0, s) + '\n' + is + value.substr(e);
                 return [d, lt, lt]
             }));
@@ -102,11 +113,14 @@
         d = Object.keys($upLoadSeq).length
         c = acts.length
     }
+
 </script>
-<SWin act={2} onAct={()=>go(1)}>
+<SWin act={2} onAct={()=>go(1)} onClose={bakPub}>
     <div class="bn" slot="btn">
         <div class="i up">
-            <input type="file" on:change={function (e){
+            <input type="file"
+                   accept={bannerMod?"image/*": "*/*"}
+                   on:change={function (e){
                 upload.call(this,e)
                 showTsk=1
             }} multiple/>

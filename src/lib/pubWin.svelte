@@ -2,11 +2,29 @@
     import SWin from './slideWin.svelte'
     import Ck from './checkbox.svelte'
     import Tags from './tags.svelte'
-    import {query} from "$lib/res";
-    import {post, tags} from "$lib/store";
+    import {host, query} from "$lib/res";
+    import {bannerMod, post, tags, winAct} from "$lib/store";
     import {errorCatch} from "$lib/utils";
+    import {onDestroy} from "svelte";
+    import {fade} from 'svelte/transition'
 
     let d = 0
+    let bs = ''
+    onDestroy(post.subscribe(o => {
+        if (!Object.keys(o).length) {
+            if ($winAct === 1) {
+                winAct.set(0)
+            }
+        } else {
+            bs = o.banner ? `background-image:url(${host}/r/${o.banner}.png)` : ''
+        }
+    }))
+
+
+    function selRes() {
+        bannerMod.set(1);
+        winAct.set(2)
+    }
 
     function pub() {
         d = 1
@@ -20,6 +38,7 @@
                     tags.add(nt).del(ot)
                     post.set({
                         ...$post,
+                        pwd: $post.pwd,
                         slug: s,
                         slug2: s,
                         id: +i,
@@ -57,16 +76,25 @@
         </div>
     </div>
     <div class="r">
-        <label for="c">Banner</label>
-        <div class="bn">
-             <input type="file" id="c"/>
+        <label>Banner</label>
+        <div class="bn" on:click={selRes}>
+            {#if bs}
+                <div
+                        transition:fade
+                        class="bg" style={bs}></div>
+                <div
+                        transition:fade
+                        class="rm" on:click|stopPropagation={()=>{
+                    $post.banner=''
+                }}></div>
+            {/if}
         </div>
     </div>
     <div class="r">
         <label for="e">
-            <Ck >Protect</Ck>
+            Protect
         </label>
-        <input type="text" id="e"/>
+        <input type="text" id="e" bind:value={$post.pwd}/>
     </div>
     <div class="r">
         <label for="f" id="f">
@@ -78,6 +106,19 @@
 <style lang="scss">
   .ld {
     animation: ss 1s infinite linear;
+  }
+
+  .rm {
+    &:hover {
+      opacity: .8;
+    }
+
+    opacity: 0;
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+    transition: .3s ease-in-out;
+    background: transparentize(#0e131e, .3) url("./img/can.svg") no-repeat center;
+    background-size: 30px;
   }
 
   label {
@@ -135,7 +176,35 @@
   }
 
   .bn {
+    cursor: pointer;
     padding-top: 50%;
+    overflow: hidden;
+
+    &:before {
+      content: '';
+      display: block;
+      opacity: .3;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("./img/add.svg") no-repeat center;
+      background-size: 50px;
+    }
+
+    div {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+
+  .bg {
+    background: no-repeat center;
+    background-size: cover;
   }
 
   .tgs {

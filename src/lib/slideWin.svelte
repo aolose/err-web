@@ -1,18 +1,23 @@
 <script>
     import {winAct} from "$lib/store";
+
     export let onAct
+    export let onClose
     export let act
-    let show=false
+    let show = false
     $:{
         show = $winAct === act
-        if(show&&onAct){
-            onAct()
+        if (show) {
+            onAct && onAct()
         }
     }
 </script>
 <div class="s-win" class:sh={show}>
     <div class="h">
-        <div class="clo" on:click={()=>winAct.set(0)}>
+        <div class="clo" on:click={()=>{
+            winAct.set(0)
+        onClose&&onClose()
+        }}>
             <i class="a"></i>
             <i class="b"></i>
         </div>
@@ -25,14 +30,15 @@
     </div>
 </div>
 <style lang="scss">
-  .h{
+  .h {
     left: 0;
     right: 0;
     top: 0;
     height: 30px;
     position: absolute;
   }
-  .au{
+
+  .au {
     position: absolute;
     overflow: auto;
     top: 40px;
@@ -42,6 +48,7 @@
     display: flex;
     flex-direction: column;
   }
+
   .ti {
     position: absolute;
     right: 10px;

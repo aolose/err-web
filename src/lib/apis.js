@@ -1,4 +1,4 @@
-import {isLogin, qa, qaList, qState, resList, tags} from "$lib/store";
+import {bannerMod, isLogin, qa, qaList, qState, resList, tags} from "$lib/store";
 import {get} from "svelte/store";
 import {tick} from "svelte";
 
@@ -133,7 +133,9 @@ export const apis = {
     lsRes: {
         path: a => `res/${a}`,
         before(_, s) {
-            return {k: s, c: 15}
+           const o= {k: s, c: 15}
+            if(get(bannerMod))o.img=1
+            return o
         },
         cacheTime: 3
     },
