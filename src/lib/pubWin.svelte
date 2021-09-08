@@ -108,19 +108,6 @@
     animation: ss 1s infinite linear;
   }
 
-  .rm {
-    &:hover {
-      opacity: .8;
-    }
-
-    opacity: 0;
-    backdrop-filter: blur(2px);
-    cursor: pointer;
-    transition: .3s ease-in-out;
-    background: transparentize(#0e131e, .3) url("./img/can.svg") no-repeat center;
-    background-size: 30px;
-  }
-
   label {
     left: 0;
     top: 22px;
@@ -180,6 +167,15 @@
     padding-top: 50%;
     overflow: hidden;
 
+    &:hover {
+      .rm {
+        opacity: 1;
+      }
+      .bg{
+        opacity: .5;
+      }
+    }
+
     &:before {
       content: '';
       display: block;
@@ -200,9 +196,24 @@
       top: 0;
       bottom: 0;
     }
+
+    .rm {
+      width: 30px;
+      height: 30px;
+      bottom: auto;
+      border-radius: 4px;
+      right: 0;
+      left: auto;
+      opacity: .2;
+      cursor: pointer;
+      transition: .3s ease-in-out;
+      background:  url("./img/can.svg") no-repeat center;
+      background-size: 20px;
+    }
   }
 
   .bg {
+    transition: .3s ease-in-out;
     background: no-repeat center;
     background-size: cover;
   }
