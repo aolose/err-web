@@ -21,6 +21,7 @@
                     post.set({
                         ...$post,
                         slug: s,
+                        slug2: s,
                         id: +i,
                         ver: +v,
                         updated: +u,
@@ -41,8 +42,9 @@
     </div>
     <div class="r">
         <label for="b">Slug</label>
-        <input id="b" type="text" placeholder="Slug"/>
-        <span>xxx</span>
+        <input id="b" type="text"
+               bind:value={$post.slug2}
+               placeholder={$post.slug||'slug'}/>
     </div>
     <div class="r">
         <label for="a">Description</label>
