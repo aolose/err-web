@@ -16,6 +16,7 @@
     let editHis = {};
     onDestroy(extraHis.subscribe(a=>{
         if(a.length){
+            editHis={}
             pushHis(content,...a)
         }
     }))

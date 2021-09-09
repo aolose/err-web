@@ -122,7 +122,7 @@
 
 
 </script>
-<div class="bg">
+<div class="bg" transition:fade>
     <div class="cc">
         <div class="bx">
             <LD act={w}/>

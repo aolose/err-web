@@ -4,7 +4,7 @@
     import Tags from './tags.svelte'
     import {host, query} from "$lib/res";
     import {bannerMod, post, tags, winAct} from "$lib/store";
-    import {errorCatch} from "$lib/utils";
+    import {errorCatch, getArtDesc} from "$lib/utils";
     import {onDestroy} from "svelte";
     import {fade} from 'svelte/transition'
 
@@ -67,7 +67,9 @@
     </div>
     <div class="r">
         <label for="a">Description</label>
-        <textarea id="a"></textarea>
+        <textarea id="a"
+                  bind:value={$post.desc}
+                  placeholder={getArtDesc($post)}></textarea>
     </div>
     <div class="r">
         <label for="d">Tags</label>
@@ -92,13 +94,13 @@
     </div>
     <div class="r">
         <label for="e">
-            Protect
+            Password
         </label>
         <input type="text" id="e" bind:value={$post.pwd}/>
     </div>
     <div class="r">
         <label for="f" id="f">
-            <Ck>Allow Comment</Ck>
+            <Ck bind:act={$post.cm}>Allow Comment</Ck>
         </label>
     </div>
 

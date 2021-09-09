@@ -1,9 +1,9 @@
 <script>
     export let type=0
 </script>
-<div class="lg" class:t1={type===1} class:t2={type===2}>
+<a href="/" class="lg" class:t1={type===1} class:t2={type===2}>
     <i/>
-</div>
+</a>
 
 <style lang="scss">
   .lg{

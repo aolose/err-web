@@ -178,3 +178,12 @@ export const col = (v = "") => `color:${colors[v.split('').map(
     a => a.charCodeAt(0))
     .reduce(((a, b) => a + b), 0) % 8]}`
 
+
+export const getArtDesc = post=>{
+    return post.desc||(post.content||'')
+        .replace(/\n+/g,'')
+        .replace(/```.*?```/g,'')
+        .replace(/!?\(.*\)/g,'')
+        .replace(/!?\[.*]/g,'')
+        .substr(0,128)
+}

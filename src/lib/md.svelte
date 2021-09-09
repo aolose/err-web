@@ -115,15 +115,10 @@
         margin: 10px 0;
         border-collapse: collapse;
       }
-
-      img {
-        max-width: 90%;
-      }
-
       code, pre {
-        background: rgba(29,33,60,.4);
+        background: rgb(37,40,55);
         padding: 2px 3px;
-        color: #d8d574;
+        color: #dadada;
         code{
           background: none;
         }

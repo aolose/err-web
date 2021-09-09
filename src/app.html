@@ -16,19 +16,23 @@
             border: none;
             outline: none;
         }
+
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
+
         input[type=number] {
             -moz-appearance: textfield;
         }
-        img,video{
-            max-width: 90%;
+
+        img, video {
+            max-width: 100%;
             margin: 10px 0;
             border-radius: 4px;
         }
+
         input[type=file] {
             opacity: 0;
             border: 0;
@@ -61,11 +65,16 @@
         }
 
         html, body {
+            background: #111;
             font-size: 13px;
             margin: 0;
             height: 100%;
             width: 100%;
             font-family: -apple-system, BlinkMacSystemFont, PingFang SC, Helvetica Neue, STHeiti, Microsoft Yahei, Tahoma, Simsun, sans-serif
+        }
+
+        a {
+            text-decoration: none;
         }
 
         #svelte {
@@ -82,6 +91,7 @@
                 opacity: .3;
             }
         }
+
         .ld {
             transition: .3s ease-in-out;
             pointer-events: none;

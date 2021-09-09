@@ -23,6 +23,7 @@ qState.init = ()=>{
 }
 qState.init()
 export const winAct = writable(0)
+export const bg = writable('')
 export const tags = writable([])
 export const isLogin = writable(0)
 export const upLoadSeq = writable({})
