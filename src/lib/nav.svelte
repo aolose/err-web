@@ -41,6 +41,7 @@
   }
 
   .e {
+    background: #1f2a3f;
     z-index: 5;
     cursor: pointer;
     opacity: .7;
