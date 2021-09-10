@@ -1,27 +1,30 @@
 <script context="module">
     import {res} from "$lib/res";
+
     export const load = res('post')
 </script>
 <script>
     import 'viewerjs/dist/viewer.css';
     import Viewer from 'viewerjs';
     import Ctx from "$lib/ctx.svelte";
+    import Tag from "$lib/tag.svelte";
     import Md from "$lib/md.svelte"
     import DC from "$lib/derection.svelte"
     import {cacheSrvData} from "$lib/res";
     import {onDestroy} from "svelte";
     import {bg} from "$lib/store";
     import {timeFmt} from "$lib/utils";
+
     Viewer.setDefaults({
-        button:true,
-        navbar:false,
-        title:false,
-        toolbar:false,
-        keyboard:false,
-        minWidth:400,
-        loop:false,
-        minHeight:200,
-        minZoomRatio:0.1,
+        button: true,
+        navbar: false,
+        title: false,
+        toolbar: false,
+        keyboard: false,
+        minWidth: 400,
+        loop: false,
+        minHeight: 200,
+        minZoomRatio: 0.1,
     })
     export let d;
     export let s;
@@ -31,10 +34,10 @@
         if (d.banner) {
             bg.set(d.banner)
         }
-        if(ga){
-           setTimeout(()=>{
-               new Viewer(ga)
-           },300)
+        if (ga) {
+            setTimeout(() => {
+                new Viewer(ga)
+            }, 300)
         }
     }
     onDestroy(() => {
@@ -52,7 +55,7 @@
                     <p>{d.desc}</p>
                     <span>{timeFmt(d.updated)}</span>
                 </div>
-                <div class='ct'bind:this={ga}>
+                <div class='ct' bind:this={ga}>
                     <Md value={d.pubCont}/>
                 </div>
                 <div class="s">
@@ -117,18 +120,28 @@
                                 <path d="M0,-14.823C2.499,-16.488 5.462,-17.54 8.481,-17.585C15.303,-17.685 20.587,-12.704 26.716,-10.508C30.196,-9.262 33.989,-8.946 37.644,-9.488C41.39,-10.044 45.065,-11.491 47.873,-14.079C47.193,-10.635 44.95,-7.594 41.585,-6.386C39.949,-5.801 38.174,-5.651 36.46,-5.935C34.222,-6.306 32.137,-7.302 30.133,-8.323L30.016,-8.126C30.913,-7.357 31.682,-6.414 32.321,-5.421C33.003,-4.358 33.614,-3.154 33.782,-1.885C34.137,0.794 31.436,2.862 29.173,2.053C28.091,1.667 27.402,0.658 26.937,-0.343C26.405,-1.491 26.073,-2.719 25.785,-3.945C25.499,-5.157 25.285,-6.406 24.784,-7.553C24.008,-9.328 22.722,-10.743 21.274,-12.001L21.109,-11.841C21.682,-10.976 21.956,-9.901 22.109,-8.888C22.284,-7.747 22.327,-6.544 22.067,-5.411C21.862,-4.513 21.418,-3.49 20.47,-3.177C19.355,-2.81 17.871,-3.427 17.073,-4.21C16.036,-5.229 15.895,-6.757 15.803,-8.133C15.709,-9.553 15.7,-11.069 15.1,-12.389C13.508,-15.889 8.767,-15.939 5.617,-14.934L5.616,-14.722C7.956,-13.987 10.735,-12.119 11.459,-9.673C12.913,-4.761 8.177,-1.818 2.984,-5.309C1.721,-6.158 0.519,-7.157 -0.844,-7.844C-1.721,-8.284 -2.678,-8.646 -3.665,-8.702C-4.515,-8.752 -5.331,-8.605 -6.117,-8.313C-4.504,-10.834 -2.505,-13.153 0,-14.823"/>
                             </g>
                         </g>
-</svg>
+                    </svg>
+                </div>
+                <div class="tg">
+                    {#if d.tags}
+                        <label>#</label>
+                        <Tag t={d.tags}/>
+                    {/if}
                 </div>
             </div>
         </Ctx>
     </div>
 {/if}
 <style lang="scss">
+  .tg{
+    display: flex;
+    flex-wrap: wrap;
+  }
   .art {
     border-radius: 4px;
     overflow: hidden;
     background: white;
-    padding:  var(--artP);
+    padding: var(--artP);
   }
 
   .c {
@@ -168,7 +181,7 @@
     margin: 14px 0 20px;
     font-weight: 100;
     text-align: center;
-   font-size: var(--fs);
+    font-size: var(--fs);
   }
 
   :global {
@@ -180,10 +193,11 @@
   }
 
   .s {
-    margin:40px auto 10px;
+    margin: 40px auto 10px;
     color: #54546e;
     width: 240px;
-    *{
+
+    * {
       color: inherit;
     }
   }

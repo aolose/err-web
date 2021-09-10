@@ -25,23 +25,3 @@ export async function load({session}) {
 {:else }
     <Lg/>
 {/if}
-<style lang="scss">
-    :global{
-      *{
-        color: #aaa;
-      }
-      *::-webkit-scrollbar {
-        width: 8px;
-        height: 8px
-      }
-
-      *::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, .05)
-      }
-
-      *::-webkit-scrollbar-thumb {
-        background-color: #075291
-      }
-
-    }
-</style>

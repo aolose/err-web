@@ -12,6 +12,28 @@
     <Mu/>
 </div>
 <style lang="scss">
+  :global{
+    .adm{
+      *{
+        color: #aaa;
+      }
+      *::-webkit-scrollbar {
+        width: 8px;
+        height: 8px
+      }
+
+      *::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, .05)
+      }
+
+      *::-webkit-scrollbar-thumb {
+        background-color: #075291
+      }
+     p{
+       font-size: 13px;
+     }
+    }
+  }
   .adm {
     display: flex;
     flex-direction: column;

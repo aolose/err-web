@@ -2,7 +2,6 @@
     import {host} from "./res";
     import {fade} from "svelte/transition";
     export let p = {}
-    export let n = 0
 
     const {banner, slug, title, content, updated} = p
     const sty = `background-image:url(${host}/r/${banner}.png)`
@@ -169,6 +168,9 @@
   .x {
     left: 150px;
     transform: skewX(var(--skA));
+    @include s(){
+      left: 170px;
+    }
   }
 
   .v {

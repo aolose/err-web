@@ -185,6 +185,10 @@ export const apis = {
         path: ({id, ver}) => `edit/${id}/${ver}`,
         method: 'PATCH',
     },
+    tags:{
+        path:'tag/all',
+        cacheTime: 60,
+    },
     posts: {
         after: (r, o, {params: {page}}) => {
             if (page === 0) {

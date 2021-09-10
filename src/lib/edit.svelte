@@ -178,7 +178,7 @@
     }
 
     input, textarea {
-      color: #8db2e9;
+      color: #aaadb0;
       line-height: 1.5;
       border: 1px solid #1d314a;
       border-radius: 6px;

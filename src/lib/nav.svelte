@@ -29,7 +29,7 @@
     align-items: center;
     position: fixed;
     padding: 20px 20px 20px 40px;
-    background: linear-gradient(transparentize(#000, 0.1), transparentize(#000, 0.4));
+    background: #141d25;
     top: 0;
     left: 0;
     right: 0;
