@@ -12,9 +12,9 @@
             padding: 0;
             box-sizing: border-box;
             background: none;
-            color: #aaa;
             border: none;
             outline: none;
+            scroll-behavior: smooth;
         }
 
         input::-webkit-outer-spin-button,
@@ -44,20 +44,6 @@
             top: 0;
             bottom: 0;
         }
-
-        *::-webkit-scrollbar {
-            width: 8px;
-            height: 8px
-        }
-
-        *::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, .05)
-        }
-
-        *::-webkit-scrollbar-thumb {
-            background-color: #075291
-        }
-
         i {
             display: block;
             background: no-repeat center;
@@ -91,7 +77,9 @@
                 opacity: .3;
             }
         }
-
+        pre {
+            white-space: pre-wrap;
+        }
         .ld {
             transition: .3s ease-in-out;
             pointer-events: none;

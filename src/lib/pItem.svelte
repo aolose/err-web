@@ -40,6 +40,7 @@
     </a>
 </div>
 <style lang="scss">
+  @import "./break";
   h3 {
     color: #bac7dc;
     font-weight: 100;
@@ -52,7 +53,7 @@
     white-space: normal;
     line-height: 1.5;
     margin-top: 3px;
-    left: -10px;
+    left: var(--pl);
     color: #506c7e;
   }
 
@@ -61,7 +62,7 @@
   }
 
   .p {
-    margin-right: 30px;
+    margin-right:var(--mr);
     margin-bottom: 50px;
     * {
       transition: .3s ease-in-out;
@@ -89,12 +90,30 @@
 
   .t {
     font-weight: 100;
-    width: 80px;
+    width: var(--tw);
     display: flex;
     text-align: right;
-    flex-direction: column;
+    flex-direction: var(--td);
     position: absolute;
-    left: -160px;
+    left: var(--it);
+    @include s(){
+       top:-10px;
+      align-items: center;
+      height: 21px;
+      .md{
+        padding-left: 4px;
+        top:-8px
+      }
+      .y{
+        opacity: .8;
+      }
+       .m,.d{
+         font-size: 16px;
+       }
+      .d:before{
+        height: 20px;
+      }
+    }
   }
 
   .y {
@@ -106,11 +125,9 @@
   .md {
     font-style: italic;
     font-size: 30px;
-
     span {
       font-family: Symbol, serif;
       color: #4d6a7c;
-
       & + span {
         &:before {
           left: 0;
@@ -136,7 +153,7 @@
     padding: 10px;
   }
   .ex{
-    width: 80%;
+    width: var(--ex);
   }
 
   .x, .v, .z, .w, .k {
@@ -151,29 +168,29 @@
 
   .x {
     left: 150px;
-    transform: skewX(-15deg);
+    transform: skewX(var(--skA));
   }
 
   .v {
     transform-origin: left top;
-    transform: skewX(15deg);
+    transform: skewX(var(--skB));
   }
 
   .w {
     transform-origin: left bottom;
-    transform: skewX(-15deg);
+    transform: skewX(var(--skA));
   }
 
   .z {
     background: center no-repeat;
     transform-origin: left bottom;
-    transform: skewX(15deg);
+    transform: skewX(var(--skB));
     background-size: cover;
   }
 
   .k {
     transform-origin: left bottom;
-    transform: skewX(-15deg);
+    transform: skewX(var(--skA));
     background: transparentize(#293f4d, .7) url("./img2/0.png");
     backdrop-filter: grayscale(0.9);
   }

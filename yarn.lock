@@ -1523,6 +1523,11 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+viewerjs@^1.10.1:
+  version "1.10.1"
+  resolved "https://registry.npmjs.org/viewerjs/-/viewerjs-1.10.1.tgz#07499ed043d0a29e3002b90f55c5b228bd1a742c"
+  integrity sha512-Oyzd3JP9dDSd+bBulfnQ+UTfHoobFwkmcT/uKSnQXjmPz7rZU0HJIiKudxPaMsiv17dr4Sm1cHnASJcDlFw1PA==
+
 vite@^2.5.2:
   version "2.5.2"
   resolved "https://registry.npmjs.org/vite/-/vite-2.5.2.tgz#3963a4ec1e6ecae49359eddfdd67f6cb1e6e07a1"
