@@ -7,6 +7,11 @@ const config = {
 		adapter: vercel(),
 		target: '#svelte',
 		ssr:true,
+		vite: {
+			define: {
+				'process.env': process.env,
+			},
+		},
 	}
 };
 

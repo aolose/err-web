@@ -1,1 +1,0 @@
-export const API_DOMAIN = import.meta.env.API_DOMAIN;
