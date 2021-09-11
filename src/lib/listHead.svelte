@@ -5,11 +5,13 @@
     export let search
     export let add
     export let hi
-    export let icon =0
+    export let icon
 </script>
 
+{#if icon}
 <Lg type={icon}/>
-<div class="sc">
+    {/if}
+<div class="sc" class:f={!icon}>
     <Sc bind:value={value} search={search}/>
     <button class="add" class:hi={hi} on:click={add}></button>
 </div>
@@ -19,6 +21,9 @@
     display: flex;
     height: 30px;
     margin: 20px 0 20px 60px;
+    &.f{
+      margin: 20px 10px;
+    }
   }
   .add {
     margin-left: 5px;

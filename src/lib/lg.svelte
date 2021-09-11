@@ -1,5 +1,5 @@
 <script>
-    export let type=0
+    export let type
 </script>
 <a href="/" class="lg" class:t1={type===1} class:t2={type===2}>
     <i/>
@@ -13,10 +13,14 @@
     i{
       width: 46px;
       height: 46px;
-      background-image: url("./img/fav.png");
     }
   }
   .t1{
+    i{
+      background-image: url("./img/fav.png");
+    }
+  }
+  .t2{
     i{
       background-image: url("./icon/4.png");
     }

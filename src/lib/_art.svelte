@@ -6,6 +6,9 @@
     import Res from '$lib/resWin.svelte'
     import Edit from '$lib/edit.svelte'
     import {onDestroy} from "svelte";
+    import BW from './blWin.svelte'
+    import Sys from './sysWin.svelte'
+    import Qa from './qaWin.svelte'
 
     import {fade} from "svelte/transition";
     import {artList, post, winAct} from "$lib/store";
@@ -90,6 +93,7 @@
 </script>
 <nav>
     <List
+            icon={1}
             api={'edit'}
             cpm={PItem}
             listStore={artList}
@@ -120,6 +124,9 @@
             {/key}
             <Pub/>
             <Res ipt={ipt}/>
+            <BW/>
+            <Qa/>
+            <Sys/>
         </div>
     </div>
 </div>

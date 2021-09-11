@@ -23,5 +23,5 @@ export async function load({session}) {
         <slot/>
     </DB>
 {:else }
-    <Lg/>
+    <Lg type={1}/>
 {/if}

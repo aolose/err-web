@@ -1,7 +1,7 @@
 import {browser} from "$app/env";
 import {apis} from "$lib/apis";
 import {logout} from './utils'
-export const host ='//'+(process.env.API_DOMAIN|| "localhost:8880")
+export const host =process.env.API_DOMAIN|| "http://localhost:8880"
 const getRes = async (ctx, name) => {
     const {page, fetch, session: sess, context} = ctx;
     const cfg = apis[name];

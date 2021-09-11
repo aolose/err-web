@@ -1,13 +1,14 @@
 <script>
-    import Msg from "./msg.svelte"
-    import Out from "./out.svelte"
-    import SF from "./safe.svelte"
-    import File from "./file.svelte"
-    import Blk from "./blk.svelte"
-    import Del from "./del.svelte"
-    import Cmt from "./cmt.svelte"
-    import Art from "./art.svelte"
-    import Und from "./und.svelte"
+    import Msg from "./iconMsg.svelte"
+    import Out from "./iconOut.svelte"
+    import SF from "./iconSafe.svelte"
+    import File from "./iconFile.svelte"
+    import Sys from "./iconSys.svelte"
+    import Blk from "./iconBlk.svelte"
+    import Del from "./iconDel.svelte"
+    import Cmt from "./iconCmt.svelte"
+    import Art from "./iconArt.svelte"
+    import Und from "./iconUnd.svelte"
     import {post, artList, winAct, isLogin, openWin} from "./store";
     import Btn from "./btn.svelte"
     import {query} from "./res";
@@ -80,19 +81,17 @@
         <Btn cls="d" fn={openWin(2)}>
             <File/>
         </Btn>
-        <Btn cls="g" fn={()=>isLogin.set(2)}>
+        <Btn cls="g" fn={openWin(5)}>
             <SF/>
-        </Btn>
-        <Btn cls="f">
-            <Msg/>
-        </Btn>
-    {/if}
-    {#if $isLogin === 2}
-        <Btn cls="j" fn={()=>isLogin.set(1)}>
-            <Art/>
         </Btn>
         <Btn cls="h" fn={openWin(3)}>
             <Blk/>
+        </Btn>
+        <Btn cls="l" fn={openWin(4)}>
+            <Sys/>
+        </Btn>
+        <Btn cls="f">
+            <Msg/>
         </Btn>
     {/if}
 </div>
@@ -138,6 +137,9 @@
 
       .h {
         color: #e7aa04;
+      }
+      .l {
+        color: #e75b04;
       }
 
       i {
