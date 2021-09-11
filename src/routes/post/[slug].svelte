@@ -1,6 +1,5 @@
 <script context="module">
     import {res} from "$lib/res";
-
     export const load = res('post')
 </script>
 <script>
@@ -13,7 +12,7 @@
     import {cacheSrvData} from "$lib/res";
     import {onDestroy} from "svelte";
     import {bg} from "$lib/store";
-    import {timeFmt} from "$lib/utils";
+    import {resUrl, timeFmt} from "$lib/utils";
 
     Viewer.setDefaults({
         button: true,
@@ -44,6 +43,19 @@
         bg.set('')
     })
 </script>
+<svelte:head>
+    <title>{d.title}</title>
+    <meta property="description" content={d.desc}/>
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content={d.title} />
+    <meta property="og:description" content={d.desc}/>
+    <meta property="og:url" content={d.slug} />
+    <meta property="article:published_time" content={timeFmt(d.updated)} />
+    <meta property="article:tag" content={d.tags} />
+    <meta property="og:image" content={resUrl(d.banner,'.png')}/>
+    <meta property="og:image:width" content="600" />
+    <meta property="og:image:height" content="400" />
+</svelte:head>
 {#if d && d.updated}
     <div class="c">
         <Ctx>
@@ -56,6 +68,9 @@
                     <span>{timeFmt(d.updated)}</span>
                 </div>
                 <div class='ct' bind:this={ga}>
+                    {#if d.banner}
+                        <img src={resUrl(d.banner)}/>
+                    {/if}
                     <Md value={d.pubCont}/>
                 </div>
                 <div class="s">
@@ -143,7 +158,22 @@
     background: white;
     padding: var(--artP);
   }
-
+ .ct{
+   :global {
+     p {
+       &:first-child:first-letter{
+         font-size: 30px;
+       }
+       &:first-letter{
+         padding-left: 29px;
+       }
+       color: #333;
+       font-size: 15px;
+       line-height: 2;
+       margin: 10px 0 30px;
+     }
+   }
+ }
   .c {
     top: 0;
     bottom: 0;
@@ -183,15 +213,6 @@
     text-align: center;
     font-size: var(--fs);
   }
-
-  :global {
-    p {
-      font-size: 15px;
-      line-height: 2;
-      margin: 10px 0;
-    }
-  }
-
   .s {
     margin: 40px auto 10px;
     color: #54546e;

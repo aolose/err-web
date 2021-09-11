@@ -187,3 +187,4 @@ export const getArtDesc = post=>{
         .replace(/!?\[.*]/g,'')
         .substr(0,128)
 }
+export const resUrl = (a,b='')=>a&&(`${host}/r/${a}${b}`)||''
