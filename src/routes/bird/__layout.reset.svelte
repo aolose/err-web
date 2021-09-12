@@ -17,6 +17,7 @@ export async function load({session}) {
 <script>
     import DB from './_base.svelte'
     import Lg from './_login.svelte'
+    import Pop from '$lib/popMsg.svelte'
 </script>
 {#if $isLogin}
     <DB>
@@ -25,3 +26,4 @@ export async function load({session}) {
 {:else }
     <Lg type={1}/>
 {/if}
+<Pop/>

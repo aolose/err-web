@@ -1,9 +1,24 @@
 import {bannerMod, isLogin, qa, qaList, qState, resList, tags} from "$lib/store";
 import {get} from "svelte/store";
 import {tick} from "svelte";
+import {enc} from "./utils";
+import {tip} from "$lib/popMsg.svelte";
 
 const ok = c => c && c.status === 200
 export const apis = {
+    pwd:{
+        path:'sys/acc',
+        method:'POST',
+        before(a,b,c){
+            return enc(...c)
+        },
+        done(){
+            tip('username/password updated!')
+        },
+        fail(e) {
+           tip(e);
+        }
+    },
     qs: {
         path: a => `qa/${a}`,
         before(_, s) {

@@ -14,6 +14,7 @@
     import {isLogin, msg} from "$lib/store";
     import Tm from "$lib/typeMsg.svelte";
     import {onDestroy} from "svelte";
+    import {enc} from "$lib/utils";
 
     let wt = 0
     let w = 0
@@ -45,7 +46,7 @@
         const res = (await fetch('/in', {
             credentials: "include",
             method: 'POST',
-            body: '_' + btoa([usr, pwd, key, ans].map(a => btoa(a)).join("\u0001"))
+            body: enc(usr, pwd, key, ans)
         }))
         if (res.ok) {
             w = 0

@@ -3,7 +3,7 @@ import SparkMD5 from 'spark-md5'
 import {host} from './res'
 import imageCompression from 'browser-image-compression';
 import {isLogin, upLoadInfo, upLoadSeq} from "$lib/store";
-
+import { goto } from '$app/navigation'
 
 export const popMsg=async (m,yes,no,cls)=>{
 
@@ -188,3 +188,21 @@ export const getArtDesc = post=>{
         .substr(0,128)
 }
 export const resUrl = (a,b='')=>a&&(`${host}/r/${a}${b}`)||''
+
+
+
+export function goBack(root = '/posts/1') {
+    const ref = document.referrer;
+    goto(ref.length > 0 ? ref : root)
+}
+
+export function trim(a){
+    if(/^\s|\s$/.test(a)){
+        return a.replace(/^\s+|\s+$/,'')
+    }
+    return a
+}
+
+export function enc(usr='', pwd='', key='', ans=''){
+    return '_' + btoa([usr, pwd, key, ans].map(a => btoa(a)).join("\u0001"))
+}

@@ -5,6 +5,7 @@ export const artList = writable([]);
 export const bkList = writable([]);
 export const qaList = writable([]);
 export const resList = writable([]);
+export const tips = writable([]);
 export const msg = writable("");
 export const initEdit = writable(0);
 export const extraHis = writable([]);
