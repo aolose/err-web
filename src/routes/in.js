@@ -20,7 +20,8 @@ export async function post({body}) {
             httpOnly: true,
             maxAge: 60 * 60 * 24 * 7,
             sameSite: 'lax',
-            path: '/'
+            path: '/',
+            domain:"err.name"
         })
 
     }

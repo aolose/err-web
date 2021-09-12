@@ -15,7 +15,8 @@ export async function post({headers}) {
             httpOnly: true,
             maxAge: -1,
             sameSite: 'lax',
-            path: '/'
+            path: '/',
+            domain:"err.name"
         })
     }
     return {
