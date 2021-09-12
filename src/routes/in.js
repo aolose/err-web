@@ -18,8 +18,9 @@ export async function post({body}) {
     const headers = {
         'Set-Cookie': cookie.serialize('session_id', tk, {
             httpOnly: true,
+            secure:true,
+            sameSite:"lax",
             maxAge: 60 * 60 * 24 * 7,
-            sameSite: 'lax',
             path: '/',
             domain:"err.name"
         })

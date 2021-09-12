@@ -13,8 +13,9 @@ export async function post({headers}) {
     const hds = {
         'Set-Cookie': cookie.serialize('session_id', '', {
             httpOnly: true,
+            secure:true,
+            sameSite:"lax",
             maxAge: -1,
-            sameSite: 'lax',
             path: '/',
             domain:"err.name"
         })
