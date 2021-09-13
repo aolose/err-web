@@ -31,7 +31,6 @@
 
     function add(a) {
         if ($bannerMod) {
-            bannerMod.set(0)
             if ($post) $post.banner = a.id
             bakPub()
             return
