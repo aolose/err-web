@@ -38,7 +38,9 @@ upLoadInfo.subscribe(v => {
 })
 let t = -1;
 resList.add = function (re) {
-    if (re && sq.find(a => a.id === re)) return;
+    if (re && sq.find(a => a.id === re)) {
+        return;
+    }
     sq.push({
         ...inf[re],
         id:re

@@ -4,6 +4,7 @@
     import {browser} from "$app/env";
     import Art from '$lib/_art.svelte'
     import {upLoadInfo, upLoadSeq} from "$lib/store";
+
     query('loadTags')
     let close = () => {
     }
@@ -11,19 +12,21 @@
         if (browser) {
             const taskUpdater = new EventSource(host + "/msg", {withCredentials: true});
             if (taskUpdater) {
-                taskUpdater.onerror=e=>{
-                    console.log("msg connect err:",e)
+                taskUpdater.onerror = e => {
+                    console.log("msg connect err:", e)
                 }
                 taskUpdater.onmessage = ({data}) => {
-                    const [key, p, t, e] = data.split(",")
-                    if (t) {
+                    const [key, p, t, e, s] = data.split(",")
+                    if (t || s) {
                         upLoadInfo.update(a => {
+                            const o = (a[key] || {})
                             return {
                                 ...a, [key]: {
-                                    ...(a[key] || {}),
+                                    ...o,
                                     id: key,
-                                    type: t,
-                                    ext: e,
+                                    type: t || o.type,
+                                    ext: e || o.ext,
+                                    size: +s || o.size
                                 }
                             }
                         })
