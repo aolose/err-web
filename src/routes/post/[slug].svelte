@@ -160,6 +160,10 @@
   }
  .ct{
    :global {
+     pre {
+       background: transparentize(rgb(37,40,55),.8);
+       color: #1a2638;
+     }
      p {
        &:first-child:first-letter{
          font-size: 30px;

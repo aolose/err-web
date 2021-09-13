@@ -1,11 +1,14 @@
 <script context="module">
     import marked from "marked";
+
     const resTag = '\u0005'
     const resSp = '\u0003'
     const br = {
         name: 'br',
         level: 'block',
-        start(src) { return src.match(/^\.\.\n?/)?.index; }, // Hint to Marked.js to stop and check for a match
+        start(src) {
+            return src.match(/^\.\.\n?/)?.index;
+        }, // Hint to Marked.js to stop and check for a match
         tokenizer(src, tokens) {
             const rule = /^\.\.\n?/;    // Regex for the complete token
             const match = rule.exec(src);
@@ -27,7 +30,9 @@
     const resRender = {
         name: 'resRender',
         level: 'inline',
-        start(src) { return src.match(/^!\(\w*?\)\n?\[.*?]/)?.index; }, // Hint to Marked.js to stop and check for a match
+        start(src) {
+            return src.match(/^!\(\w*?\)\n?\[.*?]/)?.index;
+        }, // Hint to Marked.js to stop and check for a match
         tokenizer(src, tokens) {
             const rule = /^!\((\w*?)\)\n?\[(.*?)]/;    // Regex for the complete token
             const match = rule.exec(src);
@@ -46,16 +51,17 @@
             return `${resTag}${this.parser.parseInline(token.tokens)}${resTag}`;
         }
     };
-    marked.use({extensions: [resRender,br] })
+    marked.use({extensions: [resRender, br]})
 </script>
 <script>
     import Res from './resBox.svelte';
+
     export let value = ''
-    $:out = marked(value||'').split(resTag).map(a=>a.split(resSp))
+    $:out = marked(value || '').split(resTag).map(a => a.split(resSp))
 </script>
 
 <div class="md">
-    {#each out as [u,p]}
+    {#each out as [u, p]}
         {#if p}
             <Res attr={p} src={u}/>
         {:else }
@@ -67,13 +73,15 @@
 <style lang="scss">
   .md {
     :global {
-      h1,h2,h3,h4,h5,h6{
+      h1, h2, h3, h4, h5, h6 {
         line-height: 2;
         margin: 10px 0;
       }
-      ul{
-        margin:0 0 10px 20px;
+
+      ul {
+        margin: 0 0 10px 20px;
       }
+
       h1 {
         font-size: 26px
       }
@@ -115,11 +123,13 @@
         margin: 10px 0;
         border-collapse: collapse;
       }
+
       code, pre {
-        background: rgb(37,40,55);
+        background: rgb(37, 40, 55);
         padding: 2px 3px;
         color: #dadada;
-        code{
+
+        code {
           background: none;
         }
       }

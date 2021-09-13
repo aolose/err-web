@@ -4,7 +4,7 @@
 
     export let src = ""
     export let attr = ""
-    let url=''
+    let url = ''
     let tp = '', nm, sz, w, h;
     $:{
         url = `${host}/r/${src}`
@@ -44,18 +44,19 @@
             <video controls>
                 <source src={url} type={'video/'+tp}>
             </video>
+        {:else }
+            <div class="dw">
+                <div class="t" style={`${col(tp)}`}>
+                    {(tp || '').toUpperCase()}
+                </div>
+                <div class="v">
+                    <p class="h" title={`'${nm}'`}>{nm}</p>
+                    <p class="s">{sz}</p>
+                </div>
+                <a download={`'${nm}'`} href={`${host}/r/${src}`}>
+                </a>
+            </div>
         {/if}
-        <div class="dw">
-            <div class="t" style={`${col(tp)}`}>
-                {(tp || '').toUpperCase()}
-            </div>
-            <div class="v">
-                <p class="h" title={`'${nm}'`}>{nm}</p>
-                <p class="s">{sz}</p>
-            </div>
-            <a download={`'${nm}'`} href={`${host}/r/${src}`}>
-            </a>
-        </div>
     {/if}
 {/if}
 <style lang="scss">
@@ -71,14 +72,17 @@
     margin: 3px;
     border-radius: 3px;
   }
-  .h{
+
+  .h {
     color: #050a13;
     font-size: 11px;
   }
-  .s{
+
+  .s {
     font-size: 10px;
     color: #3e3f4f;
   }
+
   .v {
     padding-right: 4px;
     border-right: 1px solid rgba(0, 0, 0, 0.1);
@@ -104,9 +108,10 @@
     text-decoration: none;
 
     a {
-      &:hover{
+      &:hover {
         opacity: 1;
       }
+
       transition: .2s ease-in-out;
       opacity: .5;
       cursor: pointer;
