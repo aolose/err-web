@@ -51,7 +51,7 @@
     <meta property="og:title" content={d.title}/>
     <meta property="og:description" content={d.desc}/>
     <meta property="og:url" content={d.slug}/>
-    <meta property="article:published_time" content={timeFmt(d.updated)}/>
+    <meta property="article:published_time" content={timeFmt(d.created)}/>
     <meta property="article:tag" content={d.tags}/>
     <meta property="og:image" content={resUrl(d.banner,'.png')}/>
     <meta property="og:image:width" content="600"/>

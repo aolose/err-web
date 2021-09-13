@@ -1,11 +1,12 @@
 <script>
     import {host} from "./res";
     import {fade} from "svelte/transition";
+
     export let p = {}
 
-    const {banner, slug, title, content, updated} = p
+    const {banner, slug, title, desc, content, created} = p
     const sty = `background-image:url(${host}/r/${banner}.webp)`
-    const tm = new Date(updated * 1e3)
+    const tm = new Date(created * 1e3)
     const y = tm.getFullYear()
     const m = tm.getMonth() + 1
     const d = tm.getDate()
@@ -23,7 +24,7 @@
     <a class="f" href={`/post/${slug}`}>
         <div class="c" class:ex={!banner}>
             <h3>{title}</h3>
-            <p>{content.substr(0,banner?32:256)}...</p>
+            <p>{desc || content.substr(0, banner ? 32 : 256)}...</p>
         </div>
         {#if banner}
             <div class="x">
@@ -40,6 +41,7 @@
 </div>
 <style lang="scss">
   @import "./break";
+
   h3 {
     color: #bac7dc;
     font-weight: 100;
@@ -48,7 +50,7 @@
   }
 
   p {
-    word-break:break-all;
+    word-break: break-all;
     white-space: normal;
     line-height: 1.5;
     margin-top: 3px;
@@ -61,18 +63,22 @@
   }
 
   .p {
-    margin-right:var(--mr);
+    margin-right: var(--mr);
     margin-bottom: 50px;
+
     * {
       transition: .3s ease-in-out;
     }
+
     &:hover {
       .y {
         color: #9fa9ad;
       }
-     .m,.d{
-       color: #7e8fb7;
-     }
+
+      .m, .d {
+        color: #7e8fb7;
+      }
+
       .k {
         opacity: 0.1;
       }
@@ -95,21 +101,21 @@
     flex-direction: var(--td);
     position: absolute;
     left: var(--it);
-    @include s(){
-       top:-10px;
+    @include s() {
+      top: -10px;
       align-items: center;
       height: 21px;
-      .md{
+      .md {
         padding-left: 4px;
-        top:-8px
+        top: -8px
       }
-      .y{
+      .y {
         opacity: .8;
       }
-       .m,.d{
-         font-size: 16px;
-       }
-      .d:before{
+      .m, .d {
+        font-size: 16px;
+      }
+      .d:before {
         height: 20px;
       }
     }
@@ -124,9 +130,11 @@
   .md {
     font-style: italic;
     font-size: 30px;
+
     span {
       font-family: Symbol, serif;
       color: #4d6a7c;
+
       & + span {
         &:before {
           left: 0;
@@ -151,7 +159,8 @@
     width: 150px;
     padding: 10px;
   }
-  .ex{
+
+  .ex {
     width: var(--ex);
   }
 
@@ -168,7 +177,7 @@
   .x {
     left: 150px;
     transform: skewX(var(--skA));
-    @include s(){
+    @include s() {
       left: 170px;
     }
   }
