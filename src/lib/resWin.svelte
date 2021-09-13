@@ -23,8 +23,10 @@
     let hasP = 0
 
     const bakPub = () => {
-        bannerMod.set(0)
-        winAct.set(1)
+        if($bannerMod){
+            bannerMod.set(0)
+            winAct.set(1)
+        }
     }
 
     function add(a) {
