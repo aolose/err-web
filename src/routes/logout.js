@@ -14,7 +14,7 @@ export async function post({headers}) {
         'Set-Cookie': cookie.serialize('session_id', '', {
             httpOnly: true,
             secure:!isDev,
-            domain:isDev?"local.io":"err.name",
+            domain:isDev?undefined:"err.name",
             sameSite:"lax",
             maxAge: -1,
             path: '/'

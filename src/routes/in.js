@@ -22,7 +22,7 @@ export async function post({body}) {
             maxAge: 60 * 60 * 24 * 7,
             path: '/',
             secure: !isDev,
-            domain: isDev ? "local.io" : "err.name",
+            domain: isDev ? undefined : "err.name",
         })
 
     }
