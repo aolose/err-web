@@ -121,7 +121,7 @@
     <div class="bn" slot="btn">
         <div class="i up">
             <input type="file"
-                   accept={bannerMod?"image/*": "*/*"}
+                   accept={$bannerMod?"image/*": "*/*"}
                    on:change={function (){
                 upload.call(this,$tok||$session.token)
                 showTsk=1
