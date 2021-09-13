@@ -157,7 +157,7 @@ export const errorCatch = e => {
 
 export const fileSize = n => {
     if (!n) return '0B';
-    const x = Math.floor(Math.log10(Math.log2(n)))
+    const x = Math.floor(Math.log2(n)/10)
     const v = [
         ['B', 1],
         ['KB', 1 << 10],
