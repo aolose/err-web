@@ -19,6 +19,9 @@ export async function load({session}) {
     import Lg from './_login.svelte'
     import Pop from '$lib/popMsg.svelte'
 </script>
+<svelte:head>
+    <title>Err - Admin</title>
+</svelte:head>
 {#if $isLogin}
     <DB>
         <slot/>

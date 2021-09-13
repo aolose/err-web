@@ -46,6 +46,9 @@
         clearTimeout(t0)
     })
 </script>
+<svelte:head>
+    <title>Err</title>
+</svelte:head>
 <div class="b">
     <div class="bb">
         {#if h}

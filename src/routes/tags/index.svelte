@@ -11,6 +11,9 @@
         cacheSrvData(s,d)
     }
 </script>
+<svelte:head>
+    <title>Err - tags</title>
+</svelte:head>
 <div>
   <Ctx>
       {#each d as tag}

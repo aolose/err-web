@@ -18,6 +18,9 @@
     $:total = d.total
     $:ls = d.ls || []
 </script>
+<svelte:head>
+    <title>Err - Posts</title>
+</svelte:head>
 <div class="o">
     <Ctx>
         <div class="t">
