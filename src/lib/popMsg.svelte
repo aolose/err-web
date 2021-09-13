@@ -1,25 +1,25 @@
 <script context="module">
     import {tips} from "$lib/store";
 
-    export function tip(m, ok, fail) {
+    export const tip = (m, ok, fail) =>
         tips.update(t => [...t, [m, ok, fail, 1]])
-    }
 </script>
 <script>
     import {fade} from "svelte/transition";
     import {onDestroy} from "svelte";
-    let m =0
+
+    let m = 0
     let ctx
-    let ox,oy
+    let ox, oy
     const mv = []
 
     function getPos(e) {
-        const {clientX, clientY} = (e.touches||[e])[0];
+        const {clientX, clientY} = (e.touches || [e])[0];
         return [clientX, clientY]
     }
 
     function onEnd() {
-        m=0
+        m = 0
         mv.length = 0
         ctx.onmousemove = ctx.ontouchmove = undefined
         ctx.onmouseup = ctx.ontouchend = ctx.ontouchcancel = ctx.onmouseleave = undefined
@@ -29,18 +29,18 @@
         const [cx, cy] = getPos(e)
         let tx = cx - mv[0] + mv[2]
         let ty = cy - mv[1] + mv[3]
-        if (tx >= ox) tx =  ox;
-        else if (tx <= -ox) tx=-ox;
-        if (ty >= oy) ty=oy;
-        else if (ty <= -oy) ty=-oy;
+        if (tx >= ox) tx = ox;
+        else if (tx <= -ox) tx = -ox;
+        if (ty >= oy) ty = oy;
+        else if (ty <= -oy) ty = -oy;
         this.style = `transform: matrix(1, 0, 0, 1, ${tx}, ${ty})`
     }
 
     function onSt(ev) {
-        m=1
+        m = 1
         const {offsetWidth, offsetHeight} = ctx;
         const {offsetWidth: w, offsetHeight: cy} = this;
-        [ox,oy] = [(offsetWidth-w)/2-10,(offsetHeight-cy)/2-10]
+        [ox, oy] = [(offsetWidth - w) / 2 - 10, (offsetHeight - cy) / 2 - 10]
         const style = getComputedStyle(this);
         let [, e = 0, f = 0] = (style.transform.match(/matrix\(.*?, *([\-0-9.]+), *([\-0-9.]+)\)/) || []).map(a => +a)
         mv.push(...getPos(ev), e, f, offsetWidth - w - 10, offsetHeight - cy - 10)
@@ -100,9 +100,11 @@
     bottom: 0;
     z-index: 9999;
   }
-  .m{
+
+  .m {
     cursor: move;
   }
+
   .tip {
     transform: translate3d(0, 0, 0);
     font-size: 14px;
@@ -111,6 +113,7 @@
     user-select: none;
     padding: 15px 30px 50px;
     background: #061c2d;
+
     p {
       color: #4b7a98;
     }

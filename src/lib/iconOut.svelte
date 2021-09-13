@@ -1,8 +1,9 @@
 <script>
-    import {logout, popMsg} from "$lib/utils";
+    import {logout} from "$lib/utils";
+    import {tip} from "./popMsg.svelte";
 </script>
 <button class="out" on:click={()=>{
-    popMsg("Confirm to sign out?").then(logout)
+    tip("Confirm to sign out?",logout,1)
 }}></button>
 <style lang="scss">
   .out {

@@ -3,22 +3,18 @@ import SparkMD5 from 'spark-md5'
 import {host} from './res'
 import imageCompression from 'browser-image-compression';
 import {isLogin, upLoadInfo, upLoadSeq} from "$lib/store";
-import { goto } from '$app/navigation'
+import {goto} from '$app/navigation'
 
-export const popMsg=async (m,yes,no,cls)=>{
-
-}
-
-export const logout = ()=>{
+export const logout = () => {
     fetch('/logout', {
-        credentials:"include",
+        credentials: "include",
         method: 'POST',
-    }).then(res=>{
-        if(res.ok){
+    }).then(res => {
+        if (res.ok) {
             isLogin.set(0)
         }
-    }).catch(e=>{
-       console.error(e)
+    }).catch(e => {
+        console.error(e)
     })
 }
 
@@ -56,7 +52,7 @@ function runTask() {
     }
 }
 
-export async function upload() {
+export async function upload(token) {
     const chunkSize = 2 << 20;
     const fs = [].slice.call(this.files || [])
     const uu = {}
@@ -96,7 +92,7 @@ export async function upload() {
             uu[key] = []
             for (let i = 0; i < t; i++) {
                 uu[key][i] = 0
-                uploader(key, i, t, f.slice(chunkSize * i, chunkSize * (i + 1)), nm, tp)
+                uploader(key, i, t, f.slice(chunkSize * i, chunkSize * (i + 1)), nm, tp,token)
             }
         }
     }
@@ -106,7 +102,7 @@ export async function upload() {
     runTask()
 }
 
-export const uploader = function (k, p, t, f, nm, tp) {
+export const uploader = function (k, p, t, f, nm, tp, token) {
     const tk = (tasks[k] = tasks[k] || [])
     tk[p] = () => {
         tk[p] = {
@@ -117,7 +113,10 @@ export const uploader = function (k, p, t, f, nm, tp) {
         const wk = new Worker(wrk)
         wk.onmessage = ({data}) => {
             wk.terminate()
-            if (data === 'ok') {
+            if (/^fail/.test(data)) {
+                //todo
+
+            } else if (data === 'ok') {
                 tk[p] = 0;
                 setTimeout(runTask, 30)
             } else if (/\d+/.test(data)) {
@@ -128,6 +127,7 @@ export const uploader = function (k, p, t, f, nm, tp) {
         }
         const v = [host, k, p, t]
         if (!p) v.push(nm, tp)
+        wk.postMessage("_" + token)
         wk.postMessage(v.join())
         wk.postMessage(f)
     }
@@ -149,7 +149,7 @@ export const timeFmt = function (a) {
 
 
 export const errorCatch = e => {
-    if(e){
+    if (e) {
         console.trace(e)
         alert(e)
     }
@@ -179,16 +179,15 @@ export const col = (v = "") => `color:${colors[v.split('').map(
     .reduce(((a, b) => a + b), 0) % 8]}`
 
 
-export const getArtDesc = post=>{
-    return post.desc||(post.content||'')
-        .replace(/\n+/g,'')
-        .replace(/```.*?```/g,'')
-        .replace(/!?\(.*\)/g,'')
-        .replace(/!?\[.*]/g,'')
-        .substr(0,128)
+export const getArtDesc = post => {
+    return post.desc || (post.content || '')
+        .replace(/\n+/g, '')
+        .replace(/```.*?```/g, '')
+        .replace(/!?\(.*\)/g, '')
+        .replace(/!?\[.*]/g, '')
+        .substr(0, 128)
 }
-export const resUrl = (a,b='')=>a&&(`${host}/r/${a}${b}`)||''
-
+export const resUrl = (a, b = '') => a && (`${host}/r/${a}${b}`) || ''
 
 
 export function goBack(root = '/posts/1') {
@@ -196,13 +195,13 @@ export function goBack(root = '/posts/1') {
     goto(ref.length > 0 ? ref : root)
 }
 
-export function trim(a){
-    if(/^\s|\s$/.test(a)){
-        return a.replace(/^\s+|\s+$/,'')
+export function trim(a) {
+    if (/^\s|\s$/.test(a)) {
+        return a.replace(/^\s+|\s+$/, '')
     }
     return a
 }
 
-export function enc(usr='', pwd='', key='', ans=''){
+export function enc(usr = '', pwd = '', key = '', ans = '') {
     return '_' + btoa([usr, pwd, key, ans].map(a => btoa(a)).join("\u0001"))
 }

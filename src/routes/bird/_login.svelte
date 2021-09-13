@@ -11,7 +11,7 @@
     export const load = res('auth')
 </script>
 <script>
-    import {isLogin, msg} from "$lib/store";
+    import {isLogin, msg, tok} from "$lib/store";
     import Tm from "$lib/typeMsg.svelte";
     import {onDestroy} from "svelte";
     import {enc} from "$lib/utils";
@@ -48,13 +48,15 @@
             method: 'POST',
             body: enc(usr, pwd, key, ans)
         }))
+        let t = await res.text();
         if (res.ok) {
             w = 0
             question = ""
             showQ = 0
             isLogin.set(1)
+            tok.set(t)
         } else {
-            let t = await res.text();
+
             try {
                 t = JSON.parse(t)
                 if (t) {

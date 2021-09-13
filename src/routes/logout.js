@@ -1,5 +1,5 @@
 import cookie from "cookie";
-import {host} from "$lib/res";
+import {host, isDev} from "$lib/res";
 
 export async function post({headers}) {
     let tk;
@@ -13,11 +13,11 @@ export async function post({headers}) {
     const hds = {
         'Set-Cookie': cookie.serialize('session_id', '', {
             httpOnly: true,
-            secure:true,
+            secure:!isDev,
+            domain:isDev?"local.io":"err.name",
             sameSite:"lax",
             maxAge: -1,
-            path: '/',
-            domain:"err.name"
+            path: '/'
         })
     }
     return {

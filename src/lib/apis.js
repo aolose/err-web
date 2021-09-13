@@ -13,7 +13,7 @@ export const apis = {
             return enc(...c)
         },
         done(){
-            tip('username/password updated!')
+            tip('update success!')
         },
         fail(e) {
            tip(e);
