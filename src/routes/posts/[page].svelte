@@ -57,6 +57,7 @@
   .i {
     position: absolute;
     top:  var(--itp);
+    min-height: 70vh;
     bottom: 80px;
     width: var(--iw);
     left: var(--poL);

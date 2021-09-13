@@ -66,7 +66,7 @@ export async function upload(token) {
                 return {...u, [key]: [0]}
             })
             let url
-            if (/image/i.test(f.type)) {
+            if (/image/i.test(f.type) && /!gif$/i.test(f.type)) {
                 f = await imageCompression(f, {
                     useWebWorker: true,
                     initialQuality: 1
@@ -92,7 +92,7 @@ export async function upload(token) {
             uu[key] = []
             for (let i = 0; i < t; i++) {
                 uu[key][i] = 0
-                uploader(key, i, t, f.slice(chunkSize * i, chunkSize * (i + 1)), nm, tp,token)
+                uploader(key, i, t, f.slice(chunkSize * i, chunkSize * (i + 1)), nm, tp, token)
             }
         }
     }
@@ -157,7 +157,7 @@ export const errorCatch = e => {
 
 export const fileSize = n => {
     if (!n) return '0B';
-    const x = Math.floor(Math.log2(n)/10)
+    const x = Math.floor(Math.log2(n) / 10)
     const v = [
         ['B', 1],
         ['KB', 1 << 10],
@@ -192,7 +192,10 @@ export const resUrl = (a, b = '') => a && (`${host}/r/${a}${b}`) || ''
 
 export function goBack(root = '/posts/1') {
     const ref = document.referrer;
-    goto(ref.length > 0 ? ref : root)
+    goto(
+        ref.length > 0 ? ref : root,
+        {replaceState: false}
+    )
 }
 
 export function trim(a) {

@@ -1,5 +1,19 @@
 <script context="module">
     import marked from "marked";
+    import hljs from 'highlight.js/lib/core';
+    import javascript from 'highlight.js/lib/languages/javascript';
+    import go from 'highlight.js/lib/languages/go';
+    import text from 'highlight.js/lib/languages/plaintext';
+    import yml from 'highlight.js/lib/languages/yaml';
+    import xml from 'highlight.js/lib/languages/xml';
+    import scss from 'highlight.js/lib/languages/scss';
+    import 'highlight.js/styles/github.css';
+    hljs.registerLanguage('js', javascript);
+    hljs.registerLanguage('xml', xml);
+    hljs.registerLanguage('yml', yml);
+    hljs.registerLanguage('scss', scss);
+    hljs.registerLanguage('go', go);
+    hljs.registerLanguage('txt', text);
 
     const resTag = '\u0005'
     const resSp = '\u0003'
@@ -51,24 +65,45 @@
             return `${resTag}${this.parser.parseInline(token.tokens)}${resTag}`;
         }
     };
+    marked.setOptions({
+        highlight: function (code, lang) {
+            const language = hljs.getLanguage(lang) ? lang : 'txt';
+            return hljs.highlight(code, {language}).value;
+        },
+        langPrefix: 'hljs language-',
+        pedantic: false,
+        gfm: true,
+        breaks: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false,
+        xhtml: false
+    })
     marked.use({extensions: [resRender, br]})
 </script>
 <script>
     import Res from './resBox.svelte';
+    import {onDestroy} from "svelte";
 
     export let value = ''
+    let out = []
     $:out = marked(value || '').split(resTag).map(a => a.split(resSp))
+    onDestroy(() => {
+        out = []
+    })
 </script>
+{#key value}
+    <div class="md">
+        {#each out as [u, p],i (i)}
+            {#if p}
+                <Res attr={p} src={u}/>
+            {:else }
+                {@html u}
+            {/if}
+        {/each}
+    </div>
+{/key}
 
-<div class="md">
-    {#each out as [u, p]}
-        {#if p}
-            <Res attr={p} src={u}/>
-        {:else }
-            {@html u}
-        {/if}
-    {/each}
-</div>
 
 <style lang="scss">
   .md {
@@ -132,6 +167,10 @@
         code {
           background: none;
         }
+      }
+
+      a {
+        text-decoration: underline;
       }
 
       pre {

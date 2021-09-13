@@ -51,7 +51,7 @@
         <div class="n">{idx}</div>
     {/if}
     {#if /svg|image/.test(tp)}
-        <div class="b" style={`background-image:url('${url||(host+`/r/${id}.png`)}')`}></div>
+        <div class="b" style={`background-image:url('${url||(host+`/r/${id}.webp`)}')`}></div>
     {:else }
         <div class="b" style={col(tp)}>{(ext).toUpperCase()}</div>
     {/if}

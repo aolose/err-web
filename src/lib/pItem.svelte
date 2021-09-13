@@ -4,7 +4,7 @@
     export let p = {}
 
     const {banner, slug, title, content, updated} = p
-    const sty = `background-image:url(${host}/r/${banner}.png)`
+    const sty = `background-image:url(${host}/r/${banner}.webp)`
     const tm = new Date(updated * 1e3)
     const y = tm.getFullYear()
     const m = tm.getMonth() + 1

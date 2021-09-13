@@ -41,7 +41,7 @@
         </audio>
     {:else }
         {#if /mp4|flv/i.test(tp)}
-            <video controls>
+            <video controls width={w} height={h}>
                 <source src={url} type={'video/'+tp}>
             </video>
         {:else }
@@ -63,19 +63,19 @@
   .t {
     width: 40px;
     height: 40px;
-    background: #17192d;
+    background: transparentize(#1d1e1f,.3);
     font-weight: bold;
-    font-size: 18px;
+    font-size: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 3px;
+    margin: 3px 5px 3px 3px;
     border-radius: 3px;
   }
 
   .h {
     color: #050a13;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .s {
@@ -102,16 +102,12 @@
     align-items: center;
     width: 170px;
     border-radius: 4px;
-    box-shadow: #0e1832 0 2px 4px;
-    background: linear-gradient(#dcdcdc, #979ca2);
+    box-shadow: rgba(14, 24, 50, 0.51) 0 2px 4px;
+    background: linear-gradient(#f1efef, #cbcdd0);
     display: flex;
     text-decoration: none;
 
     a {
-      &:hover {
-        opacity: 1;
-      }
-
       transition: .2s ease-in-out;
       opacity: .5;
       cursor: pointer;
@@ -120,6 +116,12 @@
       background-size: 100% auto;
       width: 30px;
       display: block;
+
+      &:hover {
+        opacity: 1;
+      }
+
+
     }
   }
 </style>

@@ -16,7 +16,7 @@
                 winAct.set(0)
             }
         } else {
-            bs = o.banner ? `background-image:url(${host}/r/${o.banner}.png)` : ''
+            bs = o.banner ? `background-image:url(${host}/r/${o.banner}.webp)` : ''
         }
     }))
 
