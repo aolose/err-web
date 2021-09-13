@@ -4,7 +4,6 @@
     import {timeFmt} from "$lib/utils";
     import {onDestroy, tick} from "svelte";
     import {extraHis, initEdit} from "$lib/store";
-
     export let store
     export let title="title"
     export let type = 0
@@ -12,14 +11,18 @@
     export let show
     export let ipt
     export let saved
-    $:update = saved ? `update at ${timeFmt(saved)}` : ""
     let editHis = {};
+    $:update = saved ? `update at ${timeFmt(saved)}` : ""
     onDestroy(extraHis.subscribe(a=>{
         if(a.length){
-            editHis={}
             pushHis(content,...a)
         }
     }))
+
+    onDestroy(()=>{
+        editHis={}
+    })
+
     function initHis() {
         editHis = {
             old: {
