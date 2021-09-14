@@ -7,7 +7,7 @@
 
 
     let c = 0;
-    let h = 1;
+    let h = 0;
     let sm = 0
     const m = [
         'welcome to my blog !',
@@ -20,8 +20,9 @@
         'You are so boring !',
         'OK, let me take you to the other page.'
     ]
-    let t, t0
+    let t, t0,a
     onMount(() => {
+        a=setTimeout(()=>h=1,300)
         t = setInterval(function () {
             const v = (c++) % m.length
             const t = $mk[v];
@@ -44,6 +45,7 @@
         $mk[0] = ($mk[0] || 1) + 1
         clearInterval(t)
         clearTimeout(t0)
+        clearTimeout(a)
     })
 </script>
 <svelte:head>

@@ -5,7 +5,7 @@
 
     const v = $mk[0];
 </script>
-<div class="b" transition:fade>
+<div class="b" transition:fade={{duration:200}}>
     <div class="h">
         <div class="mg">
             <Msg defaultText={v?"oh~ see you again ! x"+v:"have a nice day!"}/>
@@ -89,6 +89,7 @@
   }
 
   .b {
+    max-width: 100px;
     animation: bb infinite $s both;
     width: 100%;
     padding-top: 100%;
