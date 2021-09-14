@@ -101,6 +101,11 @@
   }
 
   .ct {
+    & > img {
+      margin: 0 auto 10px;
+      display: block;
+    }
+
     :global {
       a {
         color: #1c93ff;
