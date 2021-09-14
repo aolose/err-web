@@ -185,7 +185,13 @@ export const apis = {
     savePost: {
         path: 'edit',
         method: 'PUT',
-        data: a => a,
+        data: a => {
+            return {
+                id:a.id,
+                title:a.title,
+                content:a.content,
+            }
+        },
     },
     delPost: {
         path: (id) => `edit/${id}`,
@@ -196,8 +202,8 @@ export const apis = {
         method: 'POST',
         data: a => a,
     },
-    setVer: {
-        path: ({id, ver}) => `edit/${id}/${ver}`,
+    unPub: {
+        path: id => `edit/${id}`,
         method: 'PATCH',
     },
     tags:{

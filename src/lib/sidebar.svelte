@@ -16,10 +16,7 @@
 
     function upu() {
         if ($post.id)
-            return query('setVer', {
-                id: $post.id,
-                ver: -1
-            }).then(a => {
+            return query('unPub', $post.id).then(a => {
                 if (a) {
                     if (a.error) {
                         errorCatch(a.error)
@@ -27,7 +24,7 @@
                 }
                 post.set({
                     ...$post,
-                    ver: -1
+                    updated: 0
                 })
             })
     }
@@ -62,14 +59,11 @@
 <div class="mu">
     <Out/>
     {#if $isLogin === 1}
-        {#if $post.ver}
-            <!--        <Btn cls="e">-->
-            <!--            <Opt/>-->
-            <!--        </Btn>-->
+        {#if Object.keys($post).length}
             <Btn cls="a" fn={openWin(1)}>
                 <Cmt/>
             </Btn>
-            {#if $post.ver > 0}
+            {#if $post.updated}
                 <Btn cls="b" fn={upu}>
                     <Und/>
                 </Btn>
@@ -138,6 +132,7 @@
       .h {
         color: #e7aa04;
       }
+
       .l {
         color: #e75b04;
       }

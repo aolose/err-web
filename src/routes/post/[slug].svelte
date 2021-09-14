@@ -67,7 +67,7 @@
                         <h1>{d.title}</h1>
                     </DC>
                     <p>{d.desc}</p>
-                    <span>{timeFmt(d.updated)}</span>
+                    <span>{timeFmt(d.created)}</span>
                 </div>
                 <div class='ct' bind:this={ga}>
                     {#if d.banner}

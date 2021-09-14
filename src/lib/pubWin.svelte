@@ -1,6 +1,7 @@
 <script>
     import SWin from './slideWin.svelte'
     import Ck from './checkbox.svelte'
+    import Date from './PubDate.svelte'
     import Tags from './tags.svelte'
     import {host, query} from "$lib/res";
     import {bannerMod, post, tags, winAct} from "$lib/store";
@@ -34,15 +35,16 @@
                 if (a.error) {
                     errorCatch(a.error)
                 } else {
-                    const [i, s, v, u, nt, ot] = a.split("\u0001")
+                    const [i, s, u, nt, ot] = a.split("\u0001")
                     tags.add(nt).del(ot)
+
                     post.set({
                         ...$post,
+                        created:$post.create2||$post.created,
                         pwd: $post.pwd,
                         slug: s,
                         slug2: s,
                         id: +i,
-                        ver: +v,
                         updated: +u,
                     })
                 }
@@ -55,56 +57,71 @@
 
 </script>
 
-<SWin act={1}>
-    <div slot="btn" class="btn" class:ld={d} on:click={pub}>
-        Publish
-    </div>
-    <div class="r">
-        <label for="b">Slug</label>
-        <input id="b" type="text"
-               bind:value={$post.slug2}
-               placeholder={$post.slug||'slug'}/>
-    </div>
-    <div class="r">
-        <label for="a">Description</label>
-        <textarea id="a"
-                  bind:value={$post.desc}
-                  placeholder={getArtDesc($post)}></textarea>
-    </div>
-    <div class="r">
-        <label for="d">Tags</label>
-        <div class="tgs" id="d">
-            <Tags curStore={post} tagsStore={tags}/>
+{#key $post.id}
+    <SWin act={1}>
+        <div slot="btn" class="btn" class:ld={d} on:click={pub}>
+            Publish
         </div>
-    </div>
-    <div class="r">
-        <label>Banner</label>
-        <div class="bn" on:click={selRes}>
-            {#if bs}
-                <div
-                        transition:fade
-                        class="bg" style={bs}></div>
-                <div
-                        transition:fade
-                        class="rm" on:click|stopPropagation={()=>{
+        <div class="r">
+            <label for="b">Slug</label>
+            <input id="b" type="text"
+                   bind:value={$post.slug2}
+                   placeholder={$post.slug||'slug'}/>
+        </div>
+        <div class="r">
+            <label for="a">Description</label>
+            <textarea id="a"
+                      bind:value={$post.desc}
+                      placeholder={getArtDesc($post)}></textarea>
+        </div>
+        <div class="r">
+            <label for="j">Time</label>
+            <div class="dt" id="j">
+                <Date v={$post.created} change={v=>{
+                    post.update(p=>{
+                        if(v){
+                            p.create2=v
+                        }
+                        return p
+                    })
+            }}/>
+            </div>
+        </div>
+        <div class="r">
+            <label for="d">Tags</label>
+            <div class="tgs" id="d">
+                <Tags curStore={post} tagsStore={tags}/>
+            </div>
+        </div>
+        <div class="r">
+            <label>Banner</label>
+            <div class="bn" on:click={selRes}>
+                {#if bs}
+                    <div
+                            transition:fade
+                            class="bg" style={bs}></div>
+                    <div
+                            transition:fade
+                            class="rm" on:click|stopPropagation={()=>{
                     $post.banner=''
                 }}></div>
-            {/if}
+                {/if}
+            </div>
         </div>
-    </div>
-    <div class="r">
-        <label for="e">
-            Password
-        </label>
-        <input type="text" id="e" bind:value={$post.pwd}/>
-    </div>
-    <div class="r">
-        <label for="f" id="f">
-            <Ck bind:act={$post.cm}>Allow Comment</Ck>
-        </label>
-    </div>
+        <div class="r">
+            <label for="e">
+                Password
+            </label>
+            <input type="text" id="e" bind:value={$post.pwd}/>
+        </div>
+        <div class="r">
+            <label for="f" id="f">
+                <Ck bind:act={$post.cm}>Allow Comment</Ck>
+            </label>
+        </div>
 
-</SWin>
+    </SWin>
+{/key}
 <style lang="scss">
   .ld {
     animation: ss 1s infinite linear;
@@ -126,13 +143,12 @@
   }
 
   .r {
-    min-height: 40px;
     flex-wrap: wrap;
     display: flex;
     align-items: center;
     width: 80%;
     padding: 10px 10px 10px 100px;
-    margin: 10px auto;
+    margin: 0 auto;
 
     span {
       color: #ae893f;

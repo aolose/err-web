@@ -54,15 +54,14 @@
                 if (v !== bf) {
                     bf = v
                     lock = 1
-                    const r = await query('savePost', {...a, tags: undefined})
+                    const r = await query('savePost', a)
                     if (r && r.error) {
                         errorCatch(r.error)
                     } else {
-                        const [id, ver, da] = (r || "").split('\u0001')
+                        const [id, da] = (r || "").split('\u0001')
                         const old = $post.id
                         post.set({
                             ...a,
-                            ver: +ver,
                             id: +id,
                             saved: +da
                         });
@@ -112,7 +111,7 @@
         <Edit
                 store={post}
                 saved={$post.saved}
-                show={$post.ver}
+                show={Object.keys($post).length}
                 bind:ipt={ipt}
         />
         <div class="prev">

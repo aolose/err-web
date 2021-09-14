@@ -27,10 +27,10 @@
         {#if !data.id}
             <span title="temporary" class="_2">T</span>
         {:else }
-            {#if data.ver === -1 || data.saved > data.updated}
+            {#if  data.saved > data.updated}
                 <span title="draft" class="_0">D</span>
             {/if}
-            {#if data.ver > 0}
+            {#if data.updated > 0}
                 <span title="published" class="_1">P</span>
             {/if}
         {/if}
