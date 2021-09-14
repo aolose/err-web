@@ -89,18 +89,20 @@
         return marked(value || '').split(resTag).map(a => a.split(resSp))
     }
 </script>
-<div class="md">
-    {#each content() as [u, p]}
-        {#if p}
-            <Res attr={p} src={u}/>
-        {:else }
-            <div class="p">
-                {@html u}
-            </div>
-        {/if}
-    {/each}
-</div>
+{#key value}
+    <div class="md">
+        {#each content() as [u, p]}
+            {#if p}
+                <Res attr={p} src={u}/>
+            {:else }
+                <div class="p">
+                    {@html u}
+                </div>
+            {/if}
+        {/each}
+    </div>
 
+{/key}
 
 <style lang="scss">
   .p {
