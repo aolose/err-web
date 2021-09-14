@@ -14,7 +14,8 @@
     import {onDestroy} from "svelte";
     import {bg} from "$lib/store";
     import {goBack, resUrl, timeFmt} from "$lib/utils";
-   import PF from '$lib/pf.svelte'
+    import PF from '$lib/pf.svelte'
+
     Viewer.setDefaults({
         button: true,
         navbar: false,
@@ -36,8 +37,8 @@
         }
         if (ga) {
             setTimeout(() => {
-                new Viewer(ga)
-            }, 300)
+                new Viewer(ga);
+            }, 100)
         }
     }
     onDestroy(() => {
@@ -111,13 +112,14 @@
           background: transparentize(rgb(37, 40, 55), .95);
           color: #1a2638;
         }
-        pre{
-          code{
+
+        pre {
+          code {
             background: none;
           }
         }
 
-        & > p {
+        & > .p > p {
           &:first-child:first-letter {
             font-size: 30px;
           }
@@ -183,7 +185,8 @@
     color: #a1b0c2;
     top: 50px;
     position: absolute;
-    &:hover{
+
+    &:hover {
       opacity: 1;
     }
   }

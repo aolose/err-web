@@ -1,10 +1,10 @@
 <script>
     import {tick} from "svelte";
 
-    let ipt = []
+    let ipt = [], vv = []
+
     export let v = 0
-    export let change = n => {
-    }
+    export let change
 
     function next(a, s = 1) {
         const p = ipt[ipt.indexOf(a) + s]
@@ -14,8 +14,6 @@
             p.focus()
         }
     }
-
-    let vv = []
 
     function ch(mi, ma) {
         return async function () {
@@ -28,13 +26,13 @@
                 else if (v > ma) v = ma
             }
             vv[ipt.indexOf(tg)] = v
-            const [m, d,y, h, mm, s] = vv;
+            const [m, d, y, h, mm, s] = vv;
             const nd = new Date(+y, m - 1, +d, +h, +mm, +s)
             const t = nd.getTime()
             if (+(y + m + d + h + mm + s) && t > 0) {
-                change(Math.ceil(t / 1e3))
+                change && change(Math.ceil(t / 1e3))
             } else {
-                change(0)
+                change && change(0)
             }
             await tick()
             tg.setSelectionRange(selectionStart, selectionEnd)

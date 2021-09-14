@@ -8,6 +8,7 @@
     import xml from 'highlight.js/lib/languages/xml';
     import scss from 'highlight.js/lib/languages/scss';
     import 'highlight.js/styles/github.css';
+
     hljs.registerLanguage('js', javascript);
     hljs.registerLanguage('xml', xml);
     hljs.registerLanguage('yml', yml);
@@ -83,30 +84,26 @@
 </script>
 <script>
     import Res from './resBox.svelte';
-    import {onDestroy} from "svelte";
-
     export let value = ''
-    let out = []
-    $:out = marked(value || '').split(resTag).map(a => a.split(resSp))
-    onDestroy(() => {
-        out = []
-    })
+    function content() {
+        return marked(value || '').split(resTag).map(a => a.split(resSp))
+    }
 </script>
-{#key value}
-    <div class="md">
-        {#each out as [u, p],i (i)}
-            {#if p}
-                <Res attr={p} src={u}/>
-            {:else }
+<div class="md">
+    {#each content() as [u, p]}
+        {#if p}
+            <Res attr={p} src={u}/>
+        {:else }
+            <div class="p">
                 {@html u}
-            {/if}
-        {/each}
-    </div>
-{/key}
+            </div>
+        {/if}
+    {/each}
+</div>
 
 
 <style lang="scss">
-  .md {
+  .p {
     :global {
       h1, h2, h3, h4, h5, h6 {
         line-height: 2;
