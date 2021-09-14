@@ -84,25 +84,24 @@
 </script>
 <script>
     import Res from './resBox.svelte';
-    export let value = ''
-    function content() {
-        return marked(value || '').split(resTag).map(a => a.split(resSp))
-    }
-</script>
-{#key value}
-    <div class="md">
-        {#each content() as [u, p]}
-            {#if p}
-                <Res attr={p} src={u}/>
-            {:else }
-                <div class="p">
-                    {@html u}
-                </div>
-            {/if}
-        {/each}
-    </div>
 
-{/key}
+    export let value = ''
+    let out = []
+    $:out = marked(value || '').split(resTag).map(a => a.split(resSp))
+</script>
+
+<div class="md">
+    {#each out as [u, p]}
+        {#if p}
+            <Res attr={p} src={u}/>
+        {:else }
+            <div class="p">
+                {@html u}
+            </div>
+        {/if}
+    {/each}
+</div>
+
 
 <style lang="scss">
   .p {
