@@ -136,7 +136,7 @@
           color: #333;
           font-size: 15px;
           line-height: 2;
-          margin: 10px 0 30px;
+          margin: 10px 0 20px;
         }
       }
     }
