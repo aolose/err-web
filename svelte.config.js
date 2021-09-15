@@ -14,13 +14,13 @@ let i=10
 let t
 const b={}
 function uniqCssName(n){
-	clearTimeout(t)
-	t=setTimeout(function () {
-		fs.writeFileSync(cssCacheFile,JSON.stringify(b))
-	},300)
 	if(nm[n]){
 		return b[n]=nm[n]
 	}else {
+		clearTimeout(t)
+		t=setTimeout(function () {
+			fs.writeFileSync(cssCacheFile,JSON.stringify(b))
+		},300)
         return b[n]='_'+((i++).toString(36))
 	}
 }
