@@ -38,7 +38,7 @@ jobs:
           username: ${{ secrets.VPS_USR }}
           port: ${{ secrets.VPS_PORT }}
           source: "build"
-          target: "~/"
+          target: "~/errWeb/"
 
     - name: Run
       uses: appleboy/ssh-action@master
@@ -48,6 +48,6 @@ jobs:
        username: ${{ secrets.VPS_USR }}
        port: ${{ secrets.VPS_PORT }}
        script: |
-        sudo -S service err-web restart << EOF
+        sudo -S pm2 restart  err-web<< EOF
         ${{ secrets.VPS_PWD }}
         EOF
