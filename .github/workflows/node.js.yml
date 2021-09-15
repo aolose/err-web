@@ -3,6 +3,9 @@
 
 name: Node.js CI
 
+env:
+  API_DOMAIN: ${{ secrets.API_DOMAIN }}
+  
 on:
   push:
     branches: [ master ]
@@ -25,7 +28,6 @@ jobs:
         cache: 'npm'
     - run: npm install
     - run: |
-        API_DOMAIN="https://api.err.name"
         npm run build 
     
     - name: Publish
