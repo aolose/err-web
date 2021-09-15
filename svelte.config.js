@@ -2,16 +2,12 @@
 import preprocess from 'svelte-preprocess';
 import vercel from '@sveltejs/adapter-vercel';
 import fs from 'fs'
-import path from 'path'
 let nm = {}
-const cssCacheFile=path.join("./cssCache.json")
+const cssCacheFile="./cssCache.json"
 try {
 	nm=JSON.parse( fs.readFileSync(cssCacheFile).toString())
-}catch (e){
-
-}
-let i=10
-let t
+}catch (e){}
+let i=10,t
 const b={}
 function uniqCssName(n){
 	if(nm[n]){
