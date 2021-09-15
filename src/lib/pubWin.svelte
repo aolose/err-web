@@ -149,13 +149,6 @@
     width: 80%;
     padding: 10px 10px 10px 100px;
     margin: 0 auto;
-
-    span {
-      color: #ae893f;
-      position: absolute;
-      bottom: -10px;
-      left: 110px;
-    }
   }
 
   input, textarea, .bn, .tgs {

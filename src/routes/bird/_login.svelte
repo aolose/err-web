@@ -3,7 +3,7 @@
     import {jump} from '$lib/transition'
     import LD from '$lib/loading.svelte'
     import {fade} from 'svelte/transition'
-
+    export const prerender = true;
     /**
      * @type {import('@sveltejs/kit').Load}
      */

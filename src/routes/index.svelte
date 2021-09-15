@@ -1,3 +1,6 @@
+<script context="module">
+    export const prerender = true;
+</script>
 <script>
     import Bird from "$lib/brid.svelte"
     import {onDestroy, onMount} from "svelte";

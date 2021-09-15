@@ -1,18 +1,35 @@
 /** @type {import('@sveltejs/kit').Config} */
 import preprocess from 'svelte-preprocess';
 import vercel from '@sveltejs/adapter-vercel';
-const a={}
+import fs from 'fs'
+import path from 'path'
+let nm = {}
+const cssCacheFile=path.join("./cssCache.json")
+try {
+	nm=JSON.parse( fs.readFileSync(cssCacheFile).toString())
+}catch (e){
+
+}
 let i=10
+let t
+const b={}
 function uniqCssName(n){
-	if(a[n]){
-		return a[n]
+	clearTimeout(t)
+	t=setTimeout(function () {
+		fs.writeFileSync(cssCacheFile,JSON.stringify(b))
+	},300)
+	if(nm[n]){
+		return b[n]=nm[n]
 	}else {
-        return  a[n]='_'+((i++).toString(36))
+        return b[n]='_'+((i++).toString(36))
 	}
 }
 
 const config = {
 	compilerOptions:{
+		css:false,
+		hydratable:true,
+		generate:'ssr',
 		cssHash:({hash, css, name, filename })=>uniqCssName(hash(css))
 	},
 	preprocess: preprocess(),

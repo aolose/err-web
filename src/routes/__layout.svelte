@@ -20,8 +20,8 @@
     </div>
 </div>
 <style lang="scss">
+  @import "../lib/base.css";
   @import "../lib/break";
-
   :global {
     :root {
       --iw: 2px;

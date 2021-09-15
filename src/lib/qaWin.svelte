@@ -208,13 +208,7 @@
       height: 100%;
     }
     :global {
-      .ma {
-        .edit {
-          width: 90%;
-        }
-      }
-
-      .nav, .ma ,.vv{
+      .nav ,.vv{
         position: absolute;
         width: 80%;
         right: 10%;
@@ -307,23 +301,6 @@
     height: 60px;
     display: flex;
     align-items: center;
-  }
-
-  .qa {
-    position: absolute;
-    left: 0;
-    right: 60px;
-    top: 0;
-    bottom: 0;
-    display: flex;
-  }
-
-  .ma {
-    overflow: hidden;
-    padding: 10px 0 40px 10px;
-    flex: 1;
-    height: 100%;
-    display: flex;
   }
   .pms {
     display: flex;

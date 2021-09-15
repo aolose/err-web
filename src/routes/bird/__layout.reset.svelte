@@ -30,3 +30,6 @@ export async function load({session}) {
     <Lg type={1}/>
 {/if}
 <Pop/>
+<style lang="scss">
+  @import "../../lib/base.css";
+</style>
