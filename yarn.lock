@@ -23,6 +23,11 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
+"@iarna/toml@^2.2.5":
+  version "2.2.5"
+  resolved "https://registry.npmjs.org/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
+  integrity sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
+
 "@rollup/pluginutils@^4.1.1":
   version "4.1.1"
   resolved "https://registry.npmjs.org/@rollup/pluginutils/-/pluginutils-4.1.1.tgz#1d4da86dd4eded15656a57d933fda2b9a08d47ec"
@@ -31,11 +36,12 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
-"@sveltejs/adapter-vercel@next":
-  version "1.0.0-next.28"
-  resolved "https://registry.npmjs.org/@sveltejs/adapter-vercel/-/adapter-vercel-1.0.0-next.28.tgz#c34144a7e9c0e4e3111ca942c192a94362ad7c2b"
-  integrity sha512-a2n4UCuTu5LhUoS5KiI5xasgvIXW8qKnSSKOnTTLYlZhpJ5VnSKWyT9hUOoVsAEGkeZw+2SYxxI3Vckw6ZhSng==
+"@sveltejs/adapter-cloudflare-workers@^1.0.0-next.21":
+  version "1.0.0-next.21"
+  resolved "https://registry.npmjs.org/@sveltejs/adapter-cloudflare-workers/-/adapter-cloudflare-workers-1.0.0-next.21.tgz#9f3cb46e6110510bb301b1169a8db504422d2e72"
+  integrity sha512-mcaCoWA+9k8tgP9T0Jkse0m1ghAawL8KeHy/T+/EZ7aHyl7KAZ8YkU27HYKIlaQz4fINtdP+BQj25gZvt7RlcA==
   dependencies:
+    "@iarna/toml" "^2.2.5"
     esbuild "^0.12.5"
 
 "@sveltejs/app-utils@^1.0.0-next.0":
@@ -45,20 +51,20 @@
   dependencies:
     mime "^2.4.6"
 
-"@sveltejs/kit@^1.0.0-next.160":
-  version "1.0.0-next.160"
-  resolved "https://registry.npmjs.org/@sveltejs/kit/-/kit-1.0.0-next.160.tgz#e2764c465760cf202fd2f3d0dbd36739a7b2c305"
-  integrity sha512-JmacpK+VsppUKDQu1B3oJ70SnE9BXb/PSAP3f91K/DMnaSEGj7vtHn/3e6l7Mop12t1PkBk5lImh/ULqBO+YfA==
+"@sveltejs/kit@^1.0.0-next.167":
+  version "1.0.0-next.167"
+  resolved "https://registry.npmjs.org/@sveltejs/kit/-/kit-1.0.0-next.167.tgz#02cdaa608c85066d5ce87b8b26d96787aa5ca438"
+  integrity sha512-VQSxZ2hFh36dgb/EkFs22bFsGgkctX2YgFPdt0enuZTlu08SVXubiEWPGWUg2S/gi5Biq4lvzaa+4JoYqU9B+A==
   dependencies:
-    "@sveltejs/vite-plugin-svelte" "^1.0.0-next.16"
+    "@sveltejs/vite-plugin-svelte" "^1.0.0-next.24"
     cheap-watch "^1.0.3"
     sade "^1.7.4"
-    vite "^2.5.2"
+    vite "^2.5.7"
 
-"@sveltejs/vite-plugin-svelte@^1.0.0-next.16":
-  version "1.0.0-next.19"
-  resolved "https://registry.npmjs.org/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-1.0.0-next.19.tgz#9646abc2cd1982146db4bb341aafdb5f32f19dd2"
-  integrity sha512-q9hHkMzodScwDq64pNaWhekpj97vWg3wO9T0rqd8bC2EsrBQs2uD1qMJvDqlNd63AbO2uSJMGo+TQ0Xt2xgyYg==
+"@sveltejs/vite-plugin-svelte@^1.0.0-next.24":
+  version "1.0.0-next.24"
+  resolved "https://registry.npmjs.org/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-1.0.0-next.24.tgz#55033c27b5f428e804ff64f410a640baacff0333"
+  integrity sha512-b+n3jcLpk2j/25APQbk5ejCyd0faYTB2bOxR3gY0LX3MFGgdiL8zdf3/aawcPSxLdbL73YVlxNBIATGuvq03uQ==
   dependencies:
     "@rollup/pluginutils" "^4.1.1"
     debug "^4.3.2"
@@ -419,9 +425,9 @@ esbuild@^0.12.17:
   integrity sha512-C0ibY+HsXzYB6L/pLWEiWjMpghKsIc58Q5yumARwBQsHl9DXPakW+5NI/Y9w4YXiz0PEP6XTGTT/OV4Nnsmb4A==
 
 esbuild@^0.12.5:
-  version "0.12.26"
-  resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.12.26.tgz#35f2d58ac3fa4629df24aa4d6fd72feb5522e94b"
-  integrity sha512-YmTkhPKjvTJ+G5e96NyhGf69bP+hzO0DscqaVJTi5GM34uaD4Ecj7omu5lJO+NrxCUBRhy2chONLK1h/2LwoXA==
+  version "0.12.28"
+  resolved "https://registry.npmjs.org/esbuild/-/esbuild-0.12.28.tgz#84da0d2a0d0dee181281545271e0d65cf6fab1ef"
+  integrity sha512-pZ0FrWZXlvQOATlp14lRSk1N9GkeJ3vLIwOcUoo3ICQn9WNR4rWoNi81pbn6sC1iYUy7QPqNzI3+AEzokwyVcA==
 
 escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -1557,10 +1563,10 @@ viewerjs@^1.10.1:
   resolved "https://registry.npmjs.org/viewerjs/-/viewerjs-1.10.1.tgz#07499ed043d0a29e3002b90f55c5b228bd1a742c"
   integrity sha512-Oyzd3JP9dDSd+bBulfnQ+UTfHoobFwkmcT/uKSnQXjmPz7rZU0HJIiKudxPaMsiv17dr4Sm1cHnASJcDlFw1PA==
 
-vite@^2.5.2:
-  version "2.5.2"
-  resolved "https://registry.npmjs.org/vite/-/vite-2.5.2.tgz#3963a4ec1e6ecae49359eddfdd67f6cb1e6e07a1"
-  integrity sha512-JK5uhiVyMqHiAJbgBa8rCvpP8bEhAE9dKDv1gCmP+EUP2FSPmEeW3WXlCXauPB3MDa8behPW+ntyNXqnGaxslg==
+vite@^2.5.7:
+  version "2.5.7"
+  resolved "https://registry.npmjs.org/vite/-/vite-2.5.7.tgz#e495be9d8bcbf9d30c7141efdccacde746ee0125"
+  integrity sha512-hyUoWmRPhjN1aI+ZSBqDINKdIq7aokHE2ZXiztOg4YlmtpeQtMwMeyxv6X9YxHZmvGzg/js/eATM9Z1nwyakxg==
   dependencies:
     esbuild "^0.12.17"
     postcss "^8.3.6"

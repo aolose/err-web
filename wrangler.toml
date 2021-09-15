@@ -1,0 +1,10 @@
+name = "err"
+type = "webpack"
+route = ''
+zone_id = '9dff695da68dfe6b962291e94794a0d2'
+account_id = '9b271dc189081759b43ad0e987ef5aeb'
+usage_model = ''
+compatibility_flags = []
+workers_dev = true
+API_DOMAIN='https://api.err.name'
+site = {bucket = "./build", entry-point = "./workers-site"}

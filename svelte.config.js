@@ -1,6 +1,7 @@
 /** @type {import('@sveltejs/kit').Config} */
 import preprocess from 'svelte-preprocess';
-import vercel from '@sveltejs/adapter-vercel';
+import adapter from '@sveltejs/adapter-cloudflare-workers';
+
 import fs from 'fs'
 let nm = {}
 const cssCacheFile="./cssCache.json"
@@ -27,7 +28,7 @@ const config = {
 	},
 	preprocess: preprocess(),
 	kit: {
-		adapter: vercel(),
+		adapter: adapter(),
 		target: '#err',
 		ssr:true,
 		vite: {
