@@ -208,7 +208,13 @@
       height: 100%;
     }
     :global {
-      .nav ,.vv{
+      .ma {
+        .edit {
+          width: 90%;
+        }
+      }
+
+      .nav, .ma ,.vv{
         position: absolute;
         width: 80%;
         right: 10%;

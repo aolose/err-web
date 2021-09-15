@@ -174,7 +174,9 @@
                     {/each}
                 </div>
             </div>
-            <Pag url={go} cur={cur} total={total}/>
+            <div class="nv">
+                <Pag url={go} cur={cur} total={total}/>
+            </div>
         </div>
         <div class:act={showTsk} class="tk">
             {#each qs as q}
@@ -184,6 +186,9 @@
     </div>
 </SWin>
 <style lang="scss">
+  .nv{
+    margin-top: 10px;
+  }
   .tk {
     transition: .3s ease-in-out;
     transform: translate3d(100%, 0, 0);
