@@ -30,7 +30,24 @@ jobs:
     - run: |
         npm run build 
     
-    - name: Publish
-      uses: cloudflare/wrangler-action@1.3.0
+    - name: Upload 
+      uses: appleboy/scp-action@master
       with:
-        apiToken: ${{ secrets.API_TOKEN }}
+          host: ${{ secrets.VPS_ADDR }}
+          key: ${{ secrets.VPS_KEY }}
+          username: ${{ secrets.VPS_USR }}
+          port: ${{ secrets.VPS_PORT }}
+          source: "build"
+          target: "~/"
+
+    - name: Run
+      uses: appleboy/ssh-action@master
+      with:
+       host: ${{ secrets.VPS_ADDR }}
+       key: ${{ secrets.VPS_KEY }}
+       username: ${{ secrets.VPS_USR }}
+       port: ${{ secrets.VPS_PORT }}
+       script: |
+        sudo -S service err-web restart << EOF
+        ${{ secrets.VPS_PWD }}
+        EOF
