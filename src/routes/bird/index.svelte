@@ -1,6 +1,3 @@
-<script context="module">
-    export const prerender = true;
-</script>
 <script>
     import {onDestroy, onMount} from "svelte";
     import {host, query} from "$lib/res";

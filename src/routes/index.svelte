@@ -7,8 +7,6 @@
     import {mk, msg} from "$lib/store";
     import {slide} from "$lib/transition";
     import {goto} from "$app/navigation";
-
-
     let c = 0;
     let h = 0;
     let sm = 0

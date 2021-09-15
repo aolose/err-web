@@ -23,9 +23,6 @@ function uniqCssName(n){
 
 const config = {
 	compilerOptions:{
-		css:false,
-		hydratable:true,
-		generate:'ssr',
 		cssHash:({hash, css, name, filename })=>uniqCssName(hash(css))
 	},
 	preprocess: preprocess(),
