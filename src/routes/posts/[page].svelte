@@ -16,6 +16,7 @@
     }
     $:cur = d.cur
     $:total = d.total
+    let ls=[]
     $:ls = d.ls || []
 </script>
 <svelte:head>

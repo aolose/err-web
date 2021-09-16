@@ -55,7 +55,6 @@
             isLogin.set(1)
             tok.set(t)
         } else {
-
             try {
                 t = JSON.parse(t)
                 if (t) {

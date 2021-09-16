@@ -1,9 +1,12 @@
 import {browser} from "$app/env";
 import {apis} from "$lib/apis";
 import {logout} from './utils'
+import {get} from "svelte/store";
+import {tok} from "$lib/store";
+
 const localApi = "http://localhost:8880"
-export const host =import.meta.env.VITE_API_DOMAIN|| localApi
-export const isDev = host===localApi
+export const host = import.meta.env.VITE_API_DOMAIN || localApi
+export const isDev = host === localApi
 const getRes = async (ctx, name) => {
     const {page, fetch, session: sess, context} = ctx;
     const cfg = apis[name];
@@ -29,6 +32,7 @@ const getRes = async (ctx, name) => {
         credentials: "include",
         method
     }
+
     let s = null;
     if (before) {
         const a = before(d, sess, page, a => s = a)
@@ -92,6 +96,10 @@ const getRes = async (ctx, name) => {
     }
     let re
     await new Promise((resolve) => {
+        const t =get(tok)
+        if (t) {
+            (cf.headers = (cf.headers || {})).token = t
+        }
         fetch(url, cf).then(async r => {
             re = r
             resolve()
@@ -134,18 +142,18 @@ const getRes = async (ctx, name) => {
                 o.props.s = [cacheKey, cacheTime * 1e3, sto]
             }
             return o
-        }else {
-            err= new Error(r)
+        } else {
+            err = new Error(r)
         }
     }
     if (re && re.status === 403) {
         await logout()
-        err=null
-    }else {
-        o.status=408
+        err = null
+    } else {
+        o.status = 408
     }
-    if(err){
-        if(fail)fail(err)
+    if (err) {
+        if (fail) fail(err)
         console.trace(err)
     }
     o.error = err && err.message || new Error(`Could not load ${url}`)

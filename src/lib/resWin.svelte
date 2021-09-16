@@ -23,7 +23,7 @@
     let hasP = 0
 
     const bakPub = () => {
-        if($bannerMod){
+        if ($bannerMod) {
             bannerMod.set(0)
             winAct.set(1)
         }
@@ -186,9 +186,10 @@
     </div>
 </SWin>
 <style lang="scss">
-  .nv{
+  .nv {
     margin-top: 10px;
   }
+
   .tk {
     transition: .3s ease-in-out;
     transform: translate3d(100%, 0, 0);

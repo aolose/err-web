@@ -2,7 +2,7 @@ import wrk from './up?url';
 import SparkMD5 from 'spark-md5'
 import {host} from './res'
 import imageCompression from 'browser-image-compression';
-import {isLogin, upLoadInfo, upLoadSeq} from "$lib/store";
+import {isLogin, tok, upLoadInfo, upLoadSeq} from "$lib/store";
 import {goto} from '$app/navigation'
 
 export const logout = () => {
@@ -12,6 +12,7 @@ export const logout = () => {
     }).then(res => {
         if (res.ok) {
             isLogin.set(0)
+            tok.set('')
         }
     }).catch(e => {
         console.error(e)
