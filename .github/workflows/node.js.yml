@@ -44,4 +44,4 @@ jobs:
        key: ${{ secrets.VPS_KEY }}
        username: ${{ secrets.VPS_USR }}
        port: ${{ secrets.VPS_PORT }}
-       script: pm2 restart  err-web
+       script: pm2 start /home/aolose/errWeb/pm2.json
