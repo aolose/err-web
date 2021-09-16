@@ -27,7 +27,7 @@
         <div class="t">
             <div class="i"></div>
             <div class="c">
-                {#each ls as p,i}
+                {#each ls as p,i (p.updated)}
                     <Item p={p} n={i}/>
                 {/each}
             </div>
