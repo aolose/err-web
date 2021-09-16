@@ -12,7 +12,7 @@
     const d = tm.getDate()
 </script>
 
-<div class="p" transition:fade>
+<div class="p" transition:fade|local>
     <div class="t">
         <span class="y">{y}</span>
         <span class="md">
