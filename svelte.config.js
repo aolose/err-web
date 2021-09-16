@@ -32,9 +32,7 @@ const config = {
     preprocess: preprocess(),
     kit: {
         target: '#err',
-        adapter: adapter({
-            precompress: true,
-        }),
+        adapter: adapter(),
         ssr: true,
         vite: {
             define: {

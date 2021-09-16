@@ -2,7 +2,7 @@ import {browser} from "$app/env";
 import {apis} from "$lib/apis";
 import {logout} from './utils'
 const localApi = "http://localhost:8880"
-export const host =process.env.API_DOMAIN|| localApi
+export const host =import.meta.env.VITE_API_DOMAIN|| localApi
 export const isDev = host===localApi
 const getRes = async (ctx, name) => {
     const {page, fetch, session: sess, context} = ctx;
