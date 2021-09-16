@@ -43,7 +43,7 @@
 </script>
 <svelte:window on:resize={pos}/>
 <div class="f s" bind:this={sd}></div>
-<div class="f p"
+<div class="f re"
      style={`top:${top}px;left:${l}px`}
      transition:scale|local
      on:click={click} class:act={act}>
@@ -59,7 +59,7 @@
     <input bind:value={nm} on:change={ch}/>
 </div>
 <style lang="scss">
-  .p {
+  .re {
     position: absolute;
     transition: .3s ease-in-out left, .3s .3s ease-in-out top, .2s ease-in-out transform;
     cursor: pointer;
