@@ -25,7 +25,7 @@
 <div class="o">
     <Ctx>
         <div class="t">
-            <div class="i"></div>
+            <div class="li"></div>
             <div class="c">
                 {#each ls as p,i (p.updated)}
                     <Item p={p} n={i}/>
@@ -55,7 +55,7 @@
  .n{
    height: 80px;
  }
-  .i {
+  .li {
     position: absolute;
     top:  var(--itp);
     min-height: 70vh;
