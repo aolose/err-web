@@ -25,6 +25,9 @@
         return `<p>${s}</p>`
     }
     const renderer = {
+        link(h,ti,tx){
+            return `<a title='${ti}' target="_blank" href='${h}'>{tx}</a>`
+        },
         paragraph(s) {
             if (/\n?\.\.\n?/.test(s)) return '<br>'
             else return parseRes(s)
