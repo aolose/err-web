@@ -113,8 +113,8 @@
 
       .md {
         color: #333;
-        font-size: 15px;
-        line-height: 1.8;
+        font-size: 14px;
+        line-height: 1.95;
         margin: 10px 0 20px;
         pre, code {
           border-radius: 3px;
@@ -129,6 +129,7 @@
         }
 
         & > p {
+          margin-bottom: 10px;
           &:first-child:first-letter {
             font-size: 30px;
           }
