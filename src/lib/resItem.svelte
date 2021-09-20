@@ -51,9 +51,9 @@
         <div class="n">{idx}</div>
     {/if}
     {#if /svg|image/.test(tp)}
-        <div class="b" style={`background-image:url('${url||(host+`/r/${id}.webp`)}')`}></div>
+        <div class="be" style={`background-image:url('${url||(host+`/r/${id}.webp`)}')`}></div>
     {:else }
-        <div class="b" style={col(tp)}>{(ext).toUpperCase()}</div>
+        <div class="be" style={col(tp)}>{(ext).toUpperCase()}</div>
     {/if}
     <div class="z">{fileSize(sz)}</div>
     <input bind:value={nm} on:change={ch}/>
@@ -128,7 +128,7 @@
     border-radius: 3px;
   }
 
-  .b {
+  .be {
     user-select: none;
     border-radius: 4px;
     width: 100%;
