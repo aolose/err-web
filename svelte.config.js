@@ -27,7 +27,7 @@ function uniqCssName(n) {
 
 const config = {
     compilerOptions: {
-        cssHash: ({hash, css, name, filename}) => uniqCssName(hash(css+filename))
+        cssHash: ({hash, css, name, filename}) => uniqCssName(hash(css))
     },
     preprocess: preprocess(),
     kit: {
