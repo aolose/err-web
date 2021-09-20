@@ -7,52 +7,56 @@
     import Blk from "./iconBlk.svelte"
     import Del from "./iconDel.svelte"
     import Cmt from "./iconCmt.svelte"
-    import Art from "./iconArt.svelte"
     import Und from "./iconUnd.svelte"
-    import {post, artList, winAct, isLogin, openWin} from "./store";
+    import {post, isLogin, openWin, artList, winAct} from "./store";
     import Btn from "./btn.svelte"
     import {query} from "./res";
     import {errorCatch} from "$lib/utils";
+    import {tip} from './popMsg.svelte'
 
     function upu() {
-        if ($post.id)
-            return query('unPub', $post.id).then(a => {
-                if (a) {
-                    if (a.error) {
-                        errorCatch(a.error)
+        tip('Unpublish the post?', () => {
+            if ($post.id)
+                return query('unPub', $post.id).then(a => {
+                    if (a) {
+                        if (a.error) {
+                            errorCatch(a.error)
+                        }
                     }
-                }
-                post.set({
-                    ...$post,
-                    updated: 0
+                    post.set({
+                        ...$post,
+                        updated: 0
+                    })
                 })
-            })
+        }, 1)
     }
 
     function del() {
-        if ($post.id)
-            return query('delPost', $post.id).then(a => {
-                if (a) {
-                    if (a.error) {
-                        errorCatch(a.error)
-                    } else {
-                        const ls = [...$artList]
-                        const idx = ls.findIndex(c => c.id === +a)
-                        if (idx !== -1) {
-                            ls.splice(idx, 1)
-                        }
-                        artList.set(ls)
-                        if ($post.id === +a) {
-                            post.set({})
+        tip('Confirm delete?', () => {
+            if ($post.id)
+                return query('delPost', $post.id).then(a => {
+                    if (a) {
+                        if (a.error) {
+                            errorCatch(a.error)
+                        } else {
+                            const ls = [...$artList]
+                            const idx = ls.findIndex(c => c.id === +a)
+                            if (idx !== -1) {
+                                ls.splice(idx, 1)
+                            }
+                            artList.set(ls)
+                            if ($post.id === +a) {
+                                post.set({})
+                            }
                         }
                     }
-                }
-            })
-        const ls = [...$artList]
-        if (ls.length && (!ls[0] || !ls[0].id)) ls.unshift()
-        artList.set([])
-        post.set({})
-        if ($winAct === 1) winAct.set(0)
+                })
+            const ls = [...$artList]
+            if (ls.length && (!ls[0] || !ls[0].id)) ls.unshift()
+            artList.set([])
+            post.set({})
+            if ($winAct === 1) winAct.set(0)
+        }, 1)
     }
 
 </script>
@@ -90,11 +94,18 @@
     {/if}
 </div>
 <style lang="scss">
+  @import "./break";
+
   .mu {
     position: absolute;
     right: 0;
     top: 0;
+    bottom: 0;
     width: 60px;
+    background: #121622;
+    @include s() {
+      width: 40px;
+    }
 
     :global {
       .a {
@@ -150,6 +161,11 @@
         opacity: .6;
         transition: .2s ease-in-out;
         box-shadow: inset rgba(0, 0, 0, .0) 0 0 0;
+        @include s() {
+          width: 38px;
+          height: 38px;
+          margin:  3px 0;
+        }
 
         &:hover {
           opacity: 1;

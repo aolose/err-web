@@ -8,10 +8,13 @@
 <script>
     import {cacheSrvData} from "$lib/res";
     import Ctx from "$lib/ctx.svelte";
-
+    import {browser} from "$app/env";
     export let d = {}
     export let s;
     $:{
+        if(browser){
+            window.name='err'
+        }
         cacheSrvData(s, d)
     }
     $:cur = d.cur

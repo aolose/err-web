@@ -204,20 +204,21 @@
     bottom: 0;
 
     & > div {
-      width: 80%;
+      width: 90%;
       height: 100%;
     }
     :global {
       .ma {
         .edit {
-          width: 90%;
+          margin:  0 auto;
+          width: 100%;
         }
       }
 
       .nav, .ma ,.vv{
         position: absolute;
-        width: 80%;
-        right: 10%;
+        width: 90%;
+        right: 10px;
         top: 0;
         bottom: 40px;
         display: block;

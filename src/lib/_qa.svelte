@@ -1,14 +1,7 @@
 <script>
-    import List from './list.svelte'
-    import Qa from './qCard.svelte'
-    import Ld from './loading.svelte'
     import {fade} from "svelte/transition";
-    import {slide} from './transition'
     import { qaList, qState} from "./store";
     import {qa} from "./store";
-    import Edit from './edit.svelte'
-    import BW from './blWin.svelte'
-    import Sys from './sysWin.svelte'
     import {query} from "$lib/res";
     import {onDestroy} from "svelte";
      let last=""

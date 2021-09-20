@@ -40,7 +40,7 @@
 
                     post.set({
                         ...$post,
-                        created:$post.create2||$post.created,
+                        created: $post.create2 || $post.created,
                         pwd: $post.pwd,
                         slug: s,
                         slug2: s,
@@ -123,6 +123,8 @@
     </SWin>
 {/key}
 <style lang="scss">
+  @import "./break";
+
   .ld {
     animation: ss 1s infinite linear;
   }
@@ -149,6 +151,16 @@
     width: 80%;
     padding: 10px 10px 10px 100px;
     margin: 0 auto;
+    @include s() {
+      label {
+        left: 15px;
+        top: 0;
+        position: absolute;
+      }
+      padding: 28px 10px 10px;
+      width: 90%;
+      margin:  0 auto;
+    }
   }
 
   input, textarea, .bn, .tgs {
@@ -182,7 +194,8 @@
       .rm {
         opacity: 1;
       }
-      .bg{
+
+      .bg {
         opacity: .5;
       }
     }
@@ -218,7 +231,7 @@
       opacity: .2;
       cursor: pointer;
       transition: .3s ease-in-out;
-      background:  url("./img/can.svg") no-repeat center;
+      background: url("./img/can.svg") no-repeat center;
       background-size: 20px;
     }
   }
@@ -235,6 +248,10 @@
   }
 
   .btn {
+    top: 5px;
+    right: 0;
+    position: absolute;
+    width: 80px;
     &:hover {
       opacity: 1;
     }

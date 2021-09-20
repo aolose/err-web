@@ -162,6 +162,7 @@
 </div>
 
 <style lang="scss">
+  @import "./break";
   .edit {
     max-width: 600px;
     flex: 1;
@@ -169,7 +170,9 @@
     flex-direction: column;
     height: 100%;
     width: 50%;
-
+     @include s(){
+       padding-right: 30px;
+     }
     textarea {
       flex: 1;
       overflow: auto;

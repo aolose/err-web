@@ -9,9 +9,10 @@
     import BW from './blWin.svelte'
     import Sys from './sysWin.svelte'
     import Qa from './qaWin.svelte'
+    import Msg from '$lib/typeMsg.svelte'
 
     import {fade} from "svelte/transition";
-    import {artList, post, winAct} from "$lib/store";
+    import {artList, backView, post, view, winAct} from "$lib/store";
     import {query} from "$lib/res";
     import {errorCatch} from "$lib/utils";
 
@@ -21,6 +22,7 @@
     let pid = $post.id
     let bf
     let lock
+    let cls = ''
     $:{
         if (!bf) {
             bf = ($post.title + JSON.stringify($post.content || "")).replace(/[ \n\t\r]/g, '')
@@ -89,53 +91,67 @@
         artList.set([])
         winAct.set(0)
     })
+    onDestroy(view.subscribe(a => {
+        cls = 'v' + a
+    }))
 </script>
-<nav>
-    <List
-            icon={1}
-            api={'edit'}
-            cpm={PItem}
-            listStore={artList}
-            curStore={post}
-            baseItem={ {
+<div class={'ctx '+cls}>
+    <nav>
+        <List
+                icon={1}
+                api={'edit'}
+                cpm={PItem}
+                listStore={artList}
+                curStore={post}
+                baseItem={ {
             id: 0,
             title: "A new article",
             desc: "",
             content: "Write something",
             ver: -1
         }}
-    />
-</nav>
-<div class="ma">
-    <div class="write">
-        <Edit
-                store={post}
-                saved={$post.saved}
-                show={Object.keys($post).length}
-                bind:ipt={ipt}
         />
-        <div class="prev">
-            {#key !Object.keys($post).length}
-                <div transition:fade>
-                    <h1>{title}</h1>
-                    <Md value={content}/>
-                </div>
-            {/key}
-            <Pub/>
-            <Res ipt={ipt}/>
-            <BW/>
-            <Qa/>
-            <Sys/>
+    </nav>
+    <div class={'ma'}>
+        <div class="write">
+            <Edit
+                    store={post}
+                    saved={$post.saved}
+                    show={Object.keys($post).length}
+                    bind:ipt={ipt}
+            />
+            <div class="prev">
+                {#key !Object.keys($post).length}
+                    <div transition:fade>
+                        <h1>{title}</h1>
+                        <Md value={content}/>
+                    </div>
+                {/key}
+            </div>
         </div>
     </div>
+    <div class="msg">
+        <Msg defaultText="version 0.0.1"/>
+    </div>
 </div>
+<Pub/>
+<Res ipt={ipt}/>
+<BW/>
+<Qa/>
+<Sys/>
 <style lang="scss">
+  @import "./break";
+
   nav {
     width: 250px;
     display: block;
     height: 100%;
     background: #121622;
     padding: 0 11px 5px 6px;
+    @include s() {
+      padding-right: 40px;
+      width: 100%;
+    }
   }
 
   .write {
@@ -151,6 +167,9 @@
     margin-left: 30px;
     margin-right: 50px;
     overflow: hidden;
+    @include s() {
+      margin-right: 40px;
+    }
 
     h1 {
       margin-bottom: 20px;
@@ -182,6 +201,42 @@
     height: 100%;
     display: flex;
     flex-direction: column;
+    @include s() {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: -100%;
+      transform: translate3d(50%, 0, 0);
+    }
+  }
+  .msg {
+    position: absolute;
+    right: 30px;
+    bottom: 15px;
+    max-width: 70%;
+    color: #00a1ff;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ctx {
+    transition: .3s ease-in-out;
+    display: flex;
+    flex: 1;
+    overflow: visible;
+  }
+  @include s() {
+    .v0 {
+      transform: translate3d(0, 0, 0);
+    }
+    .v1 {
+      transform: translate3d(-100%, 0, 0);
+    }
+    .v2 {
+      transform: translate3d(-200%, 0, 0);
+    }
   }
 
 </style>

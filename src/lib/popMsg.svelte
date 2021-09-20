@@ -106,6 +106,7 @@
   }
 
   .tip {
+    min-width: 200px;
     transform: translate3d(0, 0, 0);
     font-size: 14px;
     box-shadow: #000 0 5px 20px -10px;

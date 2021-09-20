@@ -20,7 +20,7 @@
     </div>
 </div>
 <style lang="scss">
-  @import "../lib/base.css";
+  @import "../lib/base";
   @import "../lib/break";
   :global {
     :root {
@@ -62,16 +62,6 @@
     * {
       color: #666;
     }
-
-    *::-webkit-scrollbar {
-      width: 8px;
-      height: 8px
-    }
-
-    *::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, .05)
-    }
-
     *::-webkit-scrollbar-thumb {
       background-color: #2f4569
     }

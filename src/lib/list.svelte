@@ -16,23 +16,28 @@
     let sc
     let sc1
     let page = 1
+    let ld = 0
 
     async function add() {
         const o = {...baseItem}
         curStore.set({...o});
         listStore.set([o, ...$listStore])
-        await  tick()
+        await tick()
         initEdit.set(1)
     }
 
     async function search() {
+        ld=1
         res = await query(api, 1, sc) || []
         sc1 = sc
+        ld=0
     }
 
     async function go(x) {
+        ld=1
         page = x
         res = await query(api, x, sc1)
+        ld=0
     }
 
     $:{
@@ -52,7 +57,7 @@
             add={add}
             hi={hi}
     />
-    <Ld/>
+    <Ld act={ld}/>
 
     <div class="ps">
         <div>

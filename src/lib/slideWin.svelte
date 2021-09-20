@@ -1,5 +1,5 @@
 <script>
-    import {winAct} from "$lib/store";
+    import {view, winAct} from "$lib/store";
 
     export let onAct
     export let onClose
@@ -30,12 +30,17 @@
     </div>
 </div>
 <style lang="scss">
+  @import "./break";
+
   .h {
     left: 0;
     right: 0;
     top: 0;
     height: 30px;
     position: absolute;
+    @include s() {
+      left: -10px;
+    }
   }
 
   .au {
@@ -52,6 +57,7 @@
   .ti {
     position: absolute;
     right: 10px;
+    left: 50px;
     top: 0;
   }
 
@@ -63,12 +69,19 @@
     .2s .5s ease-in-out opacity,
     .3s .5s ease-in-out background-color;
     position: absolute;
-    right: 0;
-    left: -10px;
-    top: 0;
-    bottom: 0;
+    right: 60px;
+    left: calc(50% + 116px);
+    top: 20px;
+    bottom: 40px;
     overflow: hidden;
     transform: translate3d(100%, 0, 0);
+    @include s() {
+      right: 40px;
+      left: 10px;
+      top: 10px;
+      bottom: 0;
+      padding: 0;
+    }
 
     &.sh {
       opacity: 1;

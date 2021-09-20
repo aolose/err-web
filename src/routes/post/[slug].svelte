@@ -15,6 +15,7 @@
     import {bg} from "$lib/store";
     import {goBack, resUrl, timeFmt} from "$lib/utils";
     import PF from '$lib/pf.svelte'
+    import {browser} from "$app/env";
 
     Viewer.setDefaults({
         button: true,
@@ -61,7 +62,7 @@
 {#if d && d.updated}
     <div class="c">
         <Ctx>
-            <div class={'bk'} on:click={()=>goBack()}>{'< '}Go back</div>
+            <div class={'bk'} on:click={()=>goBack()}>{'< '}back</div>
             <div class="art">
                 <div class="h">
                     <DC color="currentColor">

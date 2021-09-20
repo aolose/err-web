@@ -2,9 +2,9 @@
     import {logout} from "$lib/utils";
     import {tip} from "./popMsg.svelte";
 </script>
-<button class="out" on:click={()=>{
+<i class="out" on:click={()=>{
     tip("Confirm to sign out?",logout,1)
-}}></button>
+}}></i>
 <style lang="scss">
   .out {
     border-radius: 50%;

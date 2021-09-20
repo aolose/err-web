@@ -59,6 +59,7 @@
     <input bind:value={nm} on:change={ch}/>
 </div>
 <style lang="scss">
+  @import "./break";
   .re {
     position: absolute;
     transition: .3s ease-in-out left, .3s .3s ease-in-out top, .2s ease-in-out transform;
@@ -92,6 +93,10 @@
     display: inline-block;
     margin: 3px;
     border: 2px solid transparent;
+    @include s(){
+      width: 120px;
+      margin:  0;
+    }
   }
 
   .s {

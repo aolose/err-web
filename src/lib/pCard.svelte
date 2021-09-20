@@ -1,6 +1,6 @@
 <script>
 
-    import {initEdit, post} from "$lib/store";
+    import {initEdit, post, view} from "$lib/store";
     import {timeFmt} from "$lib/utils";
     import {slide} from '$lib/transition'
     import {tick} from "svelte";
@@ -11,14 +11,16 @@
 <div
         transition:slide|local
         class:act={$post.id===data.id}
-        on:click={async ()=>{
+        on:click={ async ()=>{
+            view.set(1)
                const v={}
                             let o=v
                             if($post.id!==data.id)o={...data}
                             post.set(o)
                               await tick()
                               initEdit.set(+(v!==o))
-                        }} class="cd">
+                        }}
+        class="cd">
     <h3>{data.title}</h3>
     <p>{(data.content || "").substr(0, 64)}</p>
     <p class="tm t1">{timeFmt(data.saved)}</p>
@@ -27,7 +29,7 @@
         {#if !data.id}
             <span title="temporary" class="_2">T</span>
         {:else }
-            {#if  data.saved > data.updated || (data.saved&&!data.updated)}
+            {#if data.saved > data.updated || (data.saved && !data.updated)}
                 <span title="draft" class="_0">D</span>
             {/if}
             {#if data.updated > 0}

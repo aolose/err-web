@@ -3,7 +3,7 @@ import SparkMD5 from 'spark-md5'
 import {host} from './res'
 import imageCompression from 'browser-image-compression';
 import {isLogin, tok, upLoadInfo, upLoadSeq} from "$lib/store";
-import {goto} from '$app/navigation'
+import {goto} from "$app/navigation";
 
 export const logout = () => {
     fetch('/logout', {
@@ -192,11 +192,8 @@ export const resUrl = (a, b = '') => a && (`${host}/r/${a}${b}`) || ''
 
 
 export function goBack(root = '/posts/1') {
-    const ref = document.referrer;
-    goto(
-        ref.length > 0 ? ref : root,
-        {replaceState: false}
-    )
+    if (history && window.name === 'err') history.go(-1)
+    else goto('/posts/1', {replaceState: true})
 }
 
 export function trim(a) {

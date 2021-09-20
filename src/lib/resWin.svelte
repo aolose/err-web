@@ -186,6 +186,7 @@
     </div>
 </SWin>
 <style lang="scss">
+  @import "./break";
   .nv {
     margin-top: 10px;
   }
@@ -243,6 +244,7 @@
   }
 
   .bn {
+    justify-content: flex-end;
     display: flex;
   }
 
@@ -254,6 +256,9 @@
     background-size: 60% auto;
     cursor: pointer;
     opacity: .7;
+    @include s(){
+
+    }
 
     span {
       pointer-events: none;
