@@ -162,9 +162,13 @@
         transition: .2s ease-in-out;
         box-shadow: inset rgba(0, 0, 0, .0) 0 0 0;
         @include s() {
-          width: 38px;
-          height: 38px;
-          margin:  3px 0;
+          width: 30px;
+          height: 30px;
+          margin:  3px auto;
+          svg{
+            width: 58%;
+            height: 58%;
+          }
         }
 
         &:hover {
