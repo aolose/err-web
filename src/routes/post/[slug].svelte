@@ -15,7 +15,6 @@
     import {bg} from "$lib/store";
     import {goBack, resUrl, timeFmt} from "$lib/utils";
     import PF from '$lib/pf.svelte'
-    import {browser} from "$app/env";
 
     Viewer.setDefaults({
         button: true,
@@ -60,7 +59,7 @@
     <meta property="og:image:height" content="400"/>
 </svelte:head>
 {#if d && d.updated}
-    <div class="c">
+    <div class="co">
         <Ctx>
             <div class={'bk'} on:click={()=>goBack()}>{'< '}back</div>
             <div class="art">
@@ -143,7 +142,7 @@
     }
   }
 
-  .c {
+  .co {
     top: 0;
     bottom: 0;
     left: 0;
