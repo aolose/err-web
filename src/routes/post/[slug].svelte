@@ -158,9 +158,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 30px 0 80px;
+    margin: 30px auto 80px;
     text-align: center;
-    max-width: 80%;
+    max-width: 90%;
     p {
       color: #19283d;
       margin: 10px 0;
