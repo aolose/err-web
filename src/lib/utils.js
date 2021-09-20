@@ -169,10 +169,10 @@ export const fileSize = n => {
 }
 
 const colors = [
-    '#a66565', '#c49b67',
-    '#74a468', '#58c7d2',
-    '#539dda', '#435bbd',
-    '#4e4175', '#ac56b0'
+    '#ff684d', '#ffca68',
+    '#9aff67', '#ab00ff',
+    '#b7e1ff', '#77ffec',
+    '#a583ff', '#ff6161'
 ]
 
 export const col = (v = "") => `color:${colors[v.split('').map(

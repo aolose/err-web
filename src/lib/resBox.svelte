@@ -46,7 +46,7 @@
             </video>
         {:else }
             <div class="dw">
-                <div class="t" style={`${col(tp)}`}>
+                <div class="t" style={`${c  ol(tp)}`}>
                     {(tp || '').toUpperCase()}
                 </div>
                 <div class="v">
@@ -65,7 +65,7 @@
     height: 40px;
     background: transparentize(#1d1e1f,.3);
     font-weight: bold;
-    font-size: 14px;
+    font-size: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
