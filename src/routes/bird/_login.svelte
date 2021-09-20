@@ -45,7 +45,6 @@
         question = ""
         showQ = 0
         const k =await ((await fetch(host + '/k')).text())
-        console.log( SparkMD5.hash('adminerr#*&@#1'))
         const res = (await fetch('/in', {
             credentials: "include",
             method: 'POST',

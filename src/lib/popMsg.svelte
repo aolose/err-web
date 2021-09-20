@@ -54,8 +54,6 @@
         v[3] = 0
         tips.update(t => t.filter(a => a[3]))
     }
-
-    onDestroy(tips.subscribe(a => console.log(a)))
     onDestroy(() => tips.set([]))
 </script>
 {#if $tips.length }

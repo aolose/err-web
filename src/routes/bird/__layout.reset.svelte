@@ -3,7 +3,6 @@
  */
 import {isLogin} from "$lib/store";
 export async function load({session}) {
-    console.log('session',session)
         if (!session.token) {
             isLogin.set(0)
         }else {
