@@ -46,7 +46,7 @@
             </video>
         {:else }
             <div class="dw">
-                <div class="t" style={`${c  ol(tp)}`}>
+                <div class="t" style={`${col(tp)}`}>
                     {(tp || '').toUpperCase()}
                 </div>
                 <div class="v">
