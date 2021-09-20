@@ -112,6 +112,10 @@
       }
 
       .md {
+        color: #333;
+        font-size: 15px;
+        line-height: 1.8;
+        margin: 10px 0 20px;
         pre, code {
           border-radius: 3px;
           background: transparentize(rgb(37, 40, 55), .95);
@@ -124,19 +128,13 @@
           }
         }
 
-        & > .p > p {
+        & > p {
           &:first-child:first-letter {
             font-size: 30px;
           }
-
           &:first-letter {
             padding-left: 29px;
           }
-
-          color: #333;
-          font-size: 15px;
-          line-height: 2;
-          margin: 10px 0 20px;
         }
       }
     }
