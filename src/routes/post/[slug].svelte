@@ -159,7 +159,8 @@
     align-items: center;
     justify-content: center;
     margin: 30px 0 80px;
-
+    text-align: center;
+    max-width: 80%;
     p {
       color: #19283d;
       margin: 10px 0;
