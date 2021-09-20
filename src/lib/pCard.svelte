@@ -5,15 +5,16 @@
     import {slide} from '$lib/transition'
     import {tick} from "svelte";
 
+    let ow
     export let data = {}
 </script>
-
+<svelte:window bind:outerWidth={ow}/>
 <div
         transition:slide|local
         class:act={$post.id===data.id}
         on:click={ async ()=>{
             view.set(1)
-            const v={}
+            const v=ow<600?{...data}:{}
             let o=v
             if($post.id!==data.id)o={...data}
             post.set(o)
