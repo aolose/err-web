@@ -10,10 +10,12 @@
     export const load = res('auth')
 </script>
 <script>
+    import SparkMD5 from 'spark-md5';
     import {isLogin, msg, tok} from "$lib/store";
     import Tm from "$lib/typeMsg.svelte";
     import {onDestroy} from "svelte";
     import {enc} from "$lib/utils";
+    import {host} from "$lib/res";
 
     let wt = 0
     let w = 0
@@ -42,10 +44,12 @@
         w = 1
         question = ""
         showQ = 0
+        const k =await ((await fetch(host + '/k')).text())
+        console.log( SparkMD5.hash('adminerr#*&@#1'))
         const res = (await fetch('/in', {
             credentials: "include",
             method: 'POST',
-            body: enc(usr, pwd, key, ans)
+            body: enc(usr, SparkMD5.hash(SparkMD5.hash(pwd+"err#*&@#1")+k), key, ans)
         }))
         let t = await res.text();
         if (res.ok) {
