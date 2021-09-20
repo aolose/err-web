@@ -1,23 +1,19 @@
 <script>
     import Mu from '$lib/sidebar.svelte'
-    import {backView, view, winAct} from "$lib/store";
+    import {post, view, winAct} from "$lib/store";
     import {onDestroy} from "svelte";
+    import {fade} from "svelte/transition";
 
     let sty = `transform:translate3d(0,0,0)`
-    onDestroy(winAct.subscribe(a => {
-        if (a) {
-            // view.set(2)
-        } else {
-            view.set($backView)
+    onDestroy(post.subscribe(a => {
+        if (!Object.keys(a).length) {
+            view.set(0)
         }
     }))
     onDestroy(view.subscribe(a => {
         sty = `transform:translate3d(${a * 119}%,0,0)`
-        backView.set(a)
-        if (a < 2) {
-            if ($winAct > 0) {
-                winAct.set(0)
-            }
+        if ($winAct > 0) {
+            winAct.set(0)
         }
     }))
     onDestroy(() => {
@@ -29,13 +25,16 @@
     <Mu/>
 </div>
 <div class="nv">
-    <div on:click={()=>view.set(0)}></div>
-    <div on:click={()=>view.set(1)}></div>
-    <div on:click={()=>view.set(2)}></div>
-    <i style={sty}></i>
+    {#if Object.keys($post).length}
+        <div on:click={()=>view.set(0)} transition:fade></div>
+        <div on:click={()=>view.set(1)} transition:fade></div>
+        <div on:click={()=>view.set(2)} transition:fade></div>
+        <i style={sty} transition:fade></i>
+    {/if}
 </div>
 <style lang="scss">
   @import "../../lib/break";
+
   .nv {
     transition: .3s ease-in-out;
     position: absolute;
@@ -77,9 +76,11 @@
       * {
         color: #aaa;
       }
+
       *::-webkit-scrollbar-thumb {
         background-color: #075291
       }
+
       p {
         font-size: 13px;
       }

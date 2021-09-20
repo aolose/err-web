@@ -12,7 +12,7 @@
     import Msg from '$lib/typeMsg.svelte'
 
     import {fade} from "svelte/transition";
-    import {artList, backView, post, view, winAct} from "$lib/store";
+    import {artList, post, view, winAct} from "$lib/store";
     import {query} from "$lib/res";
     import {errorCatch} from "$lib/utils";
 
@@ -73,17 +73,7 @@
                 }
             }, 2e3)
         } else {
-            if (!pid) {
-                const idx = $artList.findIndex(a => a && !a.id)
-                if (idx !== -1) {
-                    const ls = [...$artList];
-                    if (!ls.find(a => a.id === $post.id)) {
-                        ls[idx] = $post.id
-                        artList.set(ls)
-                    }
-                }
-            }
-            pid = $post.id
+            pid = 0
         }
     }))
     onDestroy(() => {
@@ -98,6 +88,7 @@
 <div class={'ctx '+cls}>
     <nav>
         <List
+                onAdd={()=>{view.set(1)}}
                 icon={1}
                 api={'edit'}
                 cpm={PItem}
@@ -108,7 +99,6 @@
             title: "A new article",
             desc: "",
             content: "Write something",
-            ver: -1
         }}
         />
     </nav>

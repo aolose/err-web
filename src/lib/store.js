@@ -15,7 +15,6 @@ export const qa = writable({})
 export const mk = writable({})
 export const qState = writable({})
 export const view = writable(0)
-export const backView = writable(0)
 qState.init = ()=>{
     qState.update(()=>{
         return {

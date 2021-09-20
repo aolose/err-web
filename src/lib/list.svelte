@@ -8,6 +8,7 @@
 
     export let listStore
     export let curStore
+    export let onAdd
     export let cpm
     export let icon = 0
     export let api
@@ -20,32 +21,42 @@
 
     async function add() {
         const o = {...baseItem}
-        curStore.set({...o});
         listStore.set([o, ...$listStore])
+        curStore.set({...o});
+        if(onAdd)onAdd()
         await tick()
         initEdit.set(1)
     }
 
     async function search() {
-        ld=1
+        ld = 1
         res = await query(api, 1, sc) || []
         sc1 = sc
-        ld=0
+        ld = 0
     }
 
     async function go(x) {
-        ld=1
+        ld = 1
         page = x
         res = await query(api, x, sc1)
-        ld=0
+        ld = 0
     }
 
     $:{
         if (res && res.ls) listStore.set(res.ls || [])
     }
     let hi;
-    $:hi = ($listStore || []).find(a => a && !a.id)
     $:total = res.total
+    let mix
+    $:{
+        mix = $listStore || []
+        hi = ($listStore || []).find(a => a && !a.id)
+        if(Object.keys($curStore).length){
+            const m = ($listStore || []).find(a => a.id === $curStore.id)
+            if (!m) mix = [$curStore].concat($listStore)
+        }
+        mix=mix.filter(a=>a)
+    }
     go(1)
 </script>
 
@@ -61,7 +72,7 @@
 
     <div class="ps">
         <div>
-            {#each $listStore as p }
+            {#each mix as p }
                 <svelte:component this={cpm} data={p}/>
             {/each}
         </div>

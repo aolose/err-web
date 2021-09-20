@@ -13,13 +13,13 @@
         class:act={$post.id===data.id}
         on:click={ async ()=>{
             view.set(1)
-               const v={}
-                            let o=v
-                            if($post.id!==data.id)o={...data}
-                            post.set(o)
-                              await tick()
-                              initEdit.set(+(v!==o))
-                        }}
+            const v={}
+            let o=v
+            if($post.id!==data.id)o={...data}
+            post.set(o)
+              await tick()
+              initEdit.set(+(v!==o))
+        }}
         class="cd">
     <h3>{data.title}</h3>
     <p>{(data.content || "").substr(0, 64)}</p>
