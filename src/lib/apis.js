@@ -180,7 +180,7 @@ export const apis = {
     },
     post: {
         path: ({params: {slug}}) => `post/${slug}`,
-        cacheTime: 30
+        cacheTime: 60*24
     },
     savePost: {
         path: 'edit',
