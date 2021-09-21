@@ -6,17 +6,17 @@ import {tip} from "$lib/popMsg.svelte";
 
 const ok = c => c && c.status === 200
 export const apis = {
-    pwd:{
-        path:'sys/acc',
-        method:'POST',
-        before(a,b,c){
+    pwd: {
+        path: 'sys/acc',
+        method: 'POST',
+        before(a, b, c) {
             return enc(...c)
         },
-        done(){
+        done() {
             tip('update success!')
         },
         fail(e) {
-           tip(e);
+            tip(e);
         }
     },
     qs: {
@@ -148,8 +148,8 @@ export const apis = {
     lsRes: {
         path: a => `res/${a}`,
         before(_, s) {
-           const o= {k: s, c: 15}
-            if(get(bannerMod))o.img=1
+            const o = {k: s, c: 15}
+            if (get(bannerMod)) o.img = 1
             return o
         },
         cacheTime: 3
@@ -157,7 +157,7 @@ export const apis = {
     lsBk: {
         path: a => `bk/${a}`,
         before(_, s) {
-            return {ip: s, tp: [0,1][get(isLogin)], c: 15}
+            return {ip: s, tp: [0, 1][get(isLogin)], c: 15}
         },
         cacheTime: 3
     },
@@ -180,16 +180,16 @@ export const apis = {
     },
     post: {
         path: ({params: {slug}}) => `post/${slug}`,
-        cacheTime: 60*24
+        cacheTime: 3600 * 24
     },
     savePost: {
         path: 'edit',
         method: 'PUT',
         data: a => {
             return {
-                id:a.id,
-                title:a.title,
-                content:a.content,
+                id: a.id,
+                title: a.title,
+                content: a.content,
             }
         },
     },
@@ -206,8 +206,8 @@ export const apis = {
         path: id => `edit/${id}`,
         method: 'PATCH',
     },
-    tags:{
-        path:'tag/all',
+    tags: {
+        path: 'tag/all',
         cacheTime: 60,
     },
     posts: {
