@@ -1,10 +1,8 @@
 <script>
-
     import {initEdit, post, view} from "$lib/store";
     import {timeFmt} from "$lib/utils";
     import {slide} from '$lib/transition'
     import {tick} from "svelte";
-
     let ow
     export let data = {}
 </script>
