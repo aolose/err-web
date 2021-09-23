@@ -115,6 +115,9 @@
       .m, .d {
         font-size: 16px;
       }
+      .d{
+        padding-left: 6px;
+      }
       .d:before {
         height: 20px;
       }
