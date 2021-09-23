@@ -230,7 +230,7 @@ export const apis = {
                 return {}
             }
         },
-        cacheTime: 60,
+        cacheTime: 60*10,
         path: ({params: {page} = {}}) => {
             if (!page) page = 1;
             return `posts/${page}`
