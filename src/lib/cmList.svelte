@@ -279,6 +279,7 @@
   }
 
   .cm {
+    margin-top:20px;
     :global {
       .a_0 {
         background-image: url("./icon/0.png");
