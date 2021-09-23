@@ -6,7 +6,7 @@
     import 'viewerjs/dist/viewer.css';
     import Viewer from 'viewerjs';
     import Ctx from "$lib/ctx.svelte";
-    // import CmList from "$lib/cmList.svelte"
+    import CmList from "$lib/cmList.svelte"
     import Tag from "$lib/tag.svelte";
     import Md from "$lib/md.svelte"
     import DC from "$lib/derection.svelte"
@@ -80,7 +80,7 @@
                         <Tag t={d.tags}/>
                     {/if}
                 </div>
-<!--                <CmList id={d.aid} act="1"/>-->
+                <CmList id={d.aid} act="1"/>
             </div>
         </Ctx>
     </div>

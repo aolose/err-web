@@ -6,6 +6,10 @@ import {tip} from "$lib/popMsg.svelte";
 
 const ok = c => c && c.status === 200
 export const apis = {
+    cmLs:{
+        path: ([a,b]) => `c/${a}/${b}`,
+        cacheTime: 3
+    },
     cm:{
         path: 'c',
         method: 'POST',

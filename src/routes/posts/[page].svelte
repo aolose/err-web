@@ -8,10 +8,14 @@
 <script>
     import Ctx from "$lib/ctx.svelte";
     import {browser} from "$app/env";
+    let sc
     export let d = {}
     $:{
         if(browser){
             window.name='err'
+            if (sc){
+                sc.scrollIntoView(true)
+            }
         }
     }
     $:cur = d.cur
@@ -22,7 +26,7 @@
 <svelte:head>
     <title>Err - Posts</title>
 </svelte:head>
-<div class="o">
+<div class="o" bind:this={sc}>
     <Ctx>
         <div class="t">
             <div class="li"></div>

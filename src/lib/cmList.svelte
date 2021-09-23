@@ -1,13 +1,15 @@
 <script>
     import {browser} from "$app/env";
-    import {randNm, rndAr} from "./utils";
-    import {fade} from "svelte/transition";
+    import {randNm, rndAr, timeFmt} from "./utils";
+    import {fade, fly,slide} from "svelte/transition";
     import Ld from './loading.svelte'
     import {query} from "./res";
+    import Pag from './pag.svelte'
 
     export let id = ''
     export let act = 0
-    let ls = [], ed = 0,ld=0
+    let msg = []
+    let ls = [], ed = 0, ld = 0, total
     let sh = 0
     const avLs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     let nm = '', av = 0, cm = ''
@@ -15,20 +17,63 @@
     $:{
         dis = !nm.length || !cm.length
         if (browser) {
-            localStorage.av = av = av || localStorage.av || (rndAr(avLs) + 1)
+            localStorage.av = av = +av || +localStorage.av || (rndAr(avLs) + 1)
             nm = nm || localStorage.nm || randNm()
-            av = av || +localStorage.av || 1
+            av = +av || +localStorage.av || 1
         }
+        if (nm.length > 16) nm = nm.substr(0, 16)
+        if (cm.length > 512) nm = nm.substr(0, 512)
+    }
+    let cur = 1
+    let lsLd = 0
+
+    async function go(p) {
+        const i=p||1
+        lsLd = 1
+        const re = await query('cmLs', [id, i])
+        if (re.ls) {
+            ls = re.ls
+            cur = re.cur
+            total = re.total
+            setTimeout(()=>{
+                if(el&&p)el.scrollIntoView(true)
+            },300)
+        }
+        lsLd = 0
     }
 
+    let t,el
+
     async function cmt() {
-       ld=1
-        await query('cm',{
-            d:id,
-            n:nm,
-            c:cm,
+        ld = 1
+        const re = await query('cm', {
+            a: av,
+            d: id,
+            n: nm,
+            c: cm,
         })
-        ld=0
+        if (/^\d+$/g.test(re)) {
+            const i = +re
+            msg = [1, "post success!"]
+            ls = [
+                {
+                    i,
+                    a: av,
+                    n: nm,
+                    d: id,
+                    r: 0,
+                    c: cm,
+                    t: Math.floor(Date.now()/1e3),
+                    o: 1
+                }
+            ].concat(ls)
+            cm = ''
+        } else {
+            msg = [0, re.error]
+        }
+        clearTimeout(t)
+        t = setTimeout(() => msg = [], 3e3)
+        ld = 0
     }
 
     function se() {
@@ -39,20 +84,30 @@
         nm = randNm()
         av = localStorage.av = rndAr(avLs) + 1
     }
+
+    go()
 </script>
 <div class:sh={act} class="cm">
-    {#if sh}
-        <div class="as" transition:fade>
-            {#each avLs as a}
-                <i class={'av a_'+a} class:act={a===av-1} on:click={()=>{
+    <div class="c">
+        {#if msg.length === 2}
+            <div class="tp"
+                 class:su={msg[0]}
+                 class:fa={!msg[0]}
+                 transition:fly={{ y: 50, duration: 500 }}>
+                {msg[1]}
+            </div>
+        {/if}
+        {#if sh}
+            <div class="as" transition:fade>
+                {#each avLs as a}
+                    <i class={'av a_'+a} class:act={a===av-1} on:click={()=>{
                 av=a+1
                 sh=0
             }}></i>
-            {/each}
-        </div>
-    {/if}
-    <div class="c">
-        <div class="o">
+                {/each}
+            </div>
+        {/if}
+        <div class="o" bind:this={el}>
             <i class={'a a_'+(av-1)} on:click={()=>sh=1}></i>
             {#if ed}
                 <input bind:value={nm} placeholder="name"
@@ -75,10 +130,101 @@
         <Ld tm={1} act={ld} text="committing"/>
     </div>
     <div class="ls">
-
+        {#each ls as {i,a,n,t,o,c} (i)}
+            <div class="m" class:s={o} transition:slide|local>
+                <div class="h">
+                    <div class={'a a_'+(a-1)}></div>
+                    <label>{n}</label>
+                </div>
+                <div class="cx">
+                    <p>{c}</p>
+                    <span>{timeFmt(t)}</span>
+                </div>
+            </div>
+        {/each}
+        <Ld act={lsLd} tm={1}/>
     </div>
+    {#if total > 1}
+        <Pag cur={cur} total={total} url={go} tm="1"/>
+    {/if}
 </div>
 <style lang="scss">
+  .m{
+    padding:  5px 0 20px;
+    display: flex;
+    &:nth-child(2n){
+      label{
+        color: #9b9675;
+      }
+      p{
+        color: #666;
+      }
+      .cx{
+        border-color: #efece8;
+        background: #fafafa;
+      }
+    }
+  }
+  .h{
+    padding-right: 10px;
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  label{
+    text-align: center;
+    color: #7e9b9f;
+    white-space: nowrap;
+    word-break: break-word;
+    font-size: 12px;
+  }
+  .cx{
+    flex: 1;
+    padding: 5px 10px 20px;
+    border-radius: 3px;
+    border: 1px solid #dfe7e8;
+    p{
+      color: #999;
+      font-size: 13px;
+    }
+    span{
+      color: #000;
+      opacity: .5;
+      line-height: 1;
+      position: absolute;
+      right: 3px;
+      bottom: 3px;
+      font-size: 11px;
+    }
+  }
+  .tp {
+    text-align: center;
+    min-width: 200px;
+    max-width: 90%;
+    background: #fdfdfd;
+    position: absolute;
+    z-index: 99;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, .25) 0 3px 10px -4px;
+    padding: 10px;
+    bottom: 110%;
+    min-height: 30px;
+    transform: translateX(-50%);
+    left: 50%;
+    color: #fff;
+    backdrop-filter: blur(2px);
+  }
+
+  .su {
+    background-color: transparentize(#16b005, .3)
+  }
+
+  .fa {
+    background-color: transparentize(#ff6200, .3)
+  }
+
   .as {
     padding: 7px;
     position: absolute;
@@ -182,6 +328,7 @@
   }
 
   .c {
+    margin-bottom: 20px;
     border: 1px solid #eee;
     border-radius: 4px;
     background: transparentize(#eee, .6);
@@ -234,7 +381,8 @@
     cursor: pointer;
     width: 40px;
     height: 40px;
-    background: url("./icon/0.png") center no-repeat;
+    background-position: center;
+    background-repeat: no-repeat;
     background-size: auto 80%;
   }
 

@@ -2,6 +2,7 @@
     export let total
     export let cur
     export let url
+    export let tm
     export let length = 5
     $:first = cur === 1
     $:last = cur === total
@@ -23,7 +24,7 @@
     $:f = pg[0] > 2 ? '...' : ''
     $:n = pg[pg.length - 1] < total - 1 ? '...' : ''
 </script>
-<nav>
+<nav class:lt={tm}>
     {#if isF}
         <span class="nv" class:act={first} on:click={()=>url(1)}>1</span>
     {:else}
@@ -77,6 +78,23 @@
         background: #1c93ff;
         color: #fff;
       }
+    }
+  }
+  .lt{
+    *{
+      color: #1c334a;
+    }
+    .nv{
+      background: #f2f2f2;
+      padding:  5px;
+      height: 16px;
+      width:auto;
+      border-radius: 3px;
+      border: none;
+    }
+    .act {
+      color: #fff;
+      background: #1c93ff;
     }
   }
 </style>
