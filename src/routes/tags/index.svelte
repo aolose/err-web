@@ -3,13 +3,8 @@
     export const load = res('tags');
 </script>
 <script>
-    import {cacheSrvData} from "$lib/res";
     import Ctx from "$lib/ctx.svelte";
     export let d = []
-    export let s;
-    $:{
-        cacheSrvData(s,d)
-    }
 </script>
 <svelte:head>
     <title>Err - tags</title>

@@ -1,13 +1,17 @@
-import {browser} from "$app/env";
 import {apis} from "$lib/apis";
 import {logout} from './utils'
 import {get} from "svelte/store";
 import {tok} from "$lib/store";
+import {browser} from "$app/env";
 
 const localApi = "http://localhost:8880"
 export const host = import.meta.env.VITE_API_DOMAIN || localApi
 export const isDev = host === localApi
-const getRes = async (ctx, name) => {
+export const resFlag = {
+    useCache: 0
+}
+
+async function getRes(ctx, name) {
     const {page, fetch, session: sess, context} = ctx;
     const cfg = apis[name];
     if (!cfg) return {
@@ -61,18 +65,20 @@ const getRes = async (ctx, name) => {
     let cache;
     let cacheKey;
     let store;
-    if (browser && cacheTime) {
-        store = [localStorage, sessionStorage][sto];
-        if (cacheTime) {
-            let str = p
-            if (d) {
-                str = str + JSON.stringify(d);
-            }
-            let n = 0;
-            for (let i = 0, l = str.length; i < l; i++) {
-                n += str.charCodeAt(i) * (i + 1);
-            }
-            cacheKey = n.toString(36);
+    if (browser) {
+        store = [localStorage, sessionStorage][sto]
+    }
+    if (cacheTime) {
+        let str = p
+        if (d) {
+            str = str + JSON.stringify(d);
+        }
+        let n = 0;
+        for (let i = 0, l = str.length; i < l; i++) {
+            n += str.charCodeAt(i) * (i + 1);
+        }
+        cacheKey = n.toString(36);
+        if (resFlag.useCache) {
             let ca;
             try {
                 ca = JSON.parse(store[cacheKey]);
@@ -96,7 +102,7 @@ const getRes = async (ctx, name) => {
     }
     let re
     await new Promise((resolve) => {
-        const t =get(tok)
+        const t = get(tok)
         if (t) {
             (cf.headers = (cf.headers || {})).token = t
         }
@@ -128,18 +134,15 @@ const getRes = async (ctx, name) => {
             if (done) {
                 done(r, page, sess, context)
             }
+            o.props = {
+                d: r
+            }
             if (cacheTime && browser) {
                 const c = {
                     d: r
                 }
                 if (cacheTime) c.t = Date.now() + cacheTime * 1e3
                 store[cacheKey] = JSON.stringify(c)
-            }
-            o.props = {
-                d: r,
-            }
-            if (!browser) {
-                o.props.s = [cacheKey, cacheTime * 1e3, sto]
             }
             return o
         } else {
@@ -160,17 +163,7 @@ const getRes = async (ctx, name) => {
     return o
 }
 
-export const cacheSrvData = (a, d) => {
-    if (browser && a && a.length && d) {
-        const [k, c, s] = a;
-        a.length = 0;
-        const o = {
-            d,
-        }
-        if (c) o.c = Date.now() + c * 1e3;
-        [localStorage, sessionStorage][s][k] = JSON.stringify(o);
-    }
-}
+
 export const query = async (name, d, s) => {
     const ctx = {fetch, page: d, session: s}
     const res = await getRes(ctx, name);
@@ -180,11 +173,11 @@ export const query = async (name, d, s) => {
     return res
 }
 
-export const res = (name) => {
+export function res(name) {
     /**
      * @type  {import('@sveltejs/kit').Load}
      */
     return async function load(ctx) {
-        return await getRes(ctx, name)
+        return await getRes.call(this, ctx, name)
     }
 }

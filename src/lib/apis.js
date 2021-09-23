@@ -6,6 +6,13 @@ import {tip} from "$lib/popMsg.svelte";
 
 const ok = c => c && c.status === 200
 export const apis = {
+    cm:{
+        path: 'c',
+        method: 'POST',
+        before(a,b,c){
+            return c
+        }
+    },
     pwd: {
         path: 'sys/acc',
         method: 'POST',

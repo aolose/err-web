@@ -1,6 +1,6 @@
-import {writable} from 'svelte/store';
+import {writable,} from 'svelte/store';
 
-export const bannerMod =  writable(0);
+export const bannerMod = writable(0);
 export const artList = writable([]);
 export const bkList = writable([]);
 export const qaList = writable([]);
@@ -15,13 +15,13 @@ export const qa = writable({})
 export const mk = writable({})
 export const qState = writable({})
 export const view = writable(0)
-qState.init = ()=>{
-    qState.update(()=>{
+qState.init = () => {
+    qState.update(() => {
         return {
-            pending:0,
-            a:"",
-            q:"question preview",
-            e:""
+            pending: 0,
+            a: "",
+            q: "question preview",
+            e: ""
         }
     })
 }
@@ -44,7 +44,7 @@ resList.add = function (re) {
     }
     sq.push({
         ...inf[re],
-        id:re
+        id: re
     })
     clearTimeout(t)
     t = setTimeout(function () {
@@ -88,7 +88,7 @@ tags.del = od => {
 }
 
 export function openWin(i) {
-    return ()=>winAct.update(a=>{
-        return a===i ? 0 : i
+    return () => winAct.update(a => {
+        return a === i ? 0 : i
     })
 }

@@ -2,6 +2,7 @@
  * @type {import('@sveltejs/kit').Load}
  */
 import {isLogin} from "$lib/store";
+
 export async function load({session}) {
         if (!session.token) {
             isLogin.set(0)
@@ -17,6 +18,8 @@ export async function load({session}) {
     import DB from './_base.svelte'
     import Lg from './_login.svelte'
     import Pop from '$lib/popMsg.svelte'
+    import {resFlag} from "$lib/res";
+    resFlag.useCache=true
 </script>
 <svelte:head>
     <title>Err - Admin</title>

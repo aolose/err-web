@@ -1,16 +1,15 @@
 <script context="module">
     import {res} from "$lib/res";
-
     export const load = res('post')
 </script>
 <script>
     import 'viewerjs/dist/viewer.css';
     import Viewer from 'viewerjs';
     import Ctx from "$lib/ctx.svelte";
+    // import CmList from "$lib/cmList.svelte"
     import Tag from "$lib/tag.svelte";
     import Md from "$lib/md.svelte"
     import DC from "$lib/derection.svelte"
-    import {cacheSrvData} from "$lib/res";
     import {onDestroy} from "svelte";
     import {bg} from "$lib/store";
     import {goBack, resUrl, timeFmt} from "$lib/utils";
@@ -28,10 +27,8 @@
         minZoomRatio: 0.1,
     })
     export let d;
-    export let s;
     let ga;
     $:{
-        cacheSrvData(s, d)
         if (d.banner) {
             bg.set(d.banner)
         }
@@ -83,6 +80,7 @@
                         <Tag t={d.tags}/>
                     {/if}
                 </div>
+<!--                <CmList id={d.aid} act="1"/>-->
             </div>
         </Ctx>
     </div>

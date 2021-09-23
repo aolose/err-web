@@ -19,7 +19,7 @@
     const resTag = '\u0005'
     const resSp = '\u0003'
     const parseRes = s => {
-        const rule = /^!\((\w*?)\)\n?\[(.*?)]/g;
+        const rule = /!\((\w*?)\)\n?\[(.*?)]/g;
         if (rule.test(s))
             return s.replace(rule, `${resTag}$1${resSp}$2${resTag}`)
         return `<p>${s}</p>`
@@ -29,8 +29,8 @@
             return `<a target="_blank" href='${h}'>${tx}</a>`
         },
         paragraph(s) {
-            if (/\n?\.\.\n?/.test(s)) return '<br>'
-            else return parseRes(s)
+            s=s.replace(/(^|\n)\.\.\n/g,'<br>')
+            return parseRes(s)
         }
     };
     marked.setOptions({

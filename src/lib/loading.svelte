@@ -1,6 +1,7 @@
 <script>
     import {fade} from "svelte/transition";
     import {onDestroy} from "svelte";
+    export let tm=0
      export let act = 0
     let s = 0
     let v = 1
@@ -16,7 +17,7 @@
 {#if act}
     <span
             transition:fade
-            class="load">
+            class="load" class:lt={tm}>
      <i></i>
     <span class="a">
         {text}
@@ -64,6 +65,15 @@
     backdrop-filter: blur(1px);
     border-radius: inherit;
     z-index: 100;
+  }
+  .lt{
+    background: transparentize(rgb(250,250,250), .2);
+    i{
+      background-image: url("./img/ld1.svg");
+    }
+    span{
+      color: #999;
+    }
   }
   span{
     color: #2d9bc5;
