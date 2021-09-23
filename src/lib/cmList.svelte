@@ -21,6 +21,7 @@
             nm = nm || localStorage.nm || randNm()
             av = +av || +localStorage.av || 1
         }
+        if(!/^[0-9a-z· \u4e00-\u9fa5]+$/.test(nm))nm=nm.replace(/[^0-9a-z· \u4e00-\u9fa5]/g,'')
         if (nm.length > 16) nm = nm.substr(0, 16)
         if (cm.length > 512) nm = nm.substr(0, 512)
     }
@@ -46,6 +47,8 @@
 
     async function cmt() {
         ld = 1
+        nm=nm.replace(/^\s+|\s+$/g,'')
+        cm=cm.replace(/^\s+|\s+$/g,'')
         const re = await query('cm', {
             a: av,
             d: id,
