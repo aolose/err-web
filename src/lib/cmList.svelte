@@ -320,12 +320,12 @@
         background-image: url("./icon/9.png");
       }
 
-      .a_a {
-        background-image: url("./icon/a.png");
+      .a_10 {
+        background-image: url("./icon/10.png");
       }
 
-      .a_b {
-        background-image: url("./icon/b.png");
+      .a_11 {
+        background-image: url("./icon/11.png");
       }
     }
   }
