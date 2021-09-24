@@ -1,25 +1,18 @@
 <script context="module">/**
  * @type {import('@sveltejs/kit').Load}
  */
-import {isLogin} from "$lib/store";
+import {res} from "$lib/res";
 
-export async function load({session}) {
-        if (!session.token) {
-            isLogin.set(0)
-        }else {
-            isLogin.set(1)
-        }
-        return {
-            status: 200
-        }
-    }
+export const load = res('auth')
 </script>
 <script>
     import DB from './_base.svelte'
     import Lg from './_login.svelte'
     import Pop from '$lib/popMsg.svelte'
     import {resFlag} from "$lib/res";
-    resFlag.useCache=true
+    import {isLogin} from "$lib/store";
+
+    resFlag.useCache = true
 </script>
 <svelte:head>
     <title>Err - Admin</title>

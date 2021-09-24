@@ -79,11 +79,8 @@
         <Btn cls="d" fn={openWin(2)}>
             <File/>
         </Btn>
-        <Btn cls="g" fn={openWin(5)}>
+        <Btn cls="g" fn={openWin(3)}>
             <SF/>
-        </Btn>
-        <Btn cls="h" fn={openWin(3)}>
-            <Blk/>
         </Btn>
         <Btn cls="l" fn={openWin(4)}>
             <Sys/>

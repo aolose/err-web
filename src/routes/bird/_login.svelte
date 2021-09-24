@@ -1,15 +1,7 @@
-<script context="module">
-    import {res} from '$lib/res'
+<script>
     import {jump} from '$lib/transition'
     import LD from '$lib/loading.svelte'
     import {fade} from 'svelte/transition'
-    /**
-     * @type {import('@sveltejs/kit').Load}
-     */
-
-    export const load = res('auth')
-</script>
-<script>
     import SparkMD5 from 'spark-md5';
     import {isLogin, msg, tok} from "$lib/store";
     import Tm from "$lib/typeMsg.svelte";
@@ -17,12 +9,9 @@
     import {enc} from "$lib/utils";
     import {host} from "$lib/res";
 
+    let k
     let wt = 0
     let w = 0
-    let key = ""
-    let ans = ""
-    let showQ = 0
-    let question = 0
     const t = setInterval(() => {
         if (wt > 0) {
             wt = wt - 1
@@ -30,55 +19,36 @@
     }, 1e3)
     onDestroy(() => clearInterval(t))
 
-    function next() {
-        if (wt) return;
-        ans = ''
-        if (question) {
-            msg.set("Please answer the question blow!")
-            showQ = 1
-        } else login()
-    }
-
     async function login() {
-        if (dis||wt) return;
+        if (dis || wt) return;
         w = 1
-        question = ""
-        showQ = 0
-        const k =await ((await fetch(host + '/k')).text())
+        if(!k){
+           try {
+               k=await ((await fetch(host + '/k')).text())
+           }catch (e){
+               msg.set(e.message)
+           }
+        }
         const res = (await fetch('/in', {
             credentials: "include",
             method: 'POST',
-            body: enc(usr, SparkMD5.hash(SparkMD5.hash(pwd+"err#*&@#1")+k), key, ans)
+            body: enc(usr, SparkMD5.hash(SparkMD5.hash(pwd + "err#*&@#1") + k))
         }))
         let t = await res.text();
         if (res.ok) {
             w = 0
-            question = ""
-            showQ = 0
             isLogin.set(1)
             tok.set(t)
         } else {
-            try {
-                t = JSON.parse(t)
-                if (t) {
-                    const h = !key
-                    key = t.k
-                    question = t.q
-                    wt = t.w
-                    if (t.m === 'incorrect') {
-                        setTimeout(() => w = 0, 500)
-                        if (h) {
-                            return next()
-                        } else {
-                            return msg.set(`incorrect answer!`)
-                        }
-                    }
-                }
-            } catch (e) {
+            if (/^w:/.test(t)) {
+                wt = +t.substr(2)
+                msg.set("please try later")
+            } else if(t==='forbidden ip'){
+                wt=-1
+            }else {
                 setTimeout(() => w = 0, 1e3)
                 return msg.set(t)
             }
-            msg.set("username or password is incorrect !")
         }
         setTimeout(() => w = 0, 1e3)
     }
@@ -124,7 +94,6 @@
         ftt = `transform:translate3d(${mf}px,0,0)`
     }
 
-
 </script>
 <div class="bg" transition:fade>
     <div class="cc">
@@ -143,43 +112,25 @@
                 <p transition:fade
                    class="ti">{st}</p>
             {:else }
-                {#if showQ && question}
-                    <div class="qs" transition:fade>
-                        <div class="q">
-                            <label>Q</label>
-                            <p>{question}</p>
-                        </div>
-                        <div class="r" class:a={ans}>
-                            <input bind:value={ans} type="text"/>
-                            <label>Your answer</label>
-                        </div>
-                        <button
-                                class:dis={!ans}
-                                on:click={login}>
-                            Login
-                        </button>
+                <div class="l">
+                    <div class="r" class:a={usr}>
+                        <input
+                                on:input={go}
+                                bind:value={usr}
+                                bind:this={iu}
+                                on:keydown={nx}
+                                type="text"/>
+                        <label>Username</label>
                     </div>
-                {:else }
-                    <div class="l">
-                        <div class="r" class:a={usr}>
-                            <input
-                                    on:input={go}
-                                    bind:value={usr}
-                                    bind:this={iu}
-                                    on:keydown={nx}
-                                    type="text"/>
-                            <label>Username</label>
-                        </div>
-                        <div class="r" class:a={pwd}>
-                            <input bind:value={pwd}
-                                   bind:this={ip}
-                                   on:keydown={nx}
-                                   type="password" autocomplete="new-password" on:input={go}/>
-                            <label>Password</label>
-                        </div>
-                        <button class:dis={dis} on:click={next}>{question ? 'Next' : 'Login'}</button>
+                    <div class="r" class:a={pwd}>
+                        <input bind:value={pwd}
+                               bind:this={ip}
+                               on:keydown={nx}
+                               type="password" autocomplete="new-password" on:input={go}/>
+                        <label>Password</label>
                     </div>
-                {/if}
+                    <button class:dis={dis} on:click={login}>Login</button>
+                </div>
             {/if}
             <a href="/">{'<  '}Home</a>
         </div>
@@ -193,32 +144,6 @@
     top: 0;
     bottom: 0;
     padding: inherit;
-  }
-
-  .qs {
-    .q {
-      p {
-        padding: 0 8px;
-        color: #0ea701;
-        font-size: 16px;
-      }
-
-      label {
-        opacity: .2;
-        transform: rotate(10deg);
-        top: -65px;
-        left: -40px;
-        font-weight: 100;
-        font-size: 40px;
-        color: #fff;
-        width: auto;
-        margin-right: 10px;
-      }
-
-      width: 80%;
-      margin: 20px auto 30px;
-      display: flex;
-    }
   }
 
   .ti {
@@ -284,7 +209,7 @@
   .bg {
     width: 100%;
     height: 100%;
-    background: #121622 url("$lib/img/bg.jpg") bottom center;
+    background: #121622 url("../../lib/img/bg.jpg") bottom center;
     background-size: cover;
   }
 
@@ -381,7 +306,7 @@
     position: absolute;
     left: 0;
     bottom: 0;
-    background: url("$lib/img/fav.png") center no-repeat;
+    background: url("../../lib/img/fav.png") center no-repeat;
     background-size: 100% auto;
     width: inherit;
     height: inherit;

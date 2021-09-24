@@ -11,7 +11,7 @@ export async function post({body}) {
     if (!res.ok) {
         return {
             status: 403,
-            body: tk || 'auth fail'
+            body: tk || res.error
         }
     }
 

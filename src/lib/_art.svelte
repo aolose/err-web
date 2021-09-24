@@ -8,7 +8,6 @@
     import {onDestroy} from "svelte";
     import BW from './blWin.svelte'
     import Sys from './sysWin.svelte'
-    import Qa from './qaWin.svelte'
     import Msg from '$lib/typeMsg.svelte'
 
     import {fade} from "svelte/transition";
@@ -127,7 +126,6 @@
 <Pub/>
 <Res ipt={ipt}/>
 <BW/>
-<Qa/>
 <Sys/>
 <style lang="scss">
   @import "./break";
