@@ -14,7 +14,7 @@
         if(browser){
             window.name='err'
             if (sc){
-                sc.scrollIntoView(true)
+                sc.scrollTo(0,0)
             }
         }
     }

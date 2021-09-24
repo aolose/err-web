@@ -1,7 +1,8 @@
 <script>
     import {onDestroy, tick} from "svelte";
+
     export let curStore
-    export let tagsStore
+    export let tagsStore = []
     let ts = []
     let pr = ""
     let idx = 0
@@ -13,7 +14,7 @@
     let sl
     let w
     let db = []
-
+    let old = ''
     onDestroy(curStore.subscribe(({tags = ""}) => ts = tags.split(" ").filter(a => a)))
 
     function pos() {
@@ -28,13 +29,21 @@
         curStore.set({...$curStore, tags: ts.join(" ")})
     }
 
+    $:{
+        const v = ts.join()
+        if (old !== v) {
+            old = v
+            change()
+        }
+    }
+
     async function ps(en) {
         en.preventDefault()
         let {value, selectionEnd: e, selectionStart: s} = this;
         const lf = value.length - e;
         const da = (en.clipboardData.getData('text') || "")
             .replace(/[,;，；、\n ]+/g, ' ').replace(/ +/g, ' ')
-        value = ' '+value.substr(0, s) + da + value.substr(e)
+        value = ' ' + value.substr(0, s) + da + value.substr(e)
         e += da.length
         await po(value, s, e, this, lf)
     }
@@ -94,7 +103,7 @@
 
     async function po(value, s, e, ipt, lf) {
         if (/ /.test(value)) {
-            const c = value.split(/ +/).filter(a => a&&ts.indexOf(a)===-1)
+            const c = value.split(/ +/).filter(a => a && ts.indexOf(a) === -1)
             let l = c.length
             if (e < value.length && s > 0) l--
             if (l) {
@@ -105,7 +114,6 @@
                     }
                 }
             }
-            change();
             v = c[0] || '';
             if (v) {
                 e = v.length - lf
@@ -128,9 +136,11 @@
     }
 
     $:{
-        pos()
-        db = $tagsStore.filter(a => v && a !== v &&ts.indexOf(a)===-1 &&!a.indexOf(v.toLowerCase()))
-        pr = db[idx] || ''
+        if($tagsStore){
+            pos()
+            db = $tagsStore.filter(a => v && a !== v && ts.indexOf(a) === -1 && !a.indexOf(v.toLowerCase()))
+            pr = db[idx] || ''
+        }
     }
 </script>
 <div class="tgs" on:click|stopPropagation={e=>{
