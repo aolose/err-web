@@ -2,27 +2,34 @@
     import {res} from "$lib/res";
     import Nav from "$lib/pag.svelte"
     import Item from "$lib/pItem.svelte"
-
     export const load = res('posts');
 </script>
 <script>
     import Ctx from "$lib/ctx.svelte";
     import {browser} from "$app/env";
+    import {tick} from "svelte";
+
     let sc
+    async function scTop(){
+        await tick()
+        if (sc) {
+            document.scrollingElement.scrollTop=0
+            window.scrollTo(0,0)
+            sc.scrollTop=0
+        }
+    }
     export let d = {}
     $:{
-        if(browser){
-            window.name='err'
-            if (sc){
-                sc.scrollTo(0,0)
-            }
+        if (browser) {
+            window.name = 'err'
         }
     }
     $:cur = d.cur
     $:total = d.total
-    let ls=[]
+    let ls = []
     $:ls = d.ls || []
 </script>
+<svelte:window  on:sveltekit:navigation-end={scTop}/>
 <svelte:head>
     <title>Err - Posts</title>
 </svelte:head>
@@ -56,12 +63,14 @@
     right: 0;
     overflow-y: auto;
   }
- .n{
-   height: 80px;
- }
+
+  .n {
+    height: 80px;
+  }
+
   .li {
     position: absolute;
-    top:  var(--itp);
+    top: var(--itp);
     min-height: 70vh;
     bottom: 80px;
     width: var(--iw);
