@@ -120,17 +120,20 @@ async function getRes(ctx, name) {
     }
     if (re) {
         const {ok} = re;
-        let r = await re.text()
+        let r = ''
+        try {
+            r = await re.text()
+        } catch (e) {
+        }
         try {
             r = JSON.parse(r)
         } catch (e) {
-            console.log(e)
         }
         if (after) {
             const a = after(r, o, page, sess)
             if (a !== undefined) r = a;
         }
-        if (ok) {
+        if (o.status === 200) {
             if (done) {
                 done(r, page, sess, context)
             }
