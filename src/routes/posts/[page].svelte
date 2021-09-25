@@ -45,7 +45,7 @@
         </div>
     </Ctx>
     <div class="n">
-        <Nav total={total} cur={cur} url="/posts"/>
+        <Nav total={total} cur={cur} url="/posts" length="2"/>
     </div>
 </div>
 
