@@ -22,14 +22,14 @@
         const rule = /!\((\w*?)\)\n?\[(.*?)]/g;
         if (rule.test(s))
             return s.replace(rule, `${resTag}$1${resSp}$2${resTag}`)
-        return `<p>${s}</p>`
+        return `<p>${s.replace(/\n/g,'<br>')}</p>`
     }
     const renderer = {
         link(h,ti,tx){
             return `<a target="_blank" href='${h}'>${tx}</a>`
         },
         paragraph(s) {
-            s=s.replace(/(^|\n)\.\.\n/g,'<br>')
+            s=s.replace(/(^|\n)?\.\.\n?/g,'<br>')
             return parseRes(s)
         }
     };
