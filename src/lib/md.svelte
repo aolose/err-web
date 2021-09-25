@@ -22,7 +22,7 @@
         const rule = /!\((\w*?)\)\n?\[(.*?)]/g;
         if (rule.test(s))
             return s.replace(rule, `${resTag}$1${resSp}$2${resTag}`)
-        return `<p>${s.replace(/\n/g,'<br>')}</p>`
+        return `<p>${s.split('\n').join('</p><p>')}</p>`
     }
     const renderer = {
         link(h,ti,tx){
@@ -55,7 +55,8 @@
     export let value = ''
     let out = []
     $:{
-        out = marked(value || '').split(resTag).filter(a => a).map(a => a.split(resSp)).filter(a=>a[0])
+        const v = (value || '').replace(/\n\n\n+/g,'\n\u200B\n')
+        out = marked(v).split(resTag).filter(a => a).map(a => a.split(resSp)).filter(a=>a[0])
     }
 </script>
 
@@ -71,7 +72,7 @@
 
 
 <style lang="scss">
-  .p {
+  .md {
     :global {
       h1, h2, h3, h4, h5, h6 {
         line-height: 2;
@@ -83,11 +84,11 @@
       }
 
       h1 {
-        font-size: 26px
+        font-size: 27px
       }
 
       h2 {
-        font-size: 23px
+        font-size: 24px
       }
 
       h3 {
@@ -95,15 +96,15 @@
       }
 
       h4 {
-        font-size: 17px
+        font-size: 18px
       }
 
       h5 {
-        font-size: 14px
+        font-size: 16px
       }
 
       h6 {
-        font-size: 12px
+        font-size: 15px
       }
 
       thead {
@@ -152,7 +153,6 @@
 
       li {
         margin-top: 5px;
-        list-style: none;
       }
     }
   }
