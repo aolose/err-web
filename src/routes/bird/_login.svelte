@@ -7,7 +7,7 @@
     import Tm from "$lib/typeMsg.svelte";
     import {onDestroy} from "svelte";
     import {enc} from "$lib/utils";
-    import {host} from "$lib/res";
+    import {host, query} from "$lib/res";
 
     let k
     let wt = 0
@@ -22,32 +22,28 @@
     async function login() {
         if (dis || wt) return;
         w = 1
-        if(!k){
-           try {
-               k=await ((await fetch(host + '/k')).text())
-           }catch (e){
-               msg.set(e.message)
-           }
+        if (!k) {
+            try {
+                k = await ((await fetch(host + '/k')).text())
+            } catch (e) {
+                msg.set(e.message)
+            }
         }
-        const res = (await fetch('/in', {
-            credentials: "include",
-            method: 'POST',
-            body: enc(usr, SparkMD5.hash(SparkMD5.hash(pwd + "err#*&@#1") + k))
-        }))
-        let t = await res.text();
-        if (res.ok) {
+        const t = await query('login', enc(usr, SparkMD5.hash(SparkMD5.hash(pwd + "err#*&@#1") + k)))
+        const error = t && t.error;
+        if (!error) {
             w = 0
             isLogin.set(1)
             tok.set(t)
         } else {
-            if (/^w:/.test(t)) {
-                wt = +t.substr(2)
+            if (/^w:/.test(error)) {
+                wt = +error.substr(2)
                 msg.set("please try later")
-            } else if(t==='forbidden ip'){
-                wt=-1
-            }else {
+            } else if (error === 'forbidden ip') {
+                wt = -1
+            } else {
                 setTimeout(() => w = 0, 1e3)
-                return msg.set(t)
+                return msg.set(error)
             }
         }
         setTimeout(() => w = 0, 1e3)

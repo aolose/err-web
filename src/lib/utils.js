@@ -6,9 +6,10 @@ import {isLogin, tok, upLoadInfo, upLoadSeq} from "$lib/store";
 import {goto} from "$app/navigation";
 
 export const logout = () => {
-    fetch('/logout', {
+    fetch(host+'/ot', {
         credentials: "include",
-        method: 'POST',
+        mode: 'cors',
+        method: 'GET',
     }).then(res => {
         if (res.ok) {
             isLogin.set(0)

@@ -10,7 +10,9 @@
     }
     onMount(() => {
         if (browser) {
-            const taskUpdater = new EventSource(host + "/msg", {withCredentials: true});
+            const taskUpdater = new EventSource(host + "/msg", {
+                withCredentials: true
+            });
             if (taskUpdater) {
                 taskUpdater.onerror = e => {
                     console.log("msg connect err:", e)

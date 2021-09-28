@@ -153,8 +153,10 @@ async function getRes(ctx, name) {
         }
     }
     if (re && re.status === 403) {
-        await logout()
-        err = null
+        if( name !== 'login'){
+            await logout()
+            err = null
+        }
     } else {
         o.status = 408
     }

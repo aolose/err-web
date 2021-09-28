@@ -6,14 +6,14 @@ import {tip} from "$lib/popMsg.svelte";
 
 const ok = c => c && c.status === 200
 export const apis = {
-    cmLs:{
-        path: ([a,b]) => `c/${a}/${b}`,
+    cmLs: {
+        path: ([a, b]) => `c/${a}/${b}`,
         cacheTime: 3
     },
-    cm:{
+    cm: {
         path: 'c',
         method: 'POST',
-        before(a,b,c){
+        before(a, b, c) {
             return c
         }
     },
@@ -28,6 +28,13 @@ export const apis = {
         },
         fail(e) {
             tip(e);
+        }
+    },
+    login: {
+        path: 'auth',
+        method: 'POST',
+        before(a,b,c){
+            return c
         }
     },
     auth: {
@@ -148,7 +155,7 @@ export const apis = {
                 return {}
             }
         },
-        cacheTime: 60*10,
+        cacheTime: 60 * 10,
         path: ({params: {page} = {}}) => {
             if (!page) page = 1;
             return `posts/${page}`
