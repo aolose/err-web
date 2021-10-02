@@ -29,7 +29,7 @@
             return `<a target="_blank" href='${h}'>${tx}</a>`
         },
         paragraph(s) {
-            s=s.replace(/(^|\n)\.\.\n/g,'<br>')
+            s=s.replace(/(^|\n)\.\.(\n|$)/g,'<br>')
             return parseRes(s)
         }
     };
