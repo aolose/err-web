@@ -55,7 +55,7 @@
     export let value = ''
     let out = []
     $:{
-        const v = (value || '').replace(/\n\n\n+/g,'\n\u200B\n')
+        const v = (value || '').replace(/\n\n\n+/g,'\n\n\u200B\n\n')
         out = marked(v).split(resTag).filter(a => a).map(a => a.split(resSp)).filter(a=>a[0])
     }
 </script>
