@@ -14,7 +14,7 @@
         {#if a}
             <Link href="/" >HOME</Link>
             <Link href="/posts">POST</Link>
-            <Link href="/tags">Tags</Link>
+            <Link href="/tags">TAGS</Link>
         {/if}
 
     </div>
