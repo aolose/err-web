@@ -95,6 +95,7 @@
     padding-top: 100%;
     transform: rotate(-15deg);
     border-radius: 50%;
+    box-shadow: inset rgba(0,0,0,.08) -20px -20px 30px;
 
     * {
       color: #fff;
