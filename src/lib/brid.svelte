@@ -95,7 +95,6 @@
     padding-top: 100%;
     transform: rotate(-15deg);
     border-radius: 50%;
-    box-shadow: white 0 0 10px, transparentize(white, .4) 0 0 40px;
 
     * {
       color: #fff;
