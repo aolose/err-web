@@ -55,7 +55,7 @@
             const m = ($listStore || []).find(a => a.id === $curStore.id)
             if (!m) mix = [$curStore].concat($listStore)
         }
-        mix=mix.filter(a=>a)
+        mix=mix.filter(a=>a&&'id' in a)
     }
     go(1)
 </script>
