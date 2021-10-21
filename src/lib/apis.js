@@ -142,6 +142,39 @@ export const apis = {
         path: 'tag/all',
         cacheTime: 60,
     },
+    tagPosts:{
+        path: ({params: {page,name} = {}}) => {
+            if (!page) page = 1;
+            return `tag/${name}/${page}`
+        },
+        after: (r, o, {params: {page,name}}) => {
+            if (page === 0) {
+                o.status = 302;
+                o.redirect = `/tag/${name}/1`;
+                return {
+                    params:{page,name}
+                }
+            }
+            if (page > r.total) {
+                o.status = 302;
+                o.redirect = `/tag/${name}/${r.total}`;
+                return {
+                    params:{page,name}
+                }
+            }
+            if(r)r.params={page,name}
+            else {
+                return {
+                    params:{page,name}
+                }
+            }
+        },
+        before() {
+            return {
+                count: 8
+            }
+        }
+    },
     posts: {
         after: (r, o, {params: {page}}) => {
             if (page === 0) {
