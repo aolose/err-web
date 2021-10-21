@@ -32,6 +32,7 @@
     color: #94abc2;
     display: flex;
     align-items: center;
+    font-weight: 100;
   }
 
   a {
