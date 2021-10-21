@@ -13,7 +13,7 @@
 <svelte:head>
     <title>Err - tag/{params.name}</title>
 </svelte:head>
-<Posts d={d} name="tag">
+<Posts d={d} name={'tag/'+params.name}>
     <h1>
         <ITag/>{params.name}</h1>
 </Posts>
