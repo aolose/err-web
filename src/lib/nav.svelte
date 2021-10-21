@@ -13,7 +13,7 @@
     <div class="a">
         {#if a}
             <Link href="/" >HOME</Link>
-            <Link href="/posts/1">POST</Link>
+            <Link href="/posts">POST</Link>
             <Link href="/tags">Tags</Link>
         {/if}
 
