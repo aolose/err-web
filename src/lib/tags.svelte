@@ -26,7 +26,7 @@
     }
 
     function change() {
-        curStore.set({...$curStore, tags: ts.join(" ")})
+        if('id' in $curStore) curStore.set({...$curStore, tags: ts.join(" ")})
     }
 
     $:{

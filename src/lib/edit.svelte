@@ -4,30 +4,31 @@
     import {timeFmt} from "$lib/utils";
     import {onDestroy, tick} from "svelte";
     import {extraHis, initEdit} from "$lib/store";
+
     export let store
-    export let title="title"
+    export let title = "title"
     export let type = 0
-    export let content="content"
+    export let content = "content"
     export let show
     export let ipt
     export let saved
     let editHis = {};
     $:update = saved ? `update at ${timeFmt(saved)}` : ""
-    onDestroy(extraHis.subscribe(a=>{
-        if(a.length){
-            pushHis(content,...a)
+    onDestroy(extraHis.subscribe(a => {
+        if (a.length) {
+            pushHis(content, ...a)
         }
     }))
 
-    onDestroy(()=>{
-        editHis={}
+    onDestroy(() => {
+        editHis = {}
     })
 
     function initHis() {
         editHis = {
             old: {
-                [content]:$store[content],
-                [title]:$store[title],
+                [content]: $store[content],
+                [title]: $store[title],
             },
             next: {
                 [content]: [[$store[content], -1, -1]],
@@ -114,7 +115,7 @@
     function pushHis(nm, sv, s, e) {
         const {old, pre, next} = editHis;
         if (sv !== old[nm]) {
-            $store.saved=0
+            $store.saved = 0
             next[nm].push([sv, s, e]);
             pre[nm].length = 0;
             old[nm] = sv;
@@ -163,6 +164,7 @@
 
 <style lang="scss">
   @import "./break";
+
   .edit {
     max-width: 600px;
     flex: 1;
@@ -170,9 +172,10 @@
     flex-direction: column;
     height: 100%;
     width: 50%;
-     @include s(){
-       padding-right: 30px;
-     }
+    @include s() {
+      padding-right: 30px;
+    }
+
     textarea {
       flex: 1;
       overflow: auto;
@@ -199,6 +202,7 @@
       margin-bottom: 20px;
     }
   }
+
   .sv {
     position: absolute;
     color: #334271;
