@@ -5,15 +5,16 @@
     import Pub from '$lib/pubWin.svelte'
     import Res from '$lib/resWin.svelte'
     import Edit from '$lib/edit.svelte'
-    import {onDestroy} from "svelte";
+    import {onDestroy} from 'svelte';
     import BW from './blWin.svelte'
+    import Mg from './mgWin.svelte'
     import Sys from './sysWin.svelte'
     import Msg from '$lib/typeMsg.svelte'
 
-    import {fade} from "svelte/transition";
-    import {artList, post, view, winAct} from "$lib/store";
-    import {query} from "$lib/res";
-    import {errorCatch} from "$lib/utils";
+    import {fade} from 'svelte/transition';
+    import {artList, post, view, winAct, pubUrl} from '$lib/store';
+    import {query} from '$lib/res';
+    import {errorCatch} from '$lib/utils';
 
     let res
     let ipt
@@ -43,7 +44,15 @@
             artList.set(ls)
         }
     }
-
+    let pu=-1
+    onDestroy(pubUrl.subscribe(p=>{
+        clearTimeout(pu)
+        if(p){
+            pu=setTimeout(()=>{
+                pubUrl.set('')
+            },8e3)
+        }
+    }))
     onDestroy(post.subscribe(p => {
         syncList(p, p.id)
         if (lock) return
@@ -84,6 +93,9 @@
         cls = 'v' + a
     }))
 </script>
+<div class={'tip'+($pubUrl?' act':'')} on:click={()=>setTimeout(()=>pubUrl.set(""),300)}>
+    Publish success! <a target='_blank' href={'/post/'+$pubUrl}>VIEW</a>
+</div>
 <div class={'ctx '+cls}>
     <nav>
         <List
@@ -95,21 +107,21 @@
                 curStore={post}
                 baseItem={ {
             id: 0,
-            title: "A new article",
+            title: 'A new article',
             desc: "",
-            content: "Write something",
+            content: 'Write something',
         }}
         />
     </nav>
     <div class={'ma'}>
-        <div class="write">
+        <div class='write'>
             <Edit
                     store={post}
                     saved={$post.saved}
                     show={Object.keys($post).length}
                     bind:ipt={ipt}
             />
-            <div class="prev">
+            <div class='prev'>
                 {#key !Object.keys($post).length}
                     <div transition:fade>
                         <h1>{title}</h1>
@@ -119,16 +131,48 @@
             </div>
         </div>
     </div>
-    <div class="msg">
-        <Msg defaultText="version 0.0.1"/>
+    <div class='msg'>
+        <Msg defaultText='version 0.0.1'/>
     </div>
 </div>
 <Pub/>
 <Res ipt={ipt}/>
 <BW/>
+<Mg/>
 <Sys/>
-<style lang="scss">
-  @import "./break";
+<style lang='scss'>
+  @import './break';
+
+  .tip {
+    pointer-events: none;
+    position: fixed;
+    height: 30px;
+    width: 200px;
+    top: 0;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: .3s ease-in-out;
+    transform: translate3d(-50%, -100%, 0);
+    color: #fff;
+    z-index: 10;
+    background: transparentize(#0eb200, .4);
+    backdrop-filter: blur(3px);
+    box-shadow: transparentize(#0ea701, .8) 0 2px 20px -4px;
+
+    &.act {
+      pointer-events: all;
+      transform: translate3d(-50%, 100%, 0);
+    }
+
+    a {
+      padding: 0 5px;
+      color: yellow;
+      text-decoration: underline;
+    }
+  }
 
   nav {
     width: 250px;
@@ -198,6 +242,7 @@
       transform: translate3d(50%, 0, 0);
     }
   }
+
   .msg {
     position: absolute;
     right: 30px;
@@ -209,12 +254,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
   .ctx {
     transition: .3s ease-in-out;
     display: flex;
     flex: 1;
     overflow: visible;
   }
+
   @include s() {
     .v0 {
       transform: translate3d(0, 0, 0);

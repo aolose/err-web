@@ -85,7 +85,7 @@
         <Btn cls="l" fn={openWin(4)}>
             <Sys/>
         </Btn>
-        <Btn cls="f">
+        <Btn cls="f" fn={openWin(5)}>
             <Msg/>
         </Btn>
     {/if}

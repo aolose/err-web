@@ -1,10 +1,8 @@
 import {bannerMod, isLogin, qa, qaList, qState, resList, tags} from "$lib/store";
 import {get} from "svelte/store";
-import {tick} from "svelte";
 import {enc} from "./utils";
 import {tip} from "$lib/popMsg.svelte";
 
-const ok = c => c && c.status === 200
 export const apis = {
     cmLs: {
         path: ([a, b]) => `c/${a}/${b}`,

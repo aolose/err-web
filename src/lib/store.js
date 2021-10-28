@@ -8,6 +8,7 @@ export const resList = writable([]);
 export const tips = writable([]);
 export const msg = writable("");
 export const tok = writable("");
+export const pubUrl = writable("");
 export const initEdit = writable(0);
 export const extraHis = writable([]);
 export const post = writable({})

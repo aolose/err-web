@@ -63,8 +63,8 @@
 
   .s-win {
     padding: 50px 20px 20px;
-    background-color: #191e2f;
-    opacity: .5;
+    backdrop-filter: blur(4px);
+    background: transparentize(#121622, .1);
     transition: .6s ease-in-out transform,
     .2s .5s ease-in-out opacity,
     .3s .5s ease-in-out background-color;
@@ -84,9 +84,6 @@
     }
 
     &.sh {
-      opacity: 1;
-      background: #121622;
-
       i {
         width: 16px;
       }
@@ -99,6 +96,10 @@
 
       .b {
         transform: rotateZ(-35deg);
+      }
+
+      @include w() {
+        box-shadow: rgba(0,0,0,.1) -6px 0 10px -5px;
       }
     }
   }

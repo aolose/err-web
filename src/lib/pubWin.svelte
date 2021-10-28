@@ -4,7 +4,7 @@
     import Date from './PubDate.svelte'
     import Tags from './tags.svelte'
     import {host, query} from "$lib/res";
-    import {bannerMod, post, tags, winAct} from "$lib/store";
+    import {bannerMod, post, pubUrl, tags, winAct} from "$lib/store";
     import {errorCatch, getArtDesc} from "$lib/utils";
     import {onDestroy} from "svelte";
     import {fade} from 'svelte/transition'
@@ -37,7 +37,7 @@
                 } else {
                     const [i, s, u, nt, ot] = a.split("\u0001")
                     tags.add(nt).del(ot)
-
+                    if (s) pubUrl.set(s)
                     post.set({
                         ...$post,
                         created: $post.create2 || $post.created,
@@ -159,7 +159,7 @@
       }
       padding: 28px 10px 10px;
       width: 90%;
-      margin:  0 auto;
+      margin: 0 auto;
     }
   }
 
@@ -252,6 +252,7 @@
     right: 0;
     position: absolute;
     width: 80px;
+
     &:hover {
       opacity: 1;
     }
