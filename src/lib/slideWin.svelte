@@ -63,7 +63,7 @@
 
   .s-win {
     padding: 50px 20px 20px;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(50px);
     background: transparentize(#121622, .1);
     transition: .6s ease-in-out transform,
     .2s .5s ease-in-out opacity,
