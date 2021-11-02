@@ -3,6 +3,7 @@ import {writable,} from 'svelte/store';
 export const bannerMod = writable(0);
 export const artList = writable([]);
 export const bkList = writable([]);
+export const mgList = writable([]);
 export const qaList = writable([]);
 export const resList = writable([]);
 export const tips = writable([]);

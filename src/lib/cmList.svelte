@@ -1,8 +1,9 @@
 <script>
     import {browser} from "$app/env";
     import {randNm, rndAr, timeFmt} from "./utils";
-    import {fade, fly,slide} from "svelte/transition";
+    import {fade, fly, slide} from "svelte/transition";
     import Ld from './loading.svelte'
+    import Ava from './ava.svelte'
     import {query} from "./res";
     import Pag from './pag.svelte'
 
@@ -21,7 +22,7 @@
             nm = nm || localStorage.nm || randNm()
             av = +av || +localStorage.av || 1
         }
-        if(!/^[0-9a-z· \u4e00-\u9fa5]+$/.test(nm))nm=nm.replace(/[^0-9a-z· \u4e00-\u9fa5]/g,'')
+        if (!/^[0-9a-z· \u4e00-\u9fa5]+$/.test(nm)) nm = nm.replace(/[^0-9a-z· \u4e00-\u9fa5]/g, '')
         if (nm.length > 16) nm = nm.substr(0, 16)
         if (cm.length > 512) nm = nm.substr(0, 512)
     }
@@ -29,26 +30,26 @@
     let lsLd = 0
 
     async function go(p) {
-        const i=p||1
+        const i = p || 1
         lsLd = 1
         const re = await query('cmLs', [id, i])
         if (re.ls) {
             ls = re.ls
             cur = re.cur
             total = re.total
-            setTimeout(()=>{
-                if(el&&p)el.scrollIntoView(true)
-            },300)
+            setTimeout(() => {
+                if (el && p) el.scrollIntoView(true)
+            }, 300)
         }
         lsLd = 0
     }
 
-    let t,el
+    let t, el
 
     async function cmt() {
         ld = 1
-        nm=nm.replace(/^\s+|\s+$/g,'')
-        cm=cm.replace(/^\s+|\s+$/g,'')
+        nm = nm.replace(/^\s+|\s+$/g, '')
+        cm = cm.replace(/^\s+|\s+$/g, '')
         const re = await query('cm', {
             a: av,
             d: id,
@@ -66,7 +67,7 @@
                     d: id,
                     r: 0,
                     c: cm,
-                    t: Math.floor(Date.now()/1e3),
+                    t: Math.floor(Date.now() / 1e3),
                     o: 1
                 }
             ].concat(ls)
@@ -103,15 +104,18 @@
         {#if sh}
             <div class="as" transition:fade>
                 {#each avLs as a}
-                    <i class={'av a_'+a} class:act={a===av-1} on:click={()=>{
+                    <Ava idx={a+1}
+                         cls={'av'+(a===av-1?' act':'')}
+                         click={()=>{
                 av=a+1
                 sh=0
-            }}></i>
+            }}
+                    />
                 {/each}
             </div>
         {/if}
         <div class="o" bind:this={el}>
-            <i class={'a a_'+(av-1)} on:click={()=>sh=1}></i>
+            <Ava idx={av} click={()=>sh=1}/>
             {#if ed}
                 <input bind:value={nm} placeholder="name"
                        on:blur={()=>ed=0}/>
@@ -133,10 +137,10 @@
         <Ld tm={1} act={ld} text="committing"/>
     </div>
     <div class="ls">
-        {#each ls as {i,a,n,t,o,c} (i)}
+        {#each ls as {i, a, n, t, o, c} (i)}
             <div class="m" class:s={o} transition:slide|local>
                 <div class="h">
-                    <div class={'a a_'+(a-1)}></div>
+                    <Ava idx={a}/>
                     <label>{n}</label>
                 </div>
                 <div class="cx">
@@ -152,23 +156,27 @@
     {/if}
 </div>
 <style lang="scss">
-  .m{
-    padding:  5px 0 20px;
+  .m {
+    padding: 5px 0 20px;
     display: flex;
-    &:nth-child(2n){
-      label{
+
+    &:nth-child(2n) {
+      label {
         color: #9b9675;
       }
-      p{
+
+      p {
         color: #666;
       }
-      .cx{
+
+      .cx {
         border-color: #efece8;
         background: #fafafa;
       }
     }
   }
-  .h{
+
+  .h {
     padding-right: 10px;
     width: 80px;
     display: flex;
@@ -176,23 +184,27 @@
     align-items: center;
     justify-content: center;
   }
-  label{
+
+  label {
     text-align: center;
     color: #7e9b9f;
     white-space: nowrap;
     word-break: break-word;
     font-size: 12px;
   }
-  .cx{
+
+  .cx {
     flex: 1;
     padding: 5px 10px 20px;
     border-radius: 3px;
     border: 1px solid #dfe7e8;
-    p{
+
+    p {
       color: #999;
       font-size: 13px;
     }
-    span{
+
+    span {
       color: #000;
       opacity: .5;
       line-height: 1;
@@ -202,6 +214,7 @@
       font-size: 11px;
     }
   }
+
   .tp {
     text-align: center;
     min-width: 200px;
@@ -231,10 +244,11 @@
   .as {
     padding: 7px;
     position: absolute;
-    height: 100px;
-    top: -110px;
-    width: 247px;
-    background: #fff;
+    height: 150px;
+    top: -160px;
+    width: 200px;
+    background: transparentize(#16204d,.9);
+    backdrop-filter: blur(6px);
     border: 1px solid #eee;
     box-shadow: rgba(0, 0, 0, .2) 0 3px 8px -3px;
     border-radius: 5px;
@@ -250,11 +264,9 @@
         background-size: auto 80%;
         margin: 3px;
         border-radius: 6px;
-        border: 1px solid transparent;
 
         &.act, &:hover {
-          border-color: #c5c5c5;
-          background-color: #eee;
+          background-color: #fff;
         }
       }
     }
@@ -279,56 +291,7 @@
   }
 
   .cm {
-    margin-top:20px;
-    :global {
-      .a_0 {
-        background-image: url("./icon/0.png");
-      }
-
-      .a_1 {
-        background-image: url("./icon/1.png");
-      }
-
-      .a_2 {
-        background-image: url("./icon/2.png");
-      }
-
-      .a_3 {
-        background-image: url("./icon/3.png");
-      }
-
-      .a_4 {
-        background-image: url("./icon/4.png");
-      }
-
-      .a_5 {
-        background-image: url("./icon/5.png");
-      }
-
-      .a_6 {
-        background-image: url("./icon/6.png");
-      }
-
-      .a_7 {
-        background-image: url("./icon/7.png");
-      }
-
-      .a_8 {
-        background-image: url("./icon/8.png");
-      }
-
-      .a_9 {
-        background-image: url("./icon/9.png");
-      }
-
-      .a_10 {
-        background-image: url("./icon/10.png");
-      }
-
-      .a_11 {
-        background-image: url("./icon/11.png");
-      }
-    }
+    margin-top: 20px;
   }
 
   .c {
@@ -380,16 +343,6 @@
     display: flex;
     align-items: center;
   }
-
-  .a {
-    cursor: pointer;
-    width: 40px;
-    height: 40px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: auto 80%;
-  }
-
   .sd {
 
   }

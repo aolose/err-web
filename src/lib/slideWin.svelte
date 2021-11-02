@@ -99,6 +99,8 @@
       }
 
       @include w() {
+        left: auto;
+        width: 600px;
         box-shadow: rgba(0,0,0,.1) -6px 0 10px -5px;
       }
     }

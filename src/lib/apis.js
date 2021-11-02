@@ -31,7 +31,7 @@ export const apis = {
     login: {
         path: 'auth',
         method: 'POST',
-        before(a,b,c){
+        before(a, b, c) {
             return c
         }
     },
@@ -83,6 +83,19 @@ export const apis = {
             return o
         },
         cacheTime: 3
+    },
+    lsMg: {
+        path: a => `c/${a}`,
+        cacheTime: 10,
+        before(_, s) {
+            const o = {}
+            if (s) {
+                const {id, text} = s;
+                if (id) o.art_id =id;
+                if (text) o.content = text;
+            }
+            return o
+        }
     },
     lsBk: {
         path: a => `bk/${a}`,
@@ -140,30 +153,30 @@ export const apis = {
         path: 'tag/all',
         cacheTime: 60,
     },
-    tagPosts:{
-        path: ({params: {page,name} = {}}) => {
+    tagPosts: {
+        path: ({params: {page, name} = {}}) => {
             if (!page) page = 1;
             return `tag/${name}/${page}`
         },
-        after: (r, o, {params: {page,name}}) => {
+        after: (r, o, {params: {page, name}}) => {
             if (page === 0) {
                 o.status = 302;
                 o.redirect = `/tag/${name}/1`;
                 return {
-                    params:{page,name}
+                    params: {page, name}
                 }
             }
             if (page > r.total) {
                 o.status = 302;
                 o.redirect = `/tag/${name}/${r.total}`;
                 return {
-                    params:{page,name}
+                    params: {page, name}
                 }
             }
-            if(r)r.params={page,name}
+            if (r) r.params = {page, name}
             else {
                 return {
-                    params:{page,name}
+                    params: {page, name}
                 }
             }
         },
