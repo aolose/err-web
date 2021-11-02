@@ -62,7 +62,7 @@
             <Item d={b} act={selected[b.id]}/>
         {/each}
     </div>
-    <Pag cur={cur} total={total}/>
+    <Pag cur={cur} total={total} url={go}/>
 </SWin>
 <style lang="scss">
   .btn {
