@@ -57,6 +57,7 @@
             t = setTimeout(async function () {
                 const a = $post
                 const v = getKey(a)
+                if(v===null)return
                 if (v === bf) return
                 const r = await query('savePost', a)
                 if (r && r.error) {
