@@ -53,7 +53,6 @@
     onDestroy(post.subscribe(p => {
         syncList(p, p.id)
         clearTimeout(t)
-        if (v === null) return
         if (pid === p.id) {
             t = setTimeout(async function () {
                 const a = $post
