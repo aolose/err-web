@@ -1,5 +1,4 @@
 <script>
-    import Ava from './ava.svelte'
     import {timeFmt} from "$lib/utils";
     import {tip} from "$lib/popMsg.svelte";
 
@@ -20,18 +19,20 @@
         t,
     } = d;
 
-    function del() {
-        tip('Confirm delete?', () => {
+    function del(e) {
+        e.stopPropagation()
+        tip('Block the IP?', () => {
 
-        },1)
+        }, 1)
     }
 
     function block() {
 
     }
-    const sty=`color:#${[
-        '21ff00','00ffea','b783ff','ff49f6','ffdb49','ff8332'
-    ][(n+a).split('').reduce((a,b)=>a+b.charCodeAt(0),0)%6]}`
+
+    const sty = `color:#${[
+        '21ff00', '00ffea', 'b783ff', 'ff49f6', 'ffdb49', 'ff8332'
+    ][(n + a).split('').reduce((a, b) => a + b.charCodeAt(0), 0) % 6]}`
 
 
     const e = {"i": 1, "a": 8, "n": "唐纳德·肉丝", "d": 1, "r": 0, "c": "sadasdas", "l": "", "s": 1, "t": 0, "o": 0}
@@ -39,6 +40,7 @@
 <div class="cm" class:act={act} on:click={click?()=>click(i):null}>
     <div class="m">
         <i class="o" on:click={e=>{
+            e.stopPropagation()
             mr=1-mr
         }}>
             ...
@@ -54,7 +56,7 @@
     </div>
     <div class="ee" class:mr>
         <div class="e">
-            <span>Article Date: {timeFmt(date)}</span>
+            <span>IP: {f}</span>
             <div class="op">
                 <i class="del" on:click={del}></i>
             </div>
@@ -66,23 +68,29 @@
     cursor: pointer;
     border: 1px solid #10273f;
     margin: 10px 0 20px;
-    border-radius: 8px;
+  }
+  .act{
+    background: #171f33;
+    border-color: #163b78;
   }
 
   .l {
-    background:transparentize(#000,.9);
+    background: transparentize(#000, .9);
     padding: 10px;
     display: flex;
     align-items: center;
+
     span {
       margin-right: 5px;
     }
+
     a {
       margin-left: 5px;
       color: #00a1ff;
       text-decoration: underline;
     }
-    .t{
+
+    .t {
       margin-right: 30px;
       flex: 1;
       color: #638294;
@@ -92,6 +100,7 @@
 
   .r {
     flex: 1;
+
     p {
       padding: 10px;
       color: #bebebe;
@@ -124,11 +133,13 @@
     justify-content: space-between;
     padding: 10px;
     flex-wrap: wrap;
-    background:transparentize(#fff,.99);
+    background: transparentize(#fff, .99);
+
     span {
       color: #87a7bd;
     }
   }
+
   .op {
     display: flex;
     align-items: center;
@@ -137,21 +148,28 @@
     i {
       width: 20px;
       height: 20px;
-      background:  center no-repeat;
+      background: center no-repeat;
       background-size: 100%;
-
+      opacity: .5;
+      cursor: pointer;
+      transition: .2s ease-in-out;
+      &:hover{
+        opacity: 1;
+      }
     }
-    .del{
-      background-image: url("./img/del.svg");
+
+    .del {
+      background-image: url("./img/dis.svg");
     }
   }
 
-  .ee{
+  .ee {
     transition: .3s ease-in-out;
     height: 0;
     overflow: hidden;
   }
-  .mr{
+
+  .mr {
     height: 40px;
   }
 

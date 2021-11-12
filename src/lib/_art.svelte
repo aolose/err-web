@@ -21,20 +21,16 @@
     let t
     let pid = $post.id
     let bf
-    let lock
     let cls = ''
-    $:{
-        if (!bf) {
-            bf = ($post.title + JSON.stringify($post.content || "")).replace(/[ \n\t\r]/g, '')
-        }
-        if (!pid && $post.id !== undefined) {
-            pid = $post.id
-        }
-    }
     let content = "", title = ""
     $:content = ($post.content) || ""
     $:title = ($post.title) || ""
 
+
+    function getKey(p) {
+        if(!p.hasOwnProperty('id'))return null
+        return (p.title + JSON.stringify(p.content || "")).replace(/[ \n\t\r]/g, '')
+    }
 
     function syncList(p, old) {
         const i = $artList.findIndex(({id}) => id === old)
@@ -44,44 +40,43 @@
             artList.set(ls)
         }
     }
-    let pu=-1
-    onDestroy(pubUrl.subscribe(p=>{
+
+    let pu = -1
+    onDestroy(pubUrl.subscribe(p => {
         clearTimeout(pu)
-        if(p){
-            pu=setTimeout(()=>{
+        if (p) {
+            pu = setTimeout(() => {
                 pubUrl.set('')
-            },8e3)
+            }, 8e3)
         }
     }))
     onDestroy(post.subscribe(p => {
         syncList(p, p.id)
-        if (lock) return
         clearTimeout(t)
-        if (pid === $post.id) {
+        const a = p
+        const v = getKey(a)
+        if(v===null)return
+        if (pid === p.id && v !== bf) {
             t = setTimeout(async function () {
-                const a = $post
-                const v = (a.title + JSON.stringify(a.content || "")).replace(/[ \n\t\r]/g, '');
-                if (v !== bf) {
-                    bf = v
-                    lock = 1
-                    const r = await query('savePost', a)
-                    if (r && r.error) {
-                        errorCatch(r.error)
-                    } else {
-                        const [id, da] = (r || "").split('\u0001')
-                        const old = $post.id
-                        post.set({
-                            ...a,
-                            id: +id,
-                            saved: +da
-                        });
-                        syncList($post, old)
+                const r = await query('savePost', a)
+                if (r && r.error) {
+                    errorCatch(r.error)
+                } else {
+                    const [id, da] = (r || "").split('\u0001')
+                    const old = a.id
+                    bf =  getKey(a)
+                    const n = {
+                        ...a,
+                        id: +id,
+                        saved: +da
                     }
-                    lock = 0
+                    post.set(n);
+                    syncList(n, old)
                 }
-            }, 2e3)
+            })
         } else {
-            pid = 0
+            pid = p.id || 0
+            bf = getKey(p)
         }
     }))
     onDestroy(() => {
