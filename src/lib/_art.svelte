@@ -50,16 +50,19 @@
             }, 8e3)
         }
     }))
+    let lock=0
     onDestroy(post.subscribe(p => {
         syncList(p, p.id)
+        if(lock)return
         clearTimeout(t)
         if (pid === p.id) {
+            lock=1
             t = setTimeout(async function () {
                 const a = $post
                 const v = getKey(a)
-                if(v===null)return
-                if (v === bf) return
+                if (v===null || v === bf) return lock=0
                 const r = await query('savePost', a)
+                lock=0
                 if (r && r.error) {
                     errorCatch(r.error)
                 } else {
@@ -70,12 +73,13 @@
                         id: +id,
                         saved: +da
                     }
+                    $post.saved=n.saved
                     bf=v
-                    post.set(n);
                     syncList(n, old)
                 }
             })
         } else {
+            lock=0
             pid = p.id || 0
             bf = getKey(p)
         }

@@ -13,6 +13,7 @@
     export let ipt
     export let saved
     let editHis = {};
+    let update=''
     $:update = saved ? `update at ${timeFmt(saved)}` : ""
     onDestroy(extraHis.subscribe(a => {
         if (a.length) {
@@ -115,7 +116,6 @@
     function pushHis(nm, sv, s, e) {
         const {old, pre, next} = editHis;
         if (sv !== old[nm]) {
-            $store.saved = 0
             next[nm].push([sv, s, e]);
             pre[nm].length = 0;
             old[nm] = sv;
@@ -134,6 +134,7 @@
         old[nm] = cur[0];
         return cur
     }
+
 </script>
 <div class="edit">
     {#if show}
