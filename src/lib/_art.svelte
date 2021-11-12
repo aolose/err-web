@@ -28,8 +28,8 @@
 
 
     function getKey(p) {
-        if(!p.hasOwnProperty('id'))return null
-        return (p.title + JSON.stringify(p.content || "")).replace(/[ \n\t\r]/g, '')
+        if (!p.hasOwnProperty('id')) return null
+        return (p.title + JSON.stringify(p.content || ""))
     }
 
     function syncList(p, old) {
@@ -53,23 +53,24 @@
     onDestroy(post.subscribe(p => {
         syncList(p, p.id)
         clearTimeout(t)
-        const a = p
-        const v = getKey(a)
-        if(v===null)return
-        if (pid === p.id && v !== bf) {
+        if (v === null) return
+        if (pid === p.id) {
             t = setTimeout(async function () {
+                const a = $post
+                const v = getKey(a)
+                if (v === bf) return
                 const r = await query('savePost', a)
                 if (r && r.error) {
                     errorCatch(r.error)
                 } else {
                     const [id, da] = (r || "").split('\u0001')
                     const old = a.id
-                    bf =  getKey(a)
                     const n = {
                         ...a,
                         id: +id,
                         saved: +da
                     }
+                    bf=v
                     post.set(n);
                     syncList(n, old)
                 }
