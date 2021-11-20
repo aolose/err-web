@@ -36,7 +36,7 @@
         const i = $artList.findIndex(({id}) => id === old)
         if (i !== -1) {
             const ls = [...$artList]
-            ls[i] = p;
+            ls[i] = p
             artList.set(ls)
         }
     }
@@ -50,36 +50,38 @@
             }, 8e3)
         }
     }))
-    let lock=0
+    let lock = 0
     onDestroy(post.subscribe(p => {
+        if (!p || !p.hasOwnProperty('id')) return;
         syncList(p, p.id)
-        if(lock)return
+        if (lock) return
         clearTimeout(t)
         if (pid === p.id) {
-            lock=1
+            lock = 1
             t = setTimeout(async function () {
                 const a = $post
                 const v = getKey(a)
-                if (v===null || v === bf) return lock=0
+                if (v === null || v === bf) return lock = 0
                 const r = await query('savePost', a)
-                lock=0
+                lock = 0
                 if (r && r.error) {
                     errorCatch(r.error)
                 } else {
                     const [id, da] = (r || "").split('\u0001')
+                    $post.id = pid = id
+                    bf = v
                     const old = a.id
                     const n = {
                         ...a,
                         id: +id,
                         saved: +da
                     }
-                    $post.saved=n.saved
-                    bf=v
+                    $post.saved = n.saved
                     syncList(n, old)
                 }
             })
         } else {
-            lock=0
+            lock = 0
             pid = p.id || 0
             bf = getKey(p)
         }
