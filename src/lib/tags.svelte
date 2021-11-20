@@ -272,7 +272,7 @@
         cursor: pointer;
         padding: 5px 10px;
         margin-bottom: 1px;
-        background: rgba(0, 0, 0, .3);
+        background: rgba(19,25,44,.95);
       }
 
       .ac {
