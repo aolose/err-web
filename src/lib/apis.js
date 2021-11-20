@@ -1,4 +1,4 @@
-import {bannerMod, isLogin, qa, qaList, qState, resList, tags} from "$lib/store";
+import {bannerMod, isLogin, mgList, qa, qaList, qState, resList, tags} from "$lib/store";
 import {get} from "svelte/store";
 import {enc} from "./utils";
 import {tip} from "$lib/popMsg.svelte";
@@ -7,6 +7,21 @@ export const apis = {
     cmLs: {
         path: ([a, b]) => `c/${a}/${b}`,
         cacheTime: 3
+    },
+    delCm: {
+        path: (id) => `c/${id}`,
+        method: 'DELETE',
+    },
+    cmDel: {
+        path: 'c',
+        method: 'DELETE',
+        before(a, b, id) {
+            return {id: id.filter(a => a).join()}
+        },
+        done(a, id) {
+            if (id) id = [].concat(id).map(v => +v)
+            mgList.update(m => m.filter(({i}) => id.indexOf(i) === -1))
+        }
     },
     cm: {
         path: 'c',
@@ -91,7 +106,7 @@ export const apis = {
             const o = {}
             if (s) {
                 const {id, text} = s;
-                if (id) o.art_id =id;
+                if (id) o.art_id = id;
                 if (text) o.content = text;
             }
             return o

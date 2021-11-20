@@ -8,6 +8,7 @@
     import {fade} from "svelte/transition";
     import {onDestroy} from "svelte";
 
+    export let light = 0
     let m = 0
     let ctx
     let ox, oy
@@ -54,6 +55,7 @@
         v[3] = 0
         tips.update(t => t.filter(a => a[3]))
     }
+
     onDestroy(() => tips.set([]))
 </script>
 {#if $tips.length }
@@ -62,7 +64,9 @@
             {#if v[3]}
                 <div class="tip" transition:fade
                      on:touchstart={onSt}
-                     on:mousedown={onSt}>
+                     on:mousedown={onSt}
+                     class:l={light}
+                >
                     <p>{v[0]}</p>
                     <div class="bn">
                         <div class="_0"
@@ -112,7 +116,19 @@
     user-select: none;
     padding: 15px 30px 50px;
     background: #061c2d;
-
+    &.l{
+      background: transparentize(#fff, .8);
+      .bn{
+        div:not(._1){
+          color: #fff;
+          background: #00466e;
+          border: none;
+          &:hover{
+            background: #0b141a;
+          }
+        }
+      }
+    }
     p {
       color: #4b7a98;
     }

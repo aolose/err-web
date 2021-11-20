@@ -1,6 +1,7 @@
 <script>
     import {timeFmt} from "$lib/utils";
     import {tip} from "$lib/popMsg.svelte";
+    import {slide} from "svelte/transition";
 
     export let d = {}
     export let click
@@ -37,7 +38,7 @@
 
     const e = {"i": 1, "a": 8, "n": "唐纳德·肉丝", "d": 1, "r": 0, "c": "sadasdas", "l": "", "s": 1, "t": 0, "o": 0}
 </script>
-<div class="cm" class:act={act} on:click={click?()=>click(i):null}>
+<div class="cm" class:act={act} on:click={click?()=>click(i):null} transition:slide|local>
     <div class="m">
         <i class="o" on:click={e=>{
             e.stopPropagation()

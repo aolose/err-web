@@ -2,11 +2,12 @@
     import SWin from './slideWin.svelte'
     import Pag from './pag.svelte'
     import Sc from './sc.svelte'
-    import {query} from "./res";
-    import Item from "./mgItem.svelte";
-    import {mgList, post} from "./store";
-    import Switch from "./switch.svelte";
-    import {slide} from "$lib/transition";
+    import {query} from './res';
+    import Item from './mgItem.svelte';
+    import {mgList, post} from './store';
+    import Switch from './switch.svelte';
+    import {slide} from '$lib/transition';
+    import {tip} from '$lib/popMsg.svelte';
 
     let sc = ''
     let ld = 0
@@ -58,27 +59,34 @@
     }
 
     function del() {
-
+        const ids = Object.keys(selected)
+        tip('Delete selected comment' + (ids.length === 1 ? '' : 's') + '?',
+            async function () {
+                const r = await query('cmDel', ids)
+                if (r === "") {
+                    selected = {}
+                }
+            }, 1)
     }
 
 </script>
 
 <SWin act={5} onAct={()=>go(1)}>
-    <div slot="btn" class="btn">
-        <div class="sc">
+    <div slot='btn' class='btn'>
+        <div class='sc'>
             {#if se}
-                <i class="can" on:click={()=>selected={}} transition:slide={{horizon:1}}></i>
-                <i class="del" on:click={del} transition:slide={{horizon:1}}><span>{se}</span></i>
+                <i class='can' on:click={()=>selected={}} transition:slide={{horizon:1}}></i>
+                <i class='del' on:click={del} transition:slide={{horizon:1}}><span>{se}</span></i>
             {/if}
             <s></s>
             <Sc bind:value={sc} search={search}/>
             {#if ('id' in $post)}
-                <Switch bind:on name="Current" change={ch}/>
+                <Switch bind:on name='Current' change={ch}/>
             {/if}
         </div>
     </div>
-    <div class="ls">
-        {#each $mgList as b}
+    <div class='ls'>
+        {#each $mgList as b (b.i)}
             <Item d={b} act={selected[b.i]} click={
                 i=> {
                     selected={...selected,[i]:1-(selected[i]||0)}
@@ -88,7 +96,7 @@
     </div>
     <Pag cur={cur} total={total} url={go}/>
 </SWin>
-<style lang="scss">
+<style lang='scss'>
   .btn {
     display: flex;
     justify-content: flex-end;
@@ -114,7 +122,8 @@
       background-size: 90% auto;
       position: relative;
       cursor: pointer;
-      &:hover{
+
+      &:hover {
         opacity: 1;
       }
 
@@ -136,10 +145,10 @@
   }
 
   .can {
-    background-image: url("./img/can.svg");
+    background-image: url('./img/can.svg');
   }
 
   .del {
-    background-image: url("./img/del.svg");
+    background-image: url('./img/del.svg');
   }
 </style>

@@ -6,6 +6,7 @@
     import Ava from './ava.svelte'
     import {query} from "./res";
     import Pag from './pag.svelte'
+    import PopMsg, {tip} from "$lib/popMsg.svelte";
 
     export let id = ''
     export let act = 0
@@ -89,6 +90,14 @@
         av = localStorage.av = rndAr(avLs) + 1
     }
 
+    function del(id) {
+        tip("Delete the comment?", function () {
+             query('delCm',id).then(()=>{
+                 ls=ls.filter(({i})=>i!==id)
+             })
+        }, 1)
+    }
+
     go()
 </script>
 <div class:sh={act} class="cm">
@@ -139,6 +148,9 @@
     <div class="ls">
         {#each ls as {i, a, n, t, o, c} (i)}
             <div class="m" class:s={o} transition:slide|local>
+                {#if (o)}
+                    <i on:click={()=>del(i)} class="del"></i>
+                {/if}
                 <div class="h">
                     <Ava idx={a}/>
                     <label>{n}</label>
@@ -155,6 +167,7 @@
         <Pag cur={cur} total={total} url={go} tm="1"/>
     {/if}
 </div>
+<PopMsg light="1"/>
 <style lang="scss">
   .m {
     padding: 5px 0 20px;
@@ -200,6 +213,7 @@
     border: 1px solid #dfe7e8;
 
     p {
+      margin-right: 20px;
       color: #999;
       font-size: 13px;
     }
@@ -247,7 +261,7 @@
     height: 150px;
     top: -160px;
     width: 200px;
-    background: transparentize(#16204d,.9);
+    background: transparentize(#16204d, .9);
     backdrop-filter: blur(6px);
     border: 1px solid #eee;
     box-shadow: rgba(0, 0, 0, .2) 0 3px 8px -3px;
@@ -273,7 +287,7 @@
   }
 
   .s {
-    flex: 1;
+    flex: 1
   }
 
   .bn {
@@ -343,6 +357,7 @@
     display: flex;
     align-items: center;
   }
+
   .sd {
 
   }
@@ -372,6 +387,23 @@
     bottom: 10px;
     position: absolute;
     height: auto;
+  }
+
+  .del {
+    z-index: 5;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    transition: all .2s ease-in-out;
+    background: url("./img/del1.svg") center no-repeat;
+    background-size: contain;
+    top: 8px;
+    right: 5px;
+    opacity: .3;
+    cursor: pointer;
+    &:hover{
+       opacity: .8;
+    }
   }
 
   .dis {
