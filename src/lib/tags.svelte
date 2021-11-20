@@ -138,7 +138,7 @@
     $:{
         if($tagsStore){
             pos()
-            db = $tagsStore.filter(a => v && a !== v && ts.indexOf(a) === -1 && !a.indexOf(v.toLowerCase()))
+            db = $tagsStore.filter(a => v==='`' || (v&&a !== v && ts.indexOf(a) === -1 && !a.indexOf(v.toLowerCase())))
             pr = db[idx] || ''
         }
     }
