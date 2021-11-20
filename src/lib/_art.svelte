@@ -68,7 +68,7 @@
                     errorCatch(r.error)
                 } else {
                     const [id, da] = (r || "").split('\u0001')
-                    $post.id = pid = id
+                    $post.id = pid = +id
                     bf = v
                     const old = a.id
                     const n = {
