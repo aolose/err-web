@@ -117,7 +117,7 @@
     padding: 15px 30px 50px;
     background: #061c2d;
     &.l{
-      background: transparentize(#fff, .8);
+      background: #fff;
       .bn{
         div:not(._1){
           color: #fff;
