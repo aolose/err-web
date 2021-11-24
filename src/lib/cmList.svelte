@@ -92,13 +92,15 @@
 
     function del(id) {
         tip("Delete the comment?", function () {
-             query('delCm',id).then(()=>{
-                 ls=ls.filter(({i})=>i!==id)
-             })
+            query('delCm', id).then(() => {
+                ls = ls.filter(({i}) => i !== id)
+            })
         }, 1)
     }
 
-    go()
+    if (browser) {
+        go()
+    }
 </script>
 <div class:sh={act} class="cm">
     <div class="c">
@@ -401,8 +403,9 @@
     right: 5px;
     opacity: .3;
     cursor: pointer;
-    &:hover{
-       opacity: .8;
+
+    &:hover {
+      opacity: .8;
     }
   }
 
