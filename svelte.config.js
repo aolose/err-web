@@ -31,7 +31,6 @@ const config = {
     },
     preprocess: preprocess(),
     kit: {
-        hostHeader: 'X-Forwarded-Host',
         target: '#err',
         adapter: adapter(),
         ssr: true,
