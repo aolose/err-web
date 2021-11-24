@@ -19,13 +19,13 @@
         return async function () {
             const tg = this;
             const {selectionStart, selectionEnd, value} = tg
-            let v = value
+            let x = value
             if (value !== "") {
-                v = +v
-                if (v < mi) v = mi
-                else if (v > ma) v = ma
+                x = +x
+                if (x < mi) x = mi
+                else if (x > ma) x = ma
             }
-            vv[ipt.indexOf(tg)] = v
+            vv[ipt.indexOf(tg)] = x
             const [m, d, y, h, mm, s] = vv;
             const nd = new Date(+y, m - 1, +d, +h, +mm, +s)
             const t = nd.getTime()
