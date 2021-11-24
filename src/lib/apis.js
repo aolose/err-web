@@ -4,6 +4,13 @@ import {enc} from "./utils";
 import {tip} from "$lib/popMsg.svelte";
 
 export const apis = {
+    logs:{
+        path: a => `log/${a}`,
+        before(_, s) {
+            return  {c: 10}
+        },
+        cacheTime: 2
+    },
     cmLs: {
         path: ([a, b]) => `c/${a}/${b}`,
         cacheTime: 3

@@ -8,7 +8,7 @@
 </script>
 <svelte:window bind:outerWidth={ow}/>
 <div
-        transition:slide|local
+        in:slide|local
         class:act={$post.id===data.id}
         on:click={ async ()=>{
             view.set(1)

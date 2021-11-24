@@ -1,10 +1,16 @@
 <script>
     export let item = []
     export let cur = 0
+    export let change
 </script>
 <div class="tbs">
     {#each item as t,i}
-        <div class:act={cur===i} on:click={()=>cur=i}>
+        <div class:act={cur===i} on:click={()=>{
+            if(cur!==i){
+               cur=i
+               if(change)change(i)
+            }
+        }}>
             {t}
         </div>
     {/each}

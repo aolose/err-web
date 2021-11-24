@@ -40,6 +40,8 @@
         page = x
         res = await query(api, x, sc1)
         ld = 0
+        await tick()
+        sct.scrollTop=0
     }
 
     $:{
@@ -51,13 +53,14 @@
     $:{
         mix = $listStore || []
         hi = ($listStore || []).find(a => a && !a.id)
-        if(Object.keys($curStore).length){
-            const m = ($listStore || []).find(a => a.id === $curStore.id)
-            if (!m) mix = [$curStore].concat($listStore)
-        }
+        // if(Object.keys($curStore).length){
+        //     const m = ($listStore || []).find(a => a.id === $curStore.id)
+        //     if (!m) mix = [$curStore].concat($listStore)
+        // }
         mix=mix.filter(a=>a&&'id' in a)
     }
     go(1)
+    let sct;
 </script>
 
 <div class="lis">
@@ -71,8 +74,8 @@
     <Ld act={ld}/>
 
     <div class="ps">
-        <div>
-            {#each mix as p }
+        <div bind:this={sct}>
+            {#each mix as p (p.id)}
                 <svelte:component this={cpm} data={p}/>
             {/each}
         </div>
