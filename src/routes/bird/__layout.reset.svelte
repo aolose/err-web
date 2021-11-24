@@ -17,6 +17,8 @@ export const load = res('auth')
 <svelte:head>
     <title>Err - Admin</title>
 </svelte:head>
+<h1 style="color:#fff">{$isLogin}</h1>
+
 {#if $isLogin}
     <DB>
         <slot/>

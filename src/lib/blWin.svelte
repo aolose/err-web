@@ -30,7 +30,7 @@
         }
         ld = 0
         await tick();
-        sct.scrollTop=0;
+        if(sct)sct.scrollTop=0;
     }
 
     async function ch() {
