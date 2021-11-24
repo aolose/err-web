@@ -879,7 +879,7 @@ class Renderer {
 	async _load_node({ status, error, module, page, stuff }) {
 		// patch the  module to ensure add  params to node.uses.params
 		let module2 = module;
-		if (!module2.original) {
+		if (!module2.original&&!module.load) {
 			const def = module.default;
 			module2 = {
 				...module,

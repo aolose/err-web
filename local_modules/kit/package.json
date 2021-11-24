@@ -14,32 +14,6 @@
 		"sade": "^1.7.4",
 		"vite": "^2.6.12"
 	},
-	"devDependencies": {
-		"@rollup/plugin-replace": "^3.0.0",
-		"@types/amphtml-validator": "^1.0.1",
-		"@types/cookie": "^0.4.1",
-		"@types/marked": "^3.0.1",
-		"@types/mime": "^2.0.3",
-		"@types/node": "^16.10.3",
-		"@types/sade": "^1.7.3",
-		"amphtml-validator": "^1.0.35",
-		"cookie": "^0.4.1",
-		"devalue": "^2.0.1",
-		"kleur": "^4.1.4",
-		"locate-character": "^2.0.5",
-		"marked": "^3.0.7",
-		"mime": "^2.5.2",
-		"node-fetch": "^3.0.0",
-		"port-authority": "^1.1.2",
-		"rollup": "^2.58.0",
-		"selfsigned": "^1.10.11",
-		"sirv": "^1.0.17",
-		"svelte": "^3.44.0",
-		"svelte-check": "^2.2.7",
-		"svelte2tsx": "~0.4.7",
-		"tiny-glob": "^0.2.9",
-		"uvu": "^0.5.2"
-	},
 	"peerDependencies": {
 		"svelte": "^3.44.0"
 	},
@@ -54,7 +28,16 @@
 	],
 	"scripts": {
 		"build": "rollup -c",
-		"dev": "rollup -cw"
+		"dev": "rollup -cw",
+		"lint": "eslint --ignore-path .gitignore --ignore-pattern \"src/packaging/test/**\" \"{src,test}/**/*.{ts,mjs,js,svelte}\" && npm run check-format",
+		"check": "tsc && svelte-check --ignore \"src/packaging/test\"",
+		"format": "npm run check-format -- --write",
+		"check-format": "prettier --check . --config ../../.prettierrc --ignore-path .gitignore",
+		"prepublishOnly": "npm run build",
+		"test": "npm run test:unit && npm run test:packaging && npm run test:integration",
+		"test:unit": "uvu src \"(spec\\.js|test[\\\\/]index\\.js)\" -i packaging",
+		"test:packaging": "uvu src/packaging \"(spec\\.js|test[\\\\/]index\\.js)\"",
+		"test:integration": "uvu test test.js"
 	},
 	"exports": {
 		"./package.json": "./package.json",
