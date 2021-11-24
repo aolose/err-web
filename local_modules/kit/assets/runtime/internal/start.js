@@ -879,32 +879,32 @@ class Renderer {
 	async _load_node({ status, error, module, page, stuff }) {
 		// patch the  module to ensure add  params to node.uses.params
 		let module2 = module;
-		if (!module2.original && !module.load) {
-			const def = module.default;
-			module2 = {
-				...module,
-				original: module,
-				default: new Proxy(def, {
-					construct(target, args) {
-						try {
-							const page = args[0].props.$$scope.ctx[8];
-							if (page.params) {
-									page.params = new Proxy(page.params, {
-												get(target, prop) {
-													// @ts-ignore
-													node.uses.params.add(prop);
-													return target[prop];
-												}
-							});
-}
-						} catch (e) {
-							console.warn(e);
-						}
-						return new target(...args);
-					}
-				})
-			};
-		}
+// 		if (!module2.original && !module.load) {
+// 			const def = module.default;
+// 			module2 = {
+// 				...module,
+// 				original: module,
+// 				default: new Proxy(def, {
+// 					construct(target, args) {
+// 						try {
+// 							const page = args[0].props.$$scope.ctx[8];
+// 							if (page.params) {
+// 									page.params = new Proxy(page.params, {
+// 												get(target, prop) {
+// 													// @ts-ignore
+// 													node.uses.params.add(prop);
+// 													return target[prop];
+// 												}
+// 							});
+// }
+// 						} catch (e) {
+// 							console.warn(e);
+// 						}
+// 						return new target(...args);
+// 					}
+// 				})
+// 			};
+// 		}
 
 		/** @type {import('./types').BranchNode} */
 		const node = {
