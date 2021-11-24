@@ -195,7 +195,7 @@ export const apis = {
                     params: {page, name}
                 }
             }
-            if (r) r.params = {page, name}
+            if (r&&typeof r!=="string") r.params = {page, name}
             else {
                 return {
                     params: {page, name}
