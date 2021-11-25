@@ -890,12 +890,11 @@ class Renderer {
 							const page = args[0].props.$$scope.ctx[8];
 							if (page.params) {
 									page.params = new Proxy(page.params, {
-												get(target, prop) {
-													// @ts-ignore
-													node.uses.params.add(prop);
-													return target[prop];
-												}
-							});
+										get (target, prop, receiver) {
+											if (typeof prop === 'string') node.uses.params.add(prop);
+											return Reflect.get(target, prop, receiver);
+										}
+									});
 }
 						} catch (e) {
 							console.warn(e);
