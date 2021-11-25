@@ -4,9 +4,12 @@ import {get} from "svelte/store";
 import {tok} from "$lib/store";
 import {browser} from "$app/env";
 
-const localApi = "http://localhost:8880"
-export const host = import.meta.env.VITE_API_DOMAIN || localApi
-export const isDev = host === localApi
+const [cliApi = "http://localhost:8080", srvApi] = [
+    import.meta.env.VITE_API_SRV,
+    import.meta.env.VITE_API_CLI
+]
+export const host = browser ? cliApi : srvApi;
+
 export const resFlag = {
     useCache: 0
 }
@@ -114,7 +117,6 @@ async function getRes(ctx, name) {
             resolve()
         })
     })
-
     const o = {
         status: re && re.status,
     }
@@ -153,7 +155,7 @@ async function getRes(ctx, name) {
         }
     }
     if (re && re.status === 403) {
-        if( name !== 'login'){
+        if (name !== 'login') {
             await logout()
             err = null
         }
