@@ -4,11 +4,7 @@ import {get} from "svelte/store";
 import {tok} from "$lib/store";
 import {browser} from "$app/env";
 
-const [cliApi = "http://localhost:8080", srvApi] = [
-    import.meta.env.VITE_API_SRV,
-    import.meta.env.VITE_API_CLI
-]
-export const host = browser ? cliApi : srvApi;
+export const host = import.meta.env.VITE_API_SRV;
 
 export const resFlag = {
     useCache: 0

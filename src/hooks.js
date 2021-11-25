@@ -1,9 +1,26 @@
-import  cookie from 'cookie';
+import cookie from 'cookie';
+import {browser} from "$app/env";
+
+export async function externalFetch(request) {
+    const headers = {}
+    for (let pair of request.headers.entries()) {
+        headers[pair[0]] = pair[1];
+    }
+    return await fetch(
+        browser ? request.url : import.meta.env.VITE_API_CLI,
+        {
+            ...request,
+            headers,
+        })
+}
+
+
 /** @type {import('@sveltejs/kit').GetSession} */
 export async function getSession({headers}) {
-    const cks = cookie.parse(headers.cookie||'')
-    const tk=cks['session_id']
+    const cks = cookie.parse(headers.cookie || '')
+    const tk = cks['session_id']
     return {
-          token:tk
+        token: tk
     }
 }
+
