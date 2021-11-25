@@ -7,10 +7,12 @@
     import yml from 'highlight.js/lib/languages/yaml';
     import xml from 'highlight.js/lib/languages/xml';
     import scss from 'highlight.js/lib/languages/scss';
+    import bash from 'highlight.js/lib/languages/bash';
     import 'highlight.js/styles/github.css';
 
     hljs.registerLanguage('js', javascript);
     hljs.registerLanguage('xml', xml);
+    hljs.registerLanguage('bash', bash);
     hljs.registerLanguage('yml', yml);
     hljs.registerLanguage('scss', scss);
     hljs.registerLanguage('go', go);
