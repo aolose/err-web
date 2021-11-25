@@ -100,7 +100,7 @@
 
   .ct {
     & > img {
-      margin: 0 auto 10px;
+      margin: 0 auto 30px;
       display: block;
     }
 
