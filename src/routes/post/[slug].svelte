@@ -117,6 +117,7 @@
         margin: 10px 0 20px;
         pre, code {
           border-radius: 3px;
+          word-break: break-word;
           background: transparentize(rgb(37, 40, 55), .95);
           color: #1a2638;
         }
