@@ -6,8 +6,9 @@ export async function externalFetch(request) {
     for (let pair of request.headers.entries()) {
         headers[pair[0]] = pair[1];
     }
+    const {url} = request;
     return await fetch(
-        browser ? request.url : import.meta.env.VITE_API_CLI,
+        browser ? url : url.replace(import.meta.env.VITE_API_CLI, import.meta.env.VITE_API_SRV),
         {
             ...request,
             headers,
