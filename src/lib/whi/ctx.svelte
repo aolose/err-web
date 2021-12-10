@@ -1,5 +1,6 @@
 <script>
     import {onDestroy, onMount} from "svelte";
+   import {fade} from "svelte/transition";
 
     let cvs, w, h, task = {};
 
@@ -37,7 +38,7 @@
             cvs.width = w
             cvs.height = h
             const th = Math.min(60 + 15 * Math.min(800 / w, 1), 180)
-            const ww = w / 2 + Math.min(w / 8, 100)
+            const ww = w / 2 + Math.max(w / 20-10, 0)
 
             const ctx = cvs.getContext('2d')
             let a = 0, b = 0;
@@ -107,6 +108,7 @@
     }
 </script>
 <div class="ctx"
+     transition:fade
      bind:offsetWidth={w}
      bind:offsetHeight={h}
 >
@@ -118,7 +120,8 @@
   }
 
   .ctx {
-    background: #fff;
+    transition: .3s ease-in-out;
+    z-index: 0;
     position: absolute;
     left: 0;
     top: 0;

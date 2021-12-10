@@ -1,56 +1,94 @@
 <script context="module">
     import {res} from "$lib/res";
-
     export const load = res('tags');
 </script>
 <script>
     import Ctx from "$lib/ctx.svelte";
-    import ITag from "$lib/icontag.svelte"
-
+    import Ph from '../../lib/hd.svelte'
     export let d = []
+    const cols =  [
+        '#1d3f72',
+        '#5699d2',
+        '#d4a5f3',
+        '#71c2cc',
+        '#4996a2',
+        '#785471',
+        '#eacd8d',
+    ];
 </script>
 <svelte:head>
     <title>Err - tags</title>
 </svelte:head>
-<Ctx>
-    <h1>
-        <ITag/>
-        Tags
-    </h1>
+
+<div class="o">
+    <Ph>Tags</Ph>
     <div class="ls">
-        {#each d as tag}
-            <a href={`/tag/${tag.name}/1`}>{tag.name}</a>
-        {/each}
+        <Ctx>
+            {#each d as tag,i}
+                <a href={`/tag/${tag.name}/1`}
+                   style={`background:${cols[i%cols.length]}`}
+                ><span>{tag.name}</span></a>
+            {/each}
+        </Ctx>
     </div>
-</Ctx>
+
+</div>
 <style lang="scss">
+  .o{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .cc {
+    padding: 60px 0 20px;
+    position: relative;
+    border-bottom: 1px solid #eee;
+    box-shadow: rgba(0, 0, 0, .05) 0 10px 10px -5px;
+  }
+  .ls {
+
+  }
+
   h1 {
-    position: absolute;
-    left: 10px;
-    right: 10px;
-    top: 50px;
-    color: #94abc2;
+    margin: 0 auto;
+    width: 90%;
+    color: #000;
     display: flex;
     align-items: center;
     font-weight: 100;
+    span{
+      color: inherit;
+      &:first-letter{
+        color: #223bec;
+      }
+    }
   }
 
   a {
     font-size: 14px;
-    background: #1c334a;
-    margin: 8px 5px;
-    border-radius: 5px;
-    padding: 5px 10px;
-    color: #fff;
-
+    margin: 5px;
+    border-radius: 3px;
+   position: relative;
+    span{
+      display: block;
+      color: #fff;
+      border-radius: inherit;
+      padding: 10px;
+      transition: .2s ease-in-out;
+    }
     &:hover {
-      background: #49a9e8;
-      color: #000;
+      span{
+        background: rgba(0, 0, 0, 0.5);
+      }
     }
   }
-  .ls{
-    margin-top: 50px;
+
+  .ls {
+    flex: 1;
+    overflow: hidden;
+    padding: 10px;
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
   }
 </style>

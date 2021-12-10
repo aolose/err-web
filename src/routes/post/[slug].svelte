@@ -58,8 +58,8 @@
 {#if d && d.updated}
     <div class="co">
         <Ctx>
-            <div class={'bk'} on:click={()=>goBack()}>{'< '}back</div>
             <div class="art">
+                <div class={'bk'} on:click={()=>goBack()}>{'< '}back</div>
                 <div class="h">
                     <DC color="currentColor">
                         <h1>{d.title}</h1>
@@ -86,16 +86,24 @@
     </div>
 {/if}
 <style lang="scss">
+  @import "../../lib/break";
   .tg {
     display: flex;
     flex-wrap: wrap;
   }
 
   .art {
+    border: 1px solid #eee;
+    width: 800px;
+    margin:  20px auto 10px;
     border-radius: 4px;
     overflow: hidden;
     background: white;
     padding: var(--artP);
+    box-shadow: rgba(0,0,0,.2) 0 10px 30px -10px;
+    @include s(){
+      margin:  0;
+    }
   }
 
   .ct {
@@ -142,7 +150,7 @@
   }
 
   .co {
-    top: 0;
+    top: 40px;
     bottom: 0;
     left: 0;
     right: 0;
@@ -183,12 +191,13 @@
   }
 
   .bk {
+
     font-size: 14px;
     opacity: .8;
     cursor: pointer;
     left: 20px;
     color: #a1b0c2;
-    top: 50px;
+    top: 10px;
     position: absolute;
 
     &:hover {

@@ -8,12 +8,15 @@
 <style lang="scss">
   @import "./break";
   .ctx {
-    margin:  0 auto;
-    padding: 80px  10px 0;
-    max-width: 800px;
+    flex: 1;
+    min-height: 600px;
+    display: flex;
     width: 90%;
+    flex-wrap: wrap;
+    margin:  0 auto;
+    align-content: baseline;
     @include s(){
-      padding: 80px  0 0;
+      width: 98%;
     }
   }
 </style>

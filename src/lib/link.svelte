@@ -11,12 +11,12 @@
 <style lang="scss">
 
   a {
-    color: #9bafbe;
+    color: #333;
     padding: 10px 15px;
     display: block;
 
     &:hover {
-      color: #fff;
+      color: #000;
     }
   }
 </style>

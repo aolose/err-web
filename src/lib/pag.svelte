@@ -86,15 +86,15 @@
     }
     .nv{
       background: #f2f2f2;
-      padding:  5px;
-      height: 16px;
+      padding:  5px 8px;
+      height: 24px;
       width:auto;
       border-radius: 3px;
       border: none;
     }
     .act {
       color: #fff;
-      background: #1c93ff;
+      background: #5f86bb;
     }
   }
 </style>

@@ -31,7 +31,7 @@
 </div>
 <style lang="scss">
   .mg {
-    color: #fff;
+    color: #000;
     font-size: 24px;
     text-align: center;
     left: -100%;
@@ -47,7 +47,7 @@
     left: 50%;
     position: absolute;
     width: 1px;
-    background: white;
+    background: black;
     height: 20px;
   }
 
@@ -96,9 +96,11 @@
     transform: rotate(-15deg);
     border-radius: 50%;
     box-shadow: inset rgba(0,0,0,.08) -20px -20px 30px;
+    border: 1px solid #fff;
 
     * {
-      color: #fff;
+      color: #000;
+      text-shadow: white 1px 1px;
       position: absolute;
     }
   }
@@ -125,14 +127,14 @@
     transform: skew(60deg) rotateZ(19deg);
     height: 20%;
     width: 20%;
-    background: #ffffb9;
+    background: #131b2c;
   }
 
   .y {
     width: 6%;
     height: 6%;
     border-radius: 50%;
-    background: black;
+    background: white;
     left: 16%;
     top: 24%;
   }
@@ -176,6 +178,7 @@
     transform-origin: top center;
     animation: f infinite $s both;
     box-shadow: white 0 0 20px;
+    border: 1px solid #fff;
   }
 
   .f1 {
@@ -183,7 +186,7 @@
   }
 
   .v, .v1 {
-    box-shadow: white 0 0 20px;
+    box-shadow: #000 0 0 20px;
     border-radius: 100px;
     bottom: -8%;
     transform-origin: top center;
