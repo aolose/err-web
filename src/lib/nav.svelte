@@ -31,7 +31,6 @@
     top: 0;
     left: 0;
     right: 0;
-    background: transparentize(#b6c8ec,.9);
   }
 
   .a {
