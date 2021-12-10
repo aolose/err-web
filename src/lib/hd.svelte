@@ -34,7 +34,5 @@
 
   .ph {
     position: relative;
-    border-bottom: 1px solid #eee;
-    box-shadow: rgba(0, 0, 0, .05) 0 10px 10px -5px;
   }
 </style>

@@ -79,8 +79,6 @@
     position: absolute;
     z-index: 10;
     bottom: 0;
-    border-top: 1px solid #eee;
-    box-shadow: rgba(0, 0, 0, .03) 0 -10px 10px -5px;
     left: 0;
     right: 0;
     background: #fff;
