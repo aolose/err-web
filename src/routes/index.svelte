@@ -6,7 +6,6 @@
     import {onDestroy, onMount} from "svelte";
     import {mk, msg} from "$lib/store";
     import {slide} from "$lib/transition";
-    import {goto} from "$app/navigation";
     import Ctx from '$lib/whi/ctx.svelte'
     let c = 0;
     let h = 0;
@@ -80,10 +79,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding-bottom: 100px;
   }
 
   .bb {
-    transform: translateY(-100%);
     width: 50%;
     max-width: 80px;
   }

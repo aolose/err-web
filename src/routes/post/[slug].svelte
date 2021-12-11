@@ -105,7 +105,7 @@
   .art {
     display: flex;
     flex-direction: column;
-    min-height: 100%;
+    min-height: 500px;
     border-radius: 4px;
     overflow: hidden;
     background: white;
