@@ -62,7 +62,8 @@
       color: #666;
     }
     *::-webkit-scrollbar-thumb {
-      //background-color: #2f4569
+      border-radius: 10px;
+      background-color: transparentize(#1d395d,.4)
     }
   }
 

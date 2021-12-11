@@ -9,7 +9,6 @@
   @import "./break";
   .ctx {
     flex: 1;
-    min-height: 600px;
     display: flex;
     width: 90%;
     flex-wrap: wrap;

@@ -235,6 +235,7 @@
   }
 
   .bg {
+    pointer-events: none;
     position: fixed;
     height: 100%;
     z-index: 0;
