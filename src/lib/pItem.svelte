@@ -25,7 +25,7 @@
     $:{
         ds = (desc || content)
             .replace(/[#`{}()\[\]]/g,'')
-            .substr(0, 400)
+            .substr(0, 140)
     }
 </script>
 
