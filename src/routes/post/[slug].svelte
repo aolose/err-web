@@ -152,10 +152,9 @@
 
           &:first-child:first-letter {
             font-size: 30px;
-          }
-
-          &:first-letter {
-            padding-left: 29px;
+            @include s() {
+              font-size: 20px;
+            }
           }
         }
       }
@@ -184,6 +183,9 @@
     justify-content: center;
     margin: 30px auto 0;
     text-align: center;
+    @include s() {
+      margin: 0 auto;
+    }
 
     * {
       text-shadow: rgba(0, 0, 0, 0.15) 1px 1px 1px;

@@ -37,7 +37,7 @@
       --itp: 10px;
       --mr: 30px;
       --ex: 80%;
-      --artP:40px;
+      --artP:60px;
       --artC:20px 20px 60px;
       --fs:28px;
       @include s() {
