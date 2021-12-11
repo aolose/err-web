@@ -1,6 +1,7 @@
 <script>
     import Item from './pItem.svelte'
     import Ctx from "./ctx.svelte";
+    import Canvas from './whi/ctx.svelte'
     import {tick} from "svelte";
     import Nav from "./pag.svelte"
     import {browser} from "$app/env";
@@ -28,6 +29,7 @@
     $:ls = d.ls || []
 </script>
 <svelte:window on:sveltekit:navigation-end={scTop}/>
+<Canvas type={1}/>
 <div class="o" bind:this={sc}>
     <Ph><slot></slot></Ph>
     <div class="t">
@@ -81,7 +83,6 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: #fff;
   }
 
   .c {

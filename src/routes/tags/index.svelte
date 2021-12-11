@@ -5,6 +5,7 @@
 <script>
     import Ctx from "$lib/ctx.svelte";
     import Ph from '../../lib/hd.svelte'
+    import Canvas from '../../lib/whi/ctx.svelte'
     export let d = []
     const cols =  [
         '#1d3f72',
@@ -19,7 +20,7 @@
 <svelte:head>
     <title>Err - tags</title>
 </svelte:head>
-
+<Canvas type={2}/>
 <div class="o">
     <Ph>Tags</Ph>
     <div class="ls">

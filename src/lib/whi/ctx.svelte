@@ -1,7 +1,8 @@
 <script>
     import {onDestroy, onMount} from "svelte";
-   import {fade} from "svelte/transition";
+    import {fade} from "svelte/transition";
 
+    export let type
     let cvs, w, h, task = {};
 
     const r180 = 180 / Math.PI
@@ -38,22 +39,20 @@
             cvs.width = w
             cvs.height = h
             const th = Math.min(60 + 15 * Math.min(800 / w, 1), 180)
-            const ww = w / 2 + Math.max(w / 20-10, 0)
-
+            const ww =  Math.max(w / 10 - 10, 0)
             const ctx = cvs.getContext('2d')
             let a = 0, b = 0;
 
 
             function drawCurve(th, ow) {
                 ctx.beginPath()
-                ctx.moveTo(w / 2 , 0)
+                ctx.moveTo(w, 0)
                 const sinN = Math.sin(o(th))
                 const cosN = Math.cos(o(th))
                 const c = h / sinN
                 const sp = c / 3
 
-                function cr(n, k, vv = w) {
-                    const w = vv / 2;
+                function cr(n, k) {
                     const t = n + sp
                     const [rx, ry] = fn(a, (sp * (k || -1)) / 4)
                     const [x, y] = pos(t)
@@ -68,8 +67,8 @@
                     return [w - x - ow, y]
                 }
 
-                const st = Math.floor(b/sp)+2
-                for (let i = -st; i < -st+5; i++) {
+                const st = Math.floor(b / sp) + 2
+                for (let i = -st; i < -st + 5; i++) {
                     cr(b + sp * i, Math.abs(i % 2))
                 }
             }
@@ -79,26 +78,42 @@
                 b++
                 a = a % 360;
                 ctx.clearRect(0, 0, w, h)
-                ctx.beginPath();
-                ctx.moveTo(w / 2, 0)
-                drawCurve(m, n)
-                ctx.lineTo(w / 2 , h)
-                ctx.fill()
-                drawCurve(90, w / 2 - 200)
-                ctx.lineTo(w / 2, h)
-                ctx.fill()
                 const k = 2
-                const p = n / k /20
-                ctx.strokeStyle = '#ffffff'
-                drawCurve(m - k, n - p)
-                ctx.stroke()
-                drawCurve(88, w / 2 - 210)
-                ctx.stroke()
-                ctx.strokeStyle = '#000'
-                drawCurve(m - k, n - p - 1)
-                ctx.stroke()
-                drawCurve(88, w / 2 - 211)
-                ctx.stroke()
+                const p = n / k / 20
+                switch (type) {
+                    case 1:
+                        ctx.strokeStyle = '#355685'
+                        drawCurve(m - k+15, n - p - 1)
+                        ctx.stroke()
+                        ctx.strokeStyle = '#333852'
+                        drawCurve(m - k+5, n - p - 10)
+                        ctx.stroke()
+                        ctx.strokeStyle = '#121623'
+                        drawCurve(m - k-4, n - p - 30)
+                        ctx.stroke()
+                        return
+                    case 2:
+                        ctx.strokeStyle = '#503585'
+                        drawCurve(m - k+13, n - p - 1)
+                        ctx.stroke()
+                        ctx.strokeStyle = '#334e52'
+                        drawCurve(m - k+8, n - p - 10)
+                        ctx.stroke()
+                        ctx.strokeStyle = '#121623'
+                        drawCurve(m - k-3, n - p - 30)
+                        ctx.stroke()
+                        return
+                    default:
+                        drawCurve(m, n)
+                        ctx.lineTo(w, h)
+                        ctx.fill()
+                        ctx.strokeStyle = '#ffffff'
+                        drawCurve(m - k, n - p)
+                        ctx.stroke()
+                        ctx.strokeStyle = '#000'
+                        drawCurve(m - k, n - p - 1)
+                        ctx.stroke()
+                }
             }
 
             task.t = () => {
@@ -125,7 +140,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    right: -100%;
+    right: 0;
     bottom: 0;
   }
 </style>
