@@ -21,6 +21,12 @@
         '#eee7d8',
     ];
     const col = cols[n % cols.length]
+    let ds
+    $:{
+        ds = (desc || content)
+            .replace(/[#`{}()\[\]]/g,'')
+            .substr(0, 400)
+    }
 </script>
 
 <div class="s p"
@@ -36,7 +42,7 @@
             <h3>{title}</h3>
         </div>
         <div class="ss"></div>
-        <p>{desc || content.substr(0, 222)}...</p>
+        <p>{ds}...</p>
     </a>
     <div class="ms"><a href={`/post/${slug}`}>Read</a></div>
 </div>
