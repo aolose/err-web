@@ -195,6 +195,8 @@
       color: #eee;
       margin: 10px 0;
       font-size: 14px;
+      text-align: left;
+       max-width: 80%;
     }
 
     span {
