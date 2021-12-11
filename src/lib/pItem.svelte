@@ -3,125 +3,164 @@
     import {fade} from "svelte/transition";
 
     export let p = {}
-
+    export let n = 0
     const {banner, slug, title, desc, content, created} = p
-    const sty = `background-image:url(${host}/r/${banner}.webp)`
+    const sty = banner ? `background-image:url(${host}/r/${banner}.webp)` : '';
     const tm = new Date(created * 1e3)
     const y = tm.getFullYear()
     const m = tm.getMonth() + 1
     const d = tm.getDate()
+    const showY = new Date().getFullYear() !== y
+    const cols = [
+        '#1d3f72',
+        '#5699d2',
+        '#d8ebf9',
+        '#71c2cc',
+        '#4996a2',
+        '#785471',
+        '#eee7d8',
+    ];
+    const col = cols[n % cols.length]
+    let ds
+    $:{
+        ds = (desc || content)
+            .replace(/[#`{}()\[\]]/g,'')
+            .substr(0, 140)
+    }
 </script>
 
-<div class="p" transition:fade|local>
+<div class="s p"
+     style={`background-color:${col}`}
+     transition:fade|local>
+    <div class="x" style={sty}></div>
     <div class="t">
-        <span class="y">{y}</span>
-        <span class="md">
-             <span class="m">{m}</span>
-             <span class="d">{d}</span>
-         </span>
+        {m}/{d}
+        {#if showY} {y}{/if}
     </div>
-
     <a class="f" href={`/post/${slug}`}>
         <div class="c" class:ex={!banner}>
             <h3>{title}</h3>
-            <p>{desc || content.substr(0, banner ? 32 : 256)}...</p>
         </div>
-        {#if banner}
-            <div class="x">
-                <div class="v">
-                    <div class="w">
-                        <div class="z" style={sty}>
-                            <div class="k"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {/if}
+        <div class="ss"></div>
+        <p>{ds}...</p>
     </a>
+    <div class="ms"><a href={`/post/${slug}`}>Read</a></div>
 </div>
+
 <style lang="scss">
   @import "./break";
 
-  h3 {
-    color: #bac7dc;
-    font-weight: 100;
-    font-size: 17px;
-    margin-bottom: 10px;
+  .ms {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 10;
+    background: linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, .4));
+    border-radius: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s ease-in-out;
+    transform: translate3d(0, 100%, 0);
+
+    a {
+      display: block;
+      opacity: .8;
+      cursor: pointer;
+      background: #fff;
+      padding: 5px 30px;
+      border-radius: 3px;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
 
-  p {
-    word-break: break-all;
-    white-space: normal;
-    line-height: 1.5;
-    margin-top: 3px;
-    left: var(--pl);
-    color: #506c7e;
-  }
-
-  a {
-    text-decoration: none;
+  .x {
+    transition: 2s ease-in-out;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 3px;
+    background: url("./bd/1.jpg") center no-repeat;
+    background-size: cover;
+    filter: grayscale(.5) blur(3px);
+    opacity: .3;
   }
 
   .p {
-    margin-right: var(--mr);
-    margin-bottom: 50px;
-
-    * {
-      transition: .3s ease-in-out;
+    overflow: hidden;
+    border-radius: 3px;
+    width: 300px;
+    height: 240px;
+    transition: .3s ease-in-out;
+    z-index: 20;
+    position: relative;
+    padding: 20px;
+    margin: 10px;
+    @include s() {
+      width: 100%;
     }
 
     &:hover {
-      .y {
-        color: #9fa9ad;
+      .x {
+        transform: scale(1.05);
+        filter: grayscale(.1) blur(1px);
       }
 
-      .m, .d {
-        color: #7e8fb7;
+      .f {
+        opacity: .5;
       }
 
-      .k {
-        opacity: 0.1;
-      }
-
-      h3 {
-        color: #eee;
-      }
-
-      p {
-        color: #1dafee;
+      .ms {
+        transform: translate3d(0, 0, 0);
       }
     }
   }
 
-  .t {
+
+  h3 {
+    font-size: 24px;
+    text-shadow: rgba(0, 0, 0, 0.2) 1px 1px 3px;
+    color: #fff;
     font-weight: 100;
-    width: var(--tw);
+  }
+ .ss {
+   flex: 1;
+ }
+  p {
+    margin-bottom: 10px;
     display: flex;
-    text-align: right;
-    flex-direction: var(--td);
+    overflow: hidden;
+    word-break: break-all;
+    white-space: normal;
+    text-overflow: ellipsis;
+    line-height: 1.5;
+    margin-top: 3px;
+    color: #fcfcfc;
+    opacity: .5;
+    font-weight: 100;
+  }
+
+  .t {
+    top: 3px;
+    right: 3px;
+    color: #fff;
+    text-shadow: rgba(0, 0, 0, 0.39) 1px 1px 3px;
+    font-size: 10px;
+    padding: 0 10px;
+    border-radius: 10px 10px 0 0;
+    height: 20px;
     position: absolute;
-    left: var(--it);
-    @include s() {
-      top: -10px;
-      align-items: center;
-      height: 21px;
-      .md {
-        padding-left: 4px;
-        top: -8px
-      }
-      .y {
-        opacity: .8;
-      }
-      .m, .d {
-        font-size: 16px;
-      }
-      .d{
-        padding-left: 6px;
-      }
-      .d:before {
-        height: 20px;
-      }
-    }
+    justify-content: flex-end;
+    font-weight: 100;
+    display: flex;
+    align-items: center;
   }
 
   .y {
@@ -130,82 +169,19 @@
     color: #6a889b;
   }
 
-  .md {
-    font-style: italic;
-    font-size: 30px;
-
-    span {
-      font-family: Symbol, serif;
-      color: #4d6a7c;
-
-      & + span {
-        &:before {
-          left: 0;
-          transform: translateY(-50%) rotate(34deg);
-          top: 50%;
-          width: 1px;
-          background: currentColor;
-          height: 40px;
-          position: absolute;
-          display: block;
-          content: '';
-        }
-      }
-    }
-  }
-
   .f {
-    display: block;
-  }
-
-  .c {
-    width: 150px;
-    padding: 10px;
-  }
-
-  .ex {
-    width: var(--ex);
-  }
-
-  .x, .v, .z, .w, .k {
-    border-radius: 7px;
+    transition: .3s ease-in-out;
+    flex-direction: column;
+    display: flex;
+    text-decoration: none;
     position: absolute;
-    overflow: hidden;
-    right: 0;
     top: 0;
-    bottom: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    padding: inherit;
+    background: linear-gradient(transparent, transparentize(#000, .5));
   }
 
-  .x {
-    left: 150px;
-    transform: skewX(var(--skA));
-    @include s() {
-      left: 170px;
-    }
-  }
-
-  .v {
-    transform-origin: left top;
-    transform: skewX(var(--skB));
-  }
-
-  .w {
-    transform-origin: left bottom;
-    transform: skewX(var(--skA));
-  }
-
-  .z {
-    background: center no-repeat;
-    transform-origin: left bottom;
-    transform: skewX(var(--skB));
-    background-size: cover;
-  }
-
-  .k {
-    transform-origin: left bottom;
-    transform: skewX(var(--skA));
-    background: transparentize(#293f4d, .7) url("./img2/0.png");
-    backdrop-filter: grayscale(0.9);
-  }
 </style>

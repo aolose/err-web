@@ -1,13 +1,11 @@
 <script>
     import Nav from '$lib/nav.svelte'
     import {bg} from "$lib/store";
-
     import {onDestroy} from "svelte";
     import {host, resFlag} from "$lib/res";
-
     let b = ''
     onDestroy(bg.subscribe(g => {
-        b = g ? `background-image:url(${host}/r/${g})` : ''
+        // b = g ? `background-image:url(${host}/r/${g})` : ''
     }))
 </script>
 <svelte:window on:sveltekit:navigation-start={function (){
@@ -27,7 +25,6 @@
   @import "../lib/break";
   :global {
     :root {
-      --iw: 2px;
       --it: -160px;
       --skA: -15deg;
       --skB: 15deg;
@@ -51,7 +48,6 @@
         --mr: 10px;
         --skA: 0deg;
         --skB: 0deg;
-        --iw: 1px;
         --poL: 0;
         --poL2: 20px;
         --it: -5px;
@@ -66,7 +62,8 @@
       color: #666;
     }
     *::-webkit-scrollbar-thumb {
-      background-color: #2f4569
+      border-radius: 10px;
+      background-color: transparentize(#1d395d,.4)
     }
   }
 
@@ -78,14 +75,14 @@
     position: absolute;
   }
 
-  .b {
+  .b{
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
     transition: .3s ease-in-out;
-    background: url("../lib/bd/1.jpg") center no-repeat;
+    //background: url("../lib/bd/1.jpg") center no-repeat;
     background-size: cover;
   }
 
@@ -96,8 +93,6 @@
     top: -1px;
     bottom: -1px;
     padding: 1px;
-    background: transparentize(#10121c, .1);
-    backdrop-filter: blur(2px);
+    background: #fff;
   }
-
 </style>

@@ -14,18 +14,6 @@
     <title>Err - tag/{params.name}</title>
 </svelte:head>
 <Posts d={d} name={'tag/'+params.name}>
-    <h1>
-        <ITag/>{params.name}</h1>
+        <a href="/tags">{params.name}</a>
 </Posts>
-<style lang="scss">
-  h1 {
-    display: flex;
-    align-items: center;
-    font-weight: 100;
-    font-size: 23px;
-    margin-top: -20px;
-    margin-bottom: 60px;
-    color: #5a647c;
-  }
-</style>
 

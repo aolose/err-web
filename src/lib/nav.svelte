@@ -14,7 +14,7 @@
         {#if a}
             <Link href="/" >HOME</Link>
             <Link href="/posts">POST</Link>
-            <Link href="/tags">TAGS</Link>
+            <Link href="/tags">TAG</Link>
         {/if}
 
     </div>
@@ -28,11 +28,9 @@
     align-items: center;
     position: fixed;
     padding: 20px 20px 20px 40px;
-    background: #141d25;
     top: 0;
     left: 0;
     right: 0;
-    border-radius: 0 5px 5px 0;
   }
 
   .a {
@@ -40,17 +38,15 @@
   }
 
   .e {
-    background: #1f2a3f;
     z-index: 5;
     cursor: pointer;
-    opacity: .7;
     position: fixed;
     left: 5px;
     top: 20px;
     transform: translate3d(0, -50%, 0);
     height: 36px;
     width: 36px;
-    color: #ffffff;
+    color: #000000;
 
     i {
       transition: .3s ease-in-out;
