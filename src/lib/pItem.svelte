@@ -35,7 +35,8 @@
         <div class="c" class:ex={!banner}>
             <h3>{title}</h3>
         </div>
-        <p>{desc || content.substr(0, banner ? 32 : 256)}...</p>
+        <div class="ss"></div>
+        <p>{desc || content.substr(0, 222)}...</p>
     </a>
     <div class="ms"><a href={`/post/${slug}`}>Read</a></div>
 </div>
@@ -123,14 +124,16 @@
     color: #fff;
     font-weight: 100;
   }
-
+ .ss {
+   flex: 1;
+ }
   p {
-    flex: 1;
+    margin-bottom: 10px;
     display: flex;
-    align-items: flex-end;
     overflow: hidden;
     word-break: break-all;
     white-space: normal;
+    text-overflow: ellipsis;
     line-height: 1.5;
     margin-top: 3px;
     color: #fcfcfc;
