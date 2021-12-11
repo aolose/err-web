@@ -11,7 +11,7 @@
 
     $:{
         pg = [];
-        if (2< total) {
+        if (2 < total) {
             if (cur < total && cur > 1) pg = [cur]
             for (let i = 1; i <= length && pg.length < length; i++) {
                 const pr = cur - i;
@@ -80,21 +80,26 @@
       }
     }
   }
-  .lt{
-    *{
+
+  .lt {
+    * {
       color: #1c334a;
     }
-    .nv{
-      background: #f2f2f2;
-      padding:  5px 8px;
+
+    .nv {
+      color: #000;
+      background: none;
+      padding: 5px 8px;
       height: 24px;
-      width:auto;
-      border-radius: 3px;
-      border: none;
+      width: auto;
+      border-radius: 2px;
+      border: 1px solid currentColor;
     }
-    .act {
+
+    .act,.nv:hover {
       color: #fff;
-      background: #5f86bb;
+      border-color: #000;
+      background: #000;
     }
   }
 </style>
