@@ -10,10 +10,8 @@
     import CmList from "$lib/cmList.svelte"
     import Tag from "$lib/tag.svelte";
     import Md from "$lib/md.svelte"
-    import DC from "$lib/derection.svelte"
-    import {goBack, resUrl, timeFmt} from "$lib/utils";
+    import {colors, goBack, resUrl, timeFmt} from "$lib/utils";
     import PF from '$lib/pf.svelte'
-
     Viewer.setDefaults({
         button: true,
         navbar: false,
@@ -28,7 +26,9 @@
     export let d;
     let ga;
     let sly = ''
+    let style
     $:{
+        style= ` background: linear-gradient(rgba(0,0,0,.7),${ colors[d.created%colors.length]});`
         if (d.banner) {
             sly = `background-image:url(${resUrl(d.banner)})`
         }
@@ -55,7 +55,7 @@
 {#if d && d.updated}
     <div class={'bk'} on:click={()=>goBack()}>X</div>
     <div class="co" style={sly}>
-        <div class="bg"></div>
+        <div class="bg" style={style}></div>
         <Ctx>
             <div class="v">
                 <div class="h">
@@ -246,10 +246,14 @@
     left: 0;
     right: 0;
     top: 40px;
-    background: linear-gradient(
-                    transparentize(#0c274f, .5),
-                    transparentize(#000, .8)
-    );
+    opacity: .5;
+    filter: brightness(.5);
+  }
+  @supports (mix-blend-mode: multiply) {
+    .bg {
+      mix-blend-mode: multiply;
+      filter: none;
+    }
   }
 
   .v {

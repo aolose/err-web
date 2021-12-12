@@ -1,6 +1,7 @@
 <script>
     import {host} from "./res";
     import {fade} from "svelte/transition";
+    import {colors} from "$lib/utils.js";
 
     export let p = {}
     export let n = 0
@@ -11,16 +12,7 @@
     const m = tm.getMonth() + 1
     const d = tm.getDate()
     const showY = new Date().getFullYear() !== y
-    const cols = [
-        '#1d3f72',
-        '#5699d2',
-        '#d8ebf9',
-        '#71c2cc',
-        '#4996a2',
-        '#785471',
-        '#eee7d8',
-    ];
-    const col = cols[n % cols.length]
+    const col = colors[created%colors.length]
     let ds
     $:{
         ds = (desc || content)

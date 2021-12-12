@@ -169,12 +169,6 @@ export const fileSize = n => {
     return parseFloat((n / [v[1]]).toFixed(2)) + v[0]
 }
 
-const colors = [
-    '#ff684d', '#ffca68',
-    '#9aff67', '#ab00ff',
-    '#b7e1ff', '#77ffec',
-    '#a583ff', '#ff6161'
-]
 
 export const col = (v = "") => `color:${colors[v.split('').map(
     a => a.charCodeAt(0))
@@ -245,6 +239,22 @@ export  function redirectPage1({page:{path}}){
     }
 }
 
+export const colors =[
+    '#4281A4',
+    '#9CAFB7',
+    '#EAD2AC',
+    '#E6B89C',
+    '#274C77',
+    '#6096BA',
+    '#8B8C89',
+    '#014F86',
+    '#2C7DA0',
+    '#588157',
+    '#89B0AE',
+    '#A5A58D',
+    '#B7B7A4',
+    '#5C677D',
+]
 
 export function bubbles(btn, click) {
     const p = btn.offsetParent;

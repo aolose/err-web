@@ -7,18 +7,9 @@
     import Ctx from "$lib/ctx.svelte";
     import Ph from '../../lib/hd.svelte'
     import Canvas from '../../lib/whi/ctx.svelte'
-    import {bubbles} from "$lib/utils.js";
+    import {bubbles, colors} from "$lib/utils.js";
 
     export let d = []
-    const cols = [
-        '#1d3f72',
-        '#5699d2',
-        '#efcf89',
-        '#71c2cc',
-        '#4996a2',
-        '#785f54',
-        '#855435',
-    ];
 </script>
 <svelte:head>
     <title>Err - tags</title>
@@ -32,7 +23,7 @@
                 <a
                         on:mouseenter={e=>bubbles(e.target)}
                         href={`/tag/${tag.name}/1`}
-                        style={`background:${cols[i%cols.length]}`}
+                        style={`background:${colors[i%colors.length]}`}
                 >
                     <span>{tag.name}
                     </span></a>
