@@ -253,6 +253,8 @@
     .bg {
       mix-blend-mode: multiply;
       filter: none;
+      backdrop-filter: grayscale(.5);
+      opacity: .7;
     }
   }
 
