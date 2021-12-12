@@ -4,10 +4,10 @@ import {enc} from "./utils";
 import {tip} from "$lib/popMsg.svelte";
 
 export const apis = {
-    logs:{
+    logs: {
         path: a => `log/${a}`,
         before(_, s) {
-            return  {c: 10}
+            return {c: 10}
         },
         cacheTime: 2
     },
@@ -120,11 +120,47 @@ export const apis = {
         }
     },
     lsBk: {
-        path: a => `bk/${a}`,
+        path: a => `ft`,
         before(_, s) {
-            return {ip: s, tp: [0, 1][get(isLogin)], c: 15}
+
+        },
+        after(a, {status} = {}) {
+            if (status === 200) {
+                a.forEach(o => {
+                    o.st = o.st.toString(2).split('').map(a => !!+a)
+                })
+            }
+            return {ls: a}
         },
         cacheTime: 3
+    },
+    addBk: {
+        path: a => `ft`,
+        method: 'POST',
+        before(a, b, c = {}) {
+            return {
+                ...c,
+                at:!!c.at,
+                st: c.st.map((a, i) => a ? +a << i : 0)
+                    .reduce((a, b) => a | b)
+            }
+        },
+    },
+    ediBk: {
+        path: a => `ft`,
+        method: 'PATCH',
+        before(a, b, c = {}) {
+            return {
+                ...c,
+                at:!!c.at,
+                st: c.st.map((a, i) => a ? +a << i : 0)
+                    .reduce((a, b) => a | b)
+            }
+        },
+    },
+    delBk: {
+        path: a => `ft/${a}`,
+        method: 'DELETE',
     },
     loadTags: {
         path: 'tag/ls',
@@ -195,7 +231,7 @@ export const apis = {
                     params: {page, name}
                 }
             }
-            if (r&&typeof r!=="string") r.params = {page, name}
+            if (r && typeof r !== "string") r.params = {page, name}
             else {
                 return {
                     params: {page, name}

@@ -258,6 +258,12 @@ export const colors =[
     '#5C677D',
 ]
 
+export function isIp(ip){
+    const [a,b] = ip.split('/')
+    if(b&&!/^\d+$/.test(b))return false
+    return(/(^::1$)|(^([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])$)|(^((?:[0-9A-Fa-f]{1,4}))((?::[0-9A-Fa-f]{1,4}))*::((?:[0-9A-Fa-f]{1,4}))((?::[0-9A-Fa-f]{1,4}))*|((?:[0-9A-Fa-f]{1,4}))((?::[0-9A-Fa-f]{1,4})){7}$)/.test(a))
+}
+
 export function bubbles(btn, click) {
     const p = btn.offsetParent;
     if (btn.ani) return;
