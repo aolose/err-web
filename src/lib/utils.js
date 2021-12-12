@@ -244,3 +244,92 @@ export  function redirectPage1({page:{path}}){
         redirect:path+"/1"
     }
 }
+
+
+export function bubbles(btn, click) {
+    const p = btn.offsetParent;
+    if (btn.ani) return;
+    btn.ani = true;
+    const sl = getComputedStyle(btn);
+    if (sl.position !== 'absolute' && sl.position !== 'relative') {
+        btn.style.position = 'relative';
+    }
+    let cv = btn.cv;
+    const w = btn.offsetWidth;
+    const h = btn.offsetHeight;
+    if (!btn.cv) {
+        const t = btn.offsetTop - h / 2;
+        const l = btn.offsetLeft - w / 2 + 8;
+        cv = btn.cv = document.createElement('canvas');
+        const s = cv.style;
+        s.width = w * 2 + 'px';
+        s.height = h * 2 + 'px';
+        s.position = 'absolute';
+        s.left = l + 'px';
+        s.top = t + 'px';
+        s.cursor = 'point';
+        s.pointerEvents = 'none';
+        if(click)cv.onclick = e => {
+            e.stopPropagation();
+            e.preventDefault();
+            click()
+        };
+        cv.width = w * 2;
+        cv.height = h * 2;
+    }
+    p.appendChild(cv);
+    const ctx = cv.getContext('2d');
+    const bs = [];
+    const max = 6;
+
+    function create(x, i) {
+        const idx = i % 2;
+        bs.push({
+            x: [1.5 * w, 0.5 * w][idx],
+            y: [0.5 * h, 1.5 * h][idx],
+            r: 5,
+            s: 0,
+            v: 2 + Math.random() * 2,
+            q: (0.5 - Math.random()) * Math.PI,
+            i: i
+        });
+    }
+
+    function draw(o) {
+        ctx.beginPath();
+        const i = [1, -1][o.i % 2];
+        const x = o.s * Math.cos(o.q);
+        const y = o.s * Math.sin(o.q);
+        ctx.arc(o.x + x * i, o.y - y * i, o.r, 0, Math.PI * 2);
+        ctx.fillStyle = sl.backgroundColor;
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function next(o) {
+        o.r *= 0.9;
+        o.v *= 0.95;
+        o.s += o.v;
+        if ((o.r * o.v <= 0.08) && o.i === max) {
+            ctx.clearRect(0, 0, cv.width, cv.height);
+            p.removeChild(cv);
+            btn.cv = null;
+            btn.ani = false;
+        } else draw(o);
+    }
+
+    const run = (fn, m = 0, i = 0, t = 1) => {
+        if (!m || i <= m * t) {
+            if (!m || i % t === 0) {
+                if (fn(0, i / t)) return;
+            }
+            requestAnimationFrame(() => run(fn, m, i + 1, t));
+        }
+    };
+    run(create, max, 0, 2);
+    run(() => {
+        if (!document.body.contains(cv)) return;
+        ctx.clearRect(0, 0, cv.width, cv.height);
+        bs.forEach(next);
+    });
+}

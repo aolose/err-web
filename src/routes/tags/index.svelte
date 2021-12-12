@@ -1,20 +1,23 @@
 <script context="module">
     import {res} from "$lib/res";
+
     export const load = res('tags');
 </script>
 <script>
     import Ctx from "$lib/ctx.svelte";
     import Ph from '../../lib/hd.svelte'
     import Canvas from '../../lib/whi/ctx.svelte'
+    import {bubbles} from "$lib/utils.js";
+
     export let d = []
-    const cols =  [
+    const cols = [
         '#1d3f72',
         '#5699d2',
-        '#d4a5f3',
+        '#efcf89',
         '#71c2cc',
         '#4996a2',
-        '#785471',
-        '#eacd8d',
+        '#785f54',
+        '#855435',
     ];
 </script>
 <svelte:head>
@@ -23,19 +26,23 @@
 <Canvas type={2}/>
 <div class="o">
     <Ph>Tags</Ph>
-    <div class="ls">
-        <Ctx>
+    <div class="v">
+        <div class="ls">
             {#each d as tag,i}
-                <a href={`/tag/${tag.name}/1`}
-                   style={`background:${cols[i%cols.length]}`}
-                ><span>{tag.name}</span></a>
+                <a
+                        on:mouseenter={e=>bubbles(e.target)}
+                        href={`/tag/${tag.name}/1`}
+                        style={`background:${cols[i%cols.length]}`}
+                >
+                    <span>{tag.name}
+                    </span></a>
             {/each}
-        </Ctx>
+        </div>
     </div>
 
 </div>
 <style lang="scss">
-  .o{
+  .o {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -46,9 +53,6 @@
     border-bottom: 1px solid #eee;
     box-shadow: rgba(0, 0, 0, .05) 0 10px 10px -5px;
   }
-  .ls {
-
-  }
 
   h1 {
     margin: 0 auto;
@@ -57,39 +61,49 @@
     display: flex;
     align-items: center;
     font-weight: 100;
-    span{
+
+    span {
       color: inherit;
-      &:first-letter{
+
+      &:first-letter {
         color: #223bec;
       }
     }
   }
 
   a {
+    min-width: 100px;
+    text-align: center;
     font-size: 14px;
-    margin: 5px;
+    margin: 10px 15px;
     border-radius: 3px;
-   position: relative;
-    span{
+    position: relative;
+
+    span {
       display: block;
       color: #fff;
       border-radius: inherit;
-      padding: 10px;
+      padding: 7px 10px;
       transition: .2s ease-in-out;
     }
+
     &:hover {
-      span{
+      span {
         background: rgba(0, 0, 0, 0.5);
       }
     }
   }
 
+  .v {
+    width: 90%;
+    margin: 0 auto;
+  }
+
   .ls {
     flex: 1;
+    max-width: 800px;
     overflow: hidden;
-    padding: 10px;
     display: flex;
-    flex-direction: column;
     flex-wrap: wrap;
   }
 </style>
