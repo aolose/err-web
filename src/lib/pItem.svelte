@@ -23,7 +23,7 @@
 
 <div class="s p"
      style={`background-color:${col}`}
-     transition:fade|local>
+     transition:fade>
     <div class="x" style={sty}></div>
     <div class="t">
         {m}/{d}
