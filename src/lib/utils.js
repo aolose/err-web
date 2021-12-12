@@ -135,17 +135,20 @@ export const uploader = function (k, p, t, f, nm, tp, token) {
     }
 }
 
-export const timeFmt = function (a) {
+export const timeFmt = function (a,b=1) {
     if (!a) return ""
-    const formatter = new Intl.DateTimeFormat('zh-cn', {
+    const o = {
         year: 'numeric',
         month: 'numeric',
-        day: 'numeric',
+        day: 'numeric'
+    }
+    if(b)Object.assign(o,{
         hour12: false,
         hour: 'numeric',
         minute: '2-digit',
         second: '2-digit'
-    });
+    })
+    const formatter = new Intl.DateTimeFormat('zh-cn', o);
     return formatter.format(a * 1e3)
 }
 

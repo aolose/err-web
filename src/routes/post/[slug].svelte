@@ -61,7 +61,7 @@
                 <div class="h">
                     <h1>{d.title}</h1>
                     <p>{d.desc}</p>
-                    <span>{timeFmt(d.created)}</span>
+                    <span>{timeFmt(d.created,0)}</span>
                 </div>
                 <div class="art">
                     <div class='ct' bind:this={ga}>
