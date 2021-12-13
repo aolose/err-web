@@ -145,25 +145,25 @@
             </label>
         {/if}
         {#if editMode || d.st[0]}
-            <label class:act={d.st[0]} transition:slide|local={{horizon:1}}>
+            <label class:act={d.st[0]} class="l1" transition:slide|local={{horizon:1}}>
                 <span>Skip Log</span>
                 <input type="checkbox" bind:checked={d.st[0]} disabled={!editMode}/>
             </label>
         {/if}
         {#if editMode || d.st[1]}
-            <label class:act={d.st[1]} transition:slide|local={{horizon:1}}>
+            <label class:act={d.st[1]} class="l2" transition:slide|local={{horizon:1}}>
                 <span>No Login</span>
                 <input type="checkbox" bind:checked={d.st[1]} disabled={!editMode}/>
             </label>
         {/if}
         {#if editMode || d.st[2]}
-            <label class:act={d.st[2]} transition:slide|local={{horizon:1}}>
+            <label class:act={d.st[2]} class="l3"transition:slide|local={{horizon:1}}>
                 <span>No Comments</span>
                 <input type="checkbox" bind:checked={d.st[2]} disabled={!editMode}/>
             </label>
         {/if}
         {#if editMode || d.st[3]}
-            <label class:act={d.st[3]} transition:slide|local={{horizon:1}}>
+            <label class:act={d.st[3]} class="l4" transition:slide|local={{horizon:1}}>
                 <span>No Access</span>
                 <input type="checkbox" bind:checked={d.st[3]} disabled={!editMode}/>
             </label>
@@ -283,22 +283,21 @@
 
     .act {
       color: #38c907;
+    }
+    .l1 {
+      color: #EAD2AC;
+    }
 
-      &:nth-child(2) {
-        color: #EAD2AC;
-      }
+    .l2 {
+      color: #E6B89C;
+    }
 
-      &:nth-child(3) {
-        color: #E6B89C;
-      }
+    .l3 {
+      color: #60b4ec;
+    }
 
-      &:nth-child(4) {
-        color: #60b4ec;
-      }
-
-      &:nth-child(5) {
-        color: #ba94e1;
-      }
+    .l4 {
+      color: #ba94e1;
     }
 
     input {
