@@ -127,10 +127,10 @@ export const apis = {
         after(a, {status} = {}) {
             if (status === 200) {
                 a.forEach(o => o.st = ('0000' + (+o.st).toString(2))
+                    .substr(-4)
                     .split('')
                     .map(a => !!+a)
-                    .reverse()
-                    .slice(0, 4))
+                    .reverse())
             }
             return {ls: a}
         },
