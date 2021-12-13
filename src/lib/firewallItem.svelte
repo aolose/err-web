@@ -16,7 +16,8 @@
         sv: '',
         st: [0, 0, 0, 0],
         at: 1,
-        rk: ''
+        rk: '',
+        ti: ''
     }
     export let d = {...dft}
     export let raw = ""
@@ -79,7 +80,7 @@
     async function del() {
         clear();
         ld = 'committing...'
-        const r = await query('delBk', d.id)
+        const r = await query('delBk', d.ti)
         ld = 0
         if (r && r.error) {
             errorCatch(r.error)
@@ -157,7 +158,7 @@
             </label>
         {/if}
         {#if editMode || d.st[2]}
-            <label class:act={d.st[2]} class="l3"transition:slide|local={{horizon:1}}>
+            <label class:act={d.st[2]} class="l3" transition:slide|local={{horizon:1}}>
                 <span>No Comments</span>
                 <input type="checkbox" bind:checked={d.st[2]} disabled={!editMode}/>
             </label>
@@ -190,6 +191,7 @@
   span {
     white-space: nowrap;
   }
+
   p {
     color: #e8c94b;
     padding: 1px 10px 10px;
@@ -284,6 +286,7 @@
     .act {
       color: #38c907;
     }
+
     .l1 {
       color: #EAD2AC;
     }
