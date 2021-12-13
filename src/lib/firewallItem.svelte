@@ -285,22 +285,21 @@
 
     .act {
       color: #38c907;
-    }
+      &.l1 {
+        color: #EAD2AC;
+      }
 
-    .l1 {
-      color: #EAD2AC;
-    }
+      &.l2 {
+        color: #E6B89C;
+      }
 
-    .l2 {
-      color: #E6B89C;
-    }
+      &.l3 {
+        color: #60b4ec;
+      }
 
-    .l3 {
-      color: #60b4ec;
-    }
-
-    .l4 {
-      color: #ba94e1;
+      &.l4 {
+        color: #ba94e1;
+      }
     }
 
     input {
