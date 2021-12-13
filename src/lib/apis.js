@@ -127,7 +127,7 @@ export const apis = {
         after(a, {status} = {}) {
             if (status === 200) {
                 a.forEach(o => {
-                    o.st = o.st.toString(2).split('').map(a => !!+a)
+                    o.st = o.st.toString(2).split('').map(a => !!+a).reverse()
                 })
             }
             return {ls: a}
