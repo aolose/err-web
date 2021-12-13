@@ -126,9 +126,11 @@ export const apis = {
         },
         after(a, {status} = {}) {
             if (status === 200) {
-                a.forEach(o => {
-                    o.st = o.st.toString(2).split('').map(a => !!+a).reverse()
-                })
+                a.forEach(o => o.st = ('0000' + (+o.st).toString(2))
+                    .split('')
+                    .map(a => !!+a)
+                    .reverse()
+                    .slice(0, 4))
             }
             return {ls: a}
         },
@@ -140,7 +142,7 @@ export const apis = {
         before(a, b, c = {}) {
             return {
                 ...c,
-                at:!!c.at,
+                at: !!c.at,
                 st: c.st.map((a, i) => a ? +a << i : 0)
                     .reduce((a, b) => a | b)
             }
@@ -152,7 +154,7 @@ export const apis = {
         before(a, b, c = {}) {
             return {
                 ...c,
-                at:!!c.at,
+                at: !!c.at,
                 st: c.st.map((a, i) => a ? +a << i : 0)
                     .reduce((a, b) => a | b)
             }
