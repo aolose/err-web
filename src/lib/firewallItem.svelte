@@ -106,7 +106,7 @@
      class:t={mod}
      class:edit={editMode}>
     {#if !mod}
-        <p>{timeFmt(d.sv, 0)}</p>
+        <p>{timeFmt(d.sv)}</p>
     {/if}
     {#if editMode || d.ip}
         <div class="r" transition:slide|local>
