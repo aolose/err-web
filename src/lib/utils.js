@@ -243,19 +243,19 @@ export  function redirectPage1({page:{path}}){
 }
 
 export const colors =[
-    '#4281A4',
     '#9CAFB7',
-    '#EAD2AC',
     '#E6B89C',
     '#274C77',
+    '#EAD2AC',
     '#6096BA',
+    '#B7B7A4',
     '#8B8C89',
     '#014F86',
-    '#2C7DA0',
     '#89B0AE',
+    '#2C7DA0',
     '#A5A58D',
-    '#B7B7A4',
     '#5C677D',
+    '#4281A4'
 ]
 
 export function isIp(ip){
