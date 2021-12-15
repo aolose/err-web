@@ -21,9 +21,7 @@
     }
 </script>
 
-<div class="s p"
-     style={`background-color:${col}`}
-     transition:fade>
+<div class="s p" style={`background-color:${col}`}>
     <div class="x" style={sty}></div>
     <div class="t">
         {m}/{d}
