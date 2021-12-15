@@ -95,13 +95,14 @@
     padding-top: 100%;
     transform: rotate(-15deg);
     border-radius: 50%;
-    box-shadow: inset rgba(0,0,0,.08) -20px -20px 30px;
-    border: 1px solid #fff;
+    box-shadow: rgba(255,255,255,0.5) 0 0 3px 1px;
 
     * {
+      transform: translate3d(0,0,0);
       color: #000;
       text-shadow: white 1px 1px;
       position: absolute;
+      min-width: 1px;
     }
   }
 
@@ -177,8 +178,7 @@
     background: currentColor;
     transform-origin: top center;
     animation: f infinite $s both;
-    box-shadow: white 0 0 20px;
-    border: 1px solid #fff;
+    box-shadow: rgba(255,255,255,0.5) 0 0 3px 1px;
   }
 
   .f1 {
@@ -186,7 +186,7 @@
   }
 
   .v, .v1 {
-    box-shadow: #000 0 0 20px;
+    box-shadow: #fff 0 0 20px;
     border-radius: 100px;
     bottom: -8%;
     transform-origin: top center;
