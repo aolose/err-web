@@ -30,9 +30,9 @@
 </script>
 <svelte:window on:sveltekit:navigation-end={scTop}/>
 <Canvas type={1}/>
-<div class="o" bind:this={sc}>
+<div class="o">
     <Ph><slot></slot></Ph>
-    <div class="t">
+    <div class="t" bind:this={sc}>
         <Ctx>
             <div class="c">
                 {#each ls as p,i (p.updated)}
