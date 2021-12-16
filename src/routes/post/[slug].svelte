@@ -131,7 +131,6 @@
         color: #333;
         font-size: 14px;
         line-height: 2;
-        text-align: justify;
         margin: 10px 0 20px;
 
         pre, code {
