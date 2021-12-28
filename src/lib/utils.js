@@ -242,7 +242,7 @@ export  function redirectPage1({page:{path}}){
     }
 }
 
-export const colors =[
+const colors =[
     '#9CAFB7',
     '#E6B89C',
     '#274C77',
@@ -257,6 +257,11 @@ export const colors =[
     '#5C677D',
     '#4281A4'
 ]
+
+export const getColor=(a)=>{
+    a=Math.floor(a);
+    return  colors[a%colors.length]
+}
 
 export function isIp(ip){
     const [a,b] = ip.split('/')

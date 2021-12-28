@@ -10,8 +10,9 @@
     import CmList from "$lib/cmList.svelte"
     import Tag from "$lib/tag.svelte";
     import Md from "$lib/md.svelte"
-    import {colors, goBack, resUrl, timeFmt} from "$lib/utils";
+    import {getColor, goBack, resUrl, timeFmt} from "$lib/utils";
     import PF from '$lib/pf.svelte'
+
     Viewer.setDefaults({
         button: true,
         navbar: false,
@@ -23,12 +24,12 @@
         minHeight: 200,
         minZoomRatio: 0.1,
     })
-    export let d;
+    export let d={};
     let ga;
     let sly = ''
     let style
     $:{
-        style= ` background: linear-gradient(rgba(0,0,0,.7),${ colors[d.created%colors.length]});`
+        if (d.created) style = ` background: linear-gradient(rgba(0,0,0,.7),${getColor(d.created / 3600)});`
         if (d.banner) {
             sly = `background-image:url(${resUrl(d.banner)})`
         }
@@ -61,7 +62,7 @@
                 <div class="h">
                     <h1>{d.title}</h1>
                     <p>{d.desc}</p>
-                    <span>{timeFmt(d.created,0)}</span>
+                    <span>{timeFmt(d.created, 0)}</span>
                 </div>
                 <div class="art">
                     <div class='ct' bind:this={ga}>
@@ -195,7 +196,7 @@
       margin: 10px 0;
       font-size: 14px;
       text-align: left;
-       max-width: 80%;
+      max-width: 80%;
     }
 
     span {
@@ -248,6 +249,7 @@
     opacity: .5;
     filter: brightness(.5);
   }
+
   @supports (mix-blend-mode: multiply) {
     .bg {
       mix-blend-mode: multiply;

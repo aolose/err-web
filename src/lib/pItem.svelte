@@ -1,7 +1,6 @@
 <script>
     import {host} from "./res";
-    import {fade} from "svelte/transition";
-    import {colors} from "$lib/utils.js";
+    import {getColor} from "$lib/utils.js";
 
     export let p = {}
     export let n = 0
@@ -12,7 +11,6 @@
     const m = tm.getMonth() + 1
     const d = tm.getDate()
     const showY = new Date().getFullYear() !== y
-    const col = colors[created%colors.length]
     let ds
     $:{
         ds = (desc || content)
@@ -21,7 +19,7 @@
     }
 </script>
 
-<div class="s p" style={`background-color:${col}`}>
+<div class="s p" style={`background-color:${getColor(created/3600)}`}>
     <div class="x" style={sty}></div>
     <div class="t">
         {m}/{d}
