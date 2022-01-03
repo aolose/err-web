@@ -13,12 +13,14 @@ function scroll_state() {
 }
 
 /**
- * @param {Node | null} node
- * @returns {HTMLAnchorElement | SVGAElement | null}
+ * @param {Event} event
+ * @returns {HTMLAnchorElement | SVGAElement | undefined}
  */
-function find_anchor(node) {
-	while (node && node.nodeName.toUpperCase() !== 'A') node = node.parentNode; // SVG <a> elements have a lowercase name
-	return /** @type {HTMLAnchorElement | SVGAElement} */ (node);
+function find_anchor(event) {
+	const node = event
+		.composedPath()
+		.find((e) => e instanceof Node && e.nodeName.toUpperCase() === 'A'); // SVG <a> elements have a lowercase name
+	return /** @type {HTMLAnchorElement | SVGAElement | undefined} */ (node);
 }
 
 /**
@@ -97,9 +99,9 @@ class Router {
 			}, 200);
 		});
 
-		/** @param {MouseEvent|TouchEvent} event */
+		/** @param {Event} event */
 		const trigger_prefetch = (event) => {
-			const a = find_anchor(/** @type {Node} */ (event.target));
+			const a = find_anchor(event);
 			if (a && a.href && a.hasAttribute('sveltekit:prefetch')) {
 				this.prefetch(get_href(a));
 			}
@@ -112,12 +114,17 @@ class Router {
 		const handle_mousemove = (event) => {
 			clearTimeout(mousemove_timeout);
 			mousemove_timeout = setTimeout(() => {
-				trigger_prefetch(event);
+				// event.composedPath(), which is used in find_anchor, will be empty if the event is read in a timeout
+				// add a layer of indirection to address that
+				event.target?.dispatchEvent(
+					new CustomEvent('sveltekit:trigger_prefetch', { bubbles: true })
+				);
 			}, 20);
 		};
 
 		addEventListener('touchstart', trigger_prefetch);
 		addEventListener('mousemove', handle_mousemove);
+		addEventListener('sveltekit:trigger_prefetch', trigger_prefetch);
 
 		/** @param {MouseEvent} event */
 		addEventListener('click', (event) => {
@@ -129,7 +136,7 @@ class Router {
 			if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 			if (event.defaultPrevented) return;
 
-			const a = find_anchor(/** @type {Node} */ (event.target));
+			const a = find_anchor(event);
 			if (!a) return;
 
 			if (!a.href) return;
@@ -645,9 +652,7 @@ class Renderer {
 			}
 		}
 
-		if (navigation_result.reload) {
-			location.reload();
-		} else if (this.started) {
+		if (this.started) {
 			this.current = navigation_result.state;
 
 			this.root.$set(navigation_result.props);
@@ -656,44 +661,50 @@ class Renderer {
 			this._init(navigation_result);
 		}
 
-		const { hash, scroll, keepfocus } = opts || {};
+		// opts must be passed if we're navigating...
+		if (opts) {
+			const { hash, scroll, keepfocus } = opts;
 
-		if (!keepfocus) {
-			getSelection()?.removeAllRanges();
-			document.body.focus();
-		}
-
-		const old_page_y_offset = Math.round(pageYOffset);
-		const old_max_page_y_offset = document.documentElement.scrollHeight - innerHeight;
-
-		await 0;
-
-		const new_page_y_offset = Math.round(pageYOffset);
-		const new_max_page_y_offset = document.documentElement.scrollHeight - innerHeight;
-
-		// After `await 0`, the `onMount()` function in the component executed.
-		// Check if no scrolling happened on mount.
-		const no_scroll_happened =
-			// In most cases, we can compare whether `pageYOffset` changed between navigation
-			new_page_y_offset === Math.min(old_page_y_offset, new_max_page_y_offset) ||
-			// But if the page is scrolled to/near the bottom, the browser would also scroll
-			// to/near the bottom of the new page on navigation. Since we can't detect when this
-			// behaviour happens, we naively compare by the y offset from the bottom of the page.
-			old_max_page_y_offset - old_page_y_offset === new_max_page_y_offset - new_page_y_offset;
-
-		// If there was no scrolling, we run on our custom scroll handling
-		if (no_scroll_happened) {
-			const deep_linked = hash && document.getElementById(hash.slice(1));
-			if (scroll) {
-				scrollTo(scroll.x, scroll.y);
-			} else if (deep_linked) {
-				// Here we use `scrollIntoView` on the element instead of `scrollTo`
-				// because it natively supports the `scroll-margin` and `scroll-behavior`
-				// CSS properties.
-				deep_linked.scrollIntoView();
-			} else {
-				scrollTo(0, 0);
+			if (!keepfocus) {
+				getSelection()?.removeAllRanges();
+				document.body.focus();
 			}
+
+			const old_page_y_offset = Math.round(pageYOffset);
+			const old_max_page_y_offset = document.documentElement.scrollHeight - innerHeight;
+
+			await 0;
+
+			const new_page_y_offset = Math.round(pageYOffset);
+			const new_max_page_y_offset = document.documentElement.scrollHeight - innerHeight;
+
+			// After `await 0`, the `onMount()` function in the component executed.
+			// Check if no scrolling happened on mount.
+			const no_scroll_happened =
+				// In most cases, we can compare whether `pageYOffset` changed between navigation
+				new_page_y_offset === Math.min(old_page_y_offset, new_max_page_y_offset) ||
+				// But if the page is scrolled to/near the bottom, the browser would also scroll
+				// to/near the bottom of the new page on navigation. Since we can't detect when this
+				// behaviour happens, we naively compare by the y offset from the bottom of the page.
+				old_max_page_y_offset - old_page_y_offset === new_max_page_y_offset - new_page_y_offset;
+
+			// If there was no scrolling, we run on our custom scroll handling
+			if (no_scroll_happened) {
+				const deep_linked = hash && document.getElementById(hash.slice(1));
+				if (scroll) {
+					scrollTo(scroll.x, scroll.y);
+				} else if (deep_linked) {
+					// Here we use `scrollIntoView` on the element instead of `scrollTo`
+					// because it natively supports the `scroll-margin` and `scroll-behavior`
+					// CSS properties.
+					deep_linked.scrollIntoView();
+				} else {
+					scrollTo(0, 0);
+				}
+			}
+		} else {
+			// ...they will not be supplied if we're simply invalidating
+			await 0;
 		}
 
 		this.loading.promise = null;
@@ -877,37 +888,9 @@ class Renderer {
 	 * @returns
 	 */
 	async _load_node({ status, error, module, page, stuff }) {
-		// patch the  module to ensure add  params to node.uses.params
-		let module2 = module;
-		if (!module2.original && !module.load) {
-			const def = module.default;
-			module2 = {
-				...module,
-				original: module,
-				default: new Proxy(def, {
-					construct(target, args) {
-						try {
-							const page = args[0].props.$$scope.ctx[8];
-							if (page.params) {
-									page.params = new Proxy(page.params, {
-										get (target, prop, receiver) {
-											if (typeof prop === 'string') node.uses.params.add(prop);
-											return Reflect.get(target, prop, receiver);
-										}
-									});
-}
-						} catch (e) {
-							console.warn(e);
-						}
-						return new target(...args);
-					}
-				})
-			};
-		}
-
 		/** @type {import('./types').BranchNode} */
 		const node = {
-			module: module2,
+			module,
 			uses: {
 				params: new Set(),
 				path: false,
@@ -1042,7 +1025,7 @@ class Renderer {
 
 				const changed_since_last_render =
 					!previous ||
-					(module !== previous.module && module !== previous.module.original) ||
+					module !== previous.module ||
 					(changed.path && previous.uses.path) ||
 					changed.params.some((param) => previous.uses.params.has(param)) ||
 					(changed.query && previous.uses.query) ||

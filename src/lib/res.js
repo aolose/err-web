@@ -117,7 +117,6 @@ async function getRes(ctx, name) {
         status: re && re.status,
     }
     if (re) {
-        const {ok} = re;
         let r = ''
         try {
             r = await re.text()

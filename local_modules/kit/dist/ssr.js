@@ -1,4 +1,4 @@
-import { g as get_single_valued_header } from './chunks/http.js';
+import { g as get_single_valued_header, r as resolve, i as is_root_relative } from './chunks/url.js';
 import { c as coalesce_to_error } from './chunks/error.js';
 
 /** @param {Record<string, any>} obj */
@@ -627,10 +627,8 @@ async function render_response({
 		</script>`;
 	}
 
-	if (options.service_worker) {
-		init += options.amp
-			? `<amp-install-serviceworker src="${options.service_worker}" layout="nodisplay"></amp-install-serviceworker>`
-			: `<script>
+	if (options.service_worker && !options.amp) {
+		init += `<script>
 			if ('serviceWorker' in navigator) {
 				navigator.serviceWorker.register('${options.service_worker}');
 			}
@@ -646,21 +644,23 @@ async function render_response({
 		init
 	].join('\n\n\t\t');
 
-	const body = options.amp
-		? rendered.html
-		: `${rendered.html}
+	let body = rendered.html;
+	if (options.amp) {
+		if (options.service_worker) {
+			body += `<amp-install-serviceworker src="${options.service_worker}" layout="nodisplay"></amp-install-serviceworker>`;
+		}
+	} else {
+		body += serialized_data
+			.map(({ url, body, json }) => {
+				let attributes = `type="application/json" data-type="svelte-data" data-url=${escape_html_attr(
+					url
+				)}`;
+				if (body) attributes += ` data-body="${hash(body)}"`;
 
-			${serialized_data
-				.map(({ url, body, json }) => {
-					let attributes = `type="application/json" data-type="svelte-data" data-url=${escape_html_attr(
-						url
-					)}`;
-					if (body) attributes += ` data-body="${hash(body)}"`;
-
-					return `<script ${attributes}>${json}</script>`;
-				})
-				.join('\n\n\t')}
-		`;
+				return `<script ${attributes}>${json}</script>`;
+			})
+			.join('\n\n\t');
+	}
 
 	/** @type {import('types/helper').ResponseHeaders} */
 	const headers = {
@@ -874,8 +874,7 @@ async function load_node({
 						...opts
 					};
 				}
-
-				//merge  headers  from  request
+				//Merge  headers  from  request
 				opts.headers = {
 					...request.headers,
 					...opts.headers
@@ -906,7 +905,7 @@ async function load_node({
 								`http://${page.host}/${asset.file}`,
 								/** @type {RequestInit} */ (opts)
 						  );
-				} else if (resolved.startsWith('/') && !resolved.startsWith('//')) {
+				} else if (is_root_relative(resolved)) {
 					const relative = resolved;
 
 					const headers = /** @type {import('types/helper').RequestHeaders} */ ({
@@ -1082,37 +1081,6 @@ async function load_node({
 		set_cookie_headers,
 		uses_credentials
 	};
-}
-
-const absolute = /^([a-z]+:)?\/?\//;
-
-/**
- * @param {string} base
- * @param {string} path
- */
-function resolve(base, path) {
-	const base_match = absolute.exec(base);
-	const path_match = absolute.exec(path);
-
-	if (!base_match) {
-		throw new Error(`bad base path: "${base}"`);
-	}
-
-	const baseparts = path_match ? [] : base.slice(base_match[0].length).split('/');
-	const pathparts = path_match ? path.slice(path_match[0].length).split('/') : path.split('/');
-
-	baseparts.pop();
-
-	for (let i = 0; i < pathparts.length; i += 1) {
-		const part = pathparts[i];
-		if (part === '.') continue;
-		else if (part === '..') baseparts.pop();
-		else baseparts.push(part);
-	}
-
-	const prefix = (path_match && path_match[0]) || (base_match && base_match[0]) || '';
-
-	return `${prefix}${baseparts.join('/')}`;
 }
 
 /**
@@ -1758,9 +1726,15 @@ async function respond(incoming, options, state = {}) {
 						if (response.status === 200) {
 							const cache_control = get_single_valued_header(response.headers, 'cache-control');
 							if (!cache_control || !/(no-store|immutable)/.test(cache_control)) {
+								let if_none_match_value = request.headers['if-none-match'];
+								// ignore W/ prefix https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-None-Match#directives
+								if (if_none_match_value?.startsWith('W/"')) {
+									if_none_match_value = if_none_match_value.substring(2);
+								}
+
 								const etag = `"${hash(response.body || '')}"`;
 
-								if (request.headers['if-none-match'] === etag) {
+								if (if_none_match_value === etag) {
 									return {
 										status: 304,
 										headers: {}

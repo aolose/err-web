@@ -255,8 +255,12 @@ function copy(from, to, filter = () => true) {
 	return files;
 }
 
-/** @param {string} cwd */
-function walk(cwd) {
+/**
+ * Get a list of all files in a directory
+ * @param {string} cwd - the directory to walk
+ * @param {boolean} [dirs] - whether to include directories in the result
+ */
+function walk(cwd, dirs = false) {
 	/** @type {string[]} */
 	const all_files = [];
 
@@ -268,6 +272,7 @@ function walk(cwd) {
 			const joined = path__default.join(dir, file);
 			const stats = fs__default.statSync(path__default.join(cwd, joined));
 			if (stats.isDirectory()) {
+				if (dirs) all_files.push(joined);
 				walk_dir(joined);
 			} else {
 				all_files.push(joined);
@@ -817,7 +822,7 @@ async function launch(port, https) {
 	exec(`${cmd} ${https ? 'https' : 'http'}://localhost:${port}`);
 }
 
-const prog = sade('svelte-kit').version('1.0.0-next.197');
+const prog = sade('svelte-kit').version('1.0.0-next.203');
 
 prog
 	.command('dev')
@@ -982,7 +987,7 @@ async function check_port(port) {
 function welcome({ port, host, https, open, loose, allow, cwd }) {
 	if (open) launch(port, https);
 
-	console.log($.bold().cyan(`\n  SvelteKit v${'1.0.0-next.197'}\n`));
+	console.log($.bold().cyan(`\n  SvelteKit v${'1.0.0-next.203'}\n`));
 
 	const protocol = https ? 'https:' : 'http:';
 	const exposed = typeof host !== 'undefined' && host !== 'localhost' && host !== '127.0.0.1';

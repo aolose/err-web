@@ -2,20 +2,20 @@ import { m as mkdirp, r as rimraf, d as copy, $, l as logger } from '../cli.js';
 import { S as SVELTE_KIT } from './constants.js';
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve, join, dirname } from 'path';
-import { pathToFileURL, resolve as resolve$1, URL } from 'url';
+import { pathToFileURL, URL } from 'url';
 import { __fetch_polyfill } from '../install-fetch.js';
-import { g as get_single_valued_header } from './http.js';
+import { g as get_single_valued_header, r as resolve$1, i as is_root_relative } from './url.js';
 import 'sade';
 import 'child_process';
 import 'net';
 import 'os';
 import './error.js';
-import 'http';
-import 'https';
-import 'zlib';
-import 'stream';
-import 'util';
-import 'crypto';
+import 'node:http';
+import 'node:https';
+import 'node:zlib';
+import 'node:stream';
+import 'node:util';
+import 'node:url';
 
 /**
  * @typedef {import('types/config').PrerenderErrorHandler} PrerenderErrorHandler
@@ -202,6 +202,11 @@ async function prerender({ cwd, out, log, config, build_data, fallback, all }) {
 					log.warn(`${rendered.status} ${decoded_path} -> ${location}`);
 					writeFileSync(file, `<meta http-equiv="refresh" content="0;url=${encodeURI(location)}">`);
 					written_files.push(file);
+
+					const resolved = resolve$1(path, location);
+					if (is_root_relative(resolved)) {
+						await visit(resolved, path);
+					}
 				} else {
 					log.warn(`location header missing on redirect received from ${decoded_path}`);
 				}
@@ -275,7 +280,7 @@ async function prerender({ cwd, out, log, config, build_data, fallback, all }) {
 					if (!href) continue;
 
 					const resolved = resolve$1(path, href);
-					if (!resolved.startsWith('/') || resolved.startsWith('//')) continue;
+					if (!is_root_relative(resolved)) continue;
 
 					const parsed = new URL(resolved, 'http://localhost');
 					const pathname = decodeURI(parsed.pathname).replace(config.kit.paths.base, '');

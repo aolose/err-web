@@ -1,18 +1,19 @@
 {
 	"name": "@sveltejs/kit",
-	"version": "1.0.0-next.197",
+	"version": "1.0.0-next.203",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/sveltejs/kit",
 		"directory": "packages/kit"
 	},
+	"license": "MIT",
 	"homepage": "https://kit.svelte.dev",
 	"type": "module",
 	"dependencies": {
-		"@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
+		"@sveltejs/vite-plugin-svelte": "^1.0.0-next.32",
 		"cheap-watch": "^1.0.4",
 		"sade": "^1.7.4",
-		"vite": "^2.6.12"
+		"vite": "^2.7.2"
 	},
 	"peerDependencies": {
 		"svelte": "^3.44.0"
@@ -26,21 +27,11 @@
 		"types",
 		"svelte-kit.js"
 	],
-	"scripts": {
-		"build": "rollup -c",
-		"dev": "rollup -cw",
-		"lint": "eslint --ignore-path .gitignore --ignore-pattern \"src/packaging/test/**\" \"{src,test}/**/*.{ts,mjs,js,svelte}\" && npm run check-format",
-		"check": "tsc && svelte-check --ignore \"src/packaging/test\"",
-		"format": "npm run check-format -- --write",
-		"check-format": "prettier --check . --config ../../.prettierrc --ignore-path .gitignore",
-		"prepublishOnly": "npm run build",
-		"test": "npm run test:unit && npm run test:packaging && npm run test:integration",
-		"test:unit": "uvu src \"(spec\\.js|test[\\\\/]index\\.js)\" -i packaging",
-		"test:packaging": "uvu src/packaging \"(spec\\.js|test[\\\\/]index\\.js)\"",
-		"test:integration": "uvu test test.js"
-	},
 	"exports": {
 		"./package.json": "./package.json",
+		".": {
+			"types": "./types/index.d.ts"
+		},
 		"./ssr": {
 			"import": "./dist/ssr.js"
 		},
@@ -52,8 +43,7 @@
 		},
 		"./install-fetch": {
 			"import": "./dist/install-fetch.js"
-		},
-		"./types": "./types/index.d.ts"
+		}
 	},
 	"types": "types/index.d.ts",
 	"engines": {

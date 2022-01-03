@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { createRequire } from 'module';
-import { r as rimraf, w as walk$1, m as mkdirp } from '../cli.js';
+import { r as rimraf, w as walk$1, $, m as mkdirp } from '../cli.js';
 import 'sade';
 import 'child_process';
 import 'net';
@@ -5999,7 +5999,7 @@ const inject = (raw, node, values, comments) => {
 
 	const { enter, leave } = get_comment_handlers(comments, raw);
 
-	walk(node, {
+	return walk(node, {
 		enter,
 
 		/** @param {any} node */
@@ -6101,7 +6101,6 @@ const inject = (raw, node, values, comments) => {
 				node.update = node.update === EMPTY ? null : node.update;
 			}
 
-			// @ts-ignore
 			leave(node);
 		}
 	});
@@ -6120,7 +6119,7 @@ function x(strings, ...values) {
 	const comments = [];
 
 	try {
-		const expression =
+		let expression =
 			/** @type {Expression & { start: Number, end: number }} */ (
 				parseExpressionAt(str, 0, acorn_opts(comments, str))
 			);
@@ -6129,7 +6128,9 @@ function x(strings, ...values) {
 			throw new Error(`Unexpected token '${match[0]}'`);
 		}
 
-		inject(str, expression, values, comments);
+		expression = /** @type {Expression & { start: Number, end: number }} */ (
+			inject(str, expression, values, comments)
+		);
 
 		return expression;
 	} catch (err) {
@@ -15205,10 +15206,10 @@ async function process_tag(tag_name, preprocessor, source) {
     const { string, map } = await replace_in_code(tag_regex, process_single_tag, source);
     return { string, map, dependencies };
 }
-async function process_markup(filename, process, source) {
+async function process_markup(process, source) {
     const processed = await process({
         content: source.source,
-        filename
+        filename: source.filename
     });
     if (processed) {
         return {
@@ -15227,7 +15228,6 @@ async function process_markup(filename, process, source) {
     }
 }
 async function preprocess(source, preprocessor, options) {
-    // @ts-ignore todo: doublecheck
     const filename = (options && options.filename) || preprocessor.filename; // legacy
     const preprocessors = preprocessor ? (Array.isArray(preprocessor) ? preprocessor : [preprocessor]) : [];
     const markup = preprocessors.map(p => p.markup).filter(Boolean);
@@ -15237,7 +15237,7 @@ async function preprocess(source, preprocessor, options) {
     // TODO keep track: what preprocessor generated what sourcemap?
     // to make debugging easier = detect low-resolution sourcemaps in fn combine_mappings
     for (const process of markup) {
-        result.update_source(await process_markup(filename, process, result));
+        result.update_source(await process_markup(process, result));
     }
     for (const process of script) {
         result.update_source(await process_tag('script', process, result));
@@ -15255,7 +15255,8 @@ const essential_files = ['README', 'LICENSE', 'CHANGELOG', '.gitignore', '.npmig
  * @param {string} cwd
  */
 async function make_package(config, cwd = process.cwd()) {
-	const abs_package_dir = path.join(cwd, config.kit.package.dir);
+	const package_dir = config.kit.package.dir;
+	const abs_package_dir = path.isAbsolute(package_dir) ? package_dir : path.join(cwd, package_dir);
 	rimraf(abs_package_dir);
 
 	if (config.kit.package.emitTypes) {
@@ -15292,7 +15293,14 @@ async function make_package(config, cwd = process.cwd()) {
 		if (!config.kit.package.files(normalized)) {
 			const dts_file = (svelte_ext ? file : file.slice(0, -ext.length)) + '.d.ts';
 			const dts_path = path.join(abs_package_dir, dts_file);
-			if (fs.existsSync(dts_path)) fs.unlinkSync(dts_path);
+			if (fs.existsSync(dts_path)) {
+				fs.unlinkSync(dts_path);
+
+				const dir = path.dirname(dts_path);
+				if (fs.readdirSync(dir).length === 0) {
+					fs.rmdirSync(dir);
+				}
+			}
 			continue;
 		}
 
@@ -15367,14 +15375,14 @@ async function make_package(config, cwd = process.cwd()) {
 				console.warn(
 					'Cannot generate a "svelte" entry point because ' +
 						'the "." entry in "exports" is not a string. ' +
-						'If you set it by hand, please also set one of the options as a "svelte" entry point'
+						'If you set it by hand, please also set one of the options as a "svelte" entry point\n'
 				);
 			}
 		} else {
 			console.warn(
 				'Cannot generate a "svelte" entry point because ' +
 					'the "." entry in "exports" is missing. ' +
-					'Please specify one or set a "svelte" entry point yourself'
+					'Please specify one or set a "svelte" entry point yourself\n'
 			);
 		}
 	}
@@ -15392,13 +15400,20 @@ async function make_package(config, cwd = process.cwd()) {
 		const package_path = path.join(abs_package_dir, pathname);
 		if (!fs.existsSync(package_path)) fs.copyFileSync(full_path, package_path);
 	}
+
+	const from = path.relative(cwd, config.kit.files.lib);
+	const to = path.relative(cwd, config.kit.package.dir);
+	console.log($.bold().green(`${from} -> ${to}`));
+	console.log(`Successfully built '${pkg.name}' package. To publish it to npm:`);
+	console.log($.bold().cyan(`  cd ${to}`));
+	console.log($.bold().cyan('  npm publish\n'));
 }
 
 /**
  * Resolves the `$lib` alias.
  *
  * TODO: make this more generic to also handle other aliases the user could have defined
- * via `kit.vite.resolve.alias`. Also investage how to do this in a more robust way
+ * via `kit.vite.resolve.alias`. Also investigate how to do this in a more robust way
  * (right now regex string replacement is used).
  * For more discussion see https://github.com/sveltejs/kit/pull/2453
  *
