@@ -1,13 +1,14 @@
 import cookie from 'cookie';
 import {browser} from "$app/env";
 
-
+/** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
     return await resolve(event, {
         ssr: true
     });
 }
 
+/** @type {import('@sveltejs/kit').ExternalFetch} */
 export async function externalFetch({url,headers,rawBody,method}) {
     return await fetch(new Request(
         browser ? url :

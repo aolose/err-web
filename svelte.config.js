@@ -31,6 +31,7 @@ const config = {
     },
     preprocess: preprocess(),
     kit: {
+        ssr:true,
         target: '#err',
         adapter: adapter(),
         vite: {
