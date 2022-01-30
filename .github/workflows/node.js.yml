@@ -33,5 +33,5 @@ jobs:
             rm -rf ~/errWeb/*
           after_script: |
             ls -l 
-            echo ${{ secrets.VPS_PWD }} | sudo -S service err-web restart
+            echo -e "${{ secrets.VPS_PWD }}\n" | sudo -S service err-web restart
 
