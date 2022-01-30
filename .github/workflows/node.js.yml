@@ -20,16 +20,16 @@ jobs:
       - run: npm run build
 
       - name: Depoly
-        uses: mdallasanta/ssh-scp-deploy@v1.1.0
+        uses: kostya-ten/ssh-server-deploy@v4
         with:
           host: ${{ secrets.VPS_ADDR }}
-          key: ${{ secrets.VPS_KEY }}
-          user: ${{ secrets.VPS_USR }}
+          private_key: ${{ secrets.VPS_KEY }}
+          username: ${{ secrets.VPS_USR }}
           port: ${{ secrets.VPS_PORT }}
-          local: "build"
-          remote: "~/errWeb/"
-          pre_upload: rm -rf ~/errWeb/*
-          post_upload: |
+          scp_source: "build"
+          scp_target: "~/errWeb/"
+          before_script: rm -rf ~/errWeb/*
+          after_script: |
             sudo -S service err-web restart<< EOF
             ${{ secrets.VPS_PWD }}
             EOF
