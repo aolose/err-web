@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [17.x]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -29,9 +29,8 @@ jobs:
           scp_source: "build/*"
           scp_target: "/home/aolose/errWeb/build/"
           before_script: |
-            ls /home/aolose/errWeb/build -l
             rm -rf /home/aolose/errWeb/build/*
           after_script: |
-            ls /home/aolose/errWeb/build -l 
+            echo `{"name": "err-web","type": "module"}` >package.json
             echo -e "${{ secrets.VPS_PWD }}\n" | sudo -S service err-web restart
 
