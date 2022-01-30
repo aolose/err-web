@@ -20,7 +20,7 @@ jobs:
       - run: npm run build
 
       - name: Depoly
-        uses: mdallasanta/ssh-scp-deploy@1.1.0
+        uses: mdallasanta/ssh-scp-deploy@v1.1.0
         with:
           host: ${{ secrets.VPS_ADDR }}
           key: ${{ secrets.VPS_KEY }}
