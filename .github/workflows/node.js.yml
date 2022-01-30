@@ -24,7 +24,7 @@ jobs:
         with:
           host: ${{ secrets.VPS_ADDR }}
           key: ${{ secrets.VPS_KEY }}
-          username: ${{ secrets.VPS_USR }}
+          user: ${{ secrets.VPS_USR }}
           port: ${{ secrets.VPS_PORT }}
           local: "build"
           remote: "~/errWeb/"
