@@ -1,12 +1,11 @@
-import fs__default, { existsSync } from 'fs';
 import sade from 'sade';
-import path__default, { relative } from 'path';
+import path__default, { join, relative } from 'path';
 import { exec as exec$1 } from 'child_process';
 import { createConnection, createServer } from 'net';
+import fs__default from 'fs';
 import * as url from 'url';
 import { fileURLToPath } from 'url';
 import { networkInterfaces, release } from 'os';
-import { c as coalesce_to_error, h as has_error_code } from './chunks/error.js';
 
 let FORCE_COLOR, NODE_DISABLE_COLORS, NO_COLOR, TERM, isTTY=true;
 if (typeof process !== 'undefined') {
@@ -231,26 +230,59 @@ function rimraf(path) {
 }
 
 /**
- * @param {string} from
- * @param {string} to
- * @param {(basename: string) => boolean} filter
+ * @param {string} source
+ * @param {string} target
+ * @param {{
+ *   filter?: (basename: string) => boolean;
+ *   replace?: Record<string, string>;
+ * }} opts
  */
-function copy(from, to, filter = () => true) {
-	if (!fs__default.existsSync(from)) return [];
-	if (!filter(path__default.basename(from))) return [];
+function copy(source, target, opts = {}) {
+	if (!fs__default.existsSync(source)) return [];
 
+	/** @type {string[]} */
 	const files = [];
-	const stats = fs__default.statSync(from);
 
-	if (stats.isDirectory()) {
-		fs__default.readdirSync(from).forEach((file) => {
-			files.push(...copy(path__default.join(from, file), path__default.join(to, file)));
-		});
-	} else {
-		mkdirp(path__default.dirname(to));
-		fs__default.copyFileSync(from, to);
-		files.push(to);
+	const prefix = posixify(target) + '/';
+
+	const regex = opts.replace
+		? new RegExp(`\\b(${Object.keys(opts.replace).join('|')})\\b`, 'g')
+		: null;
+
+	/**
+	 * @param {string} from
+	 * @param {string} to
+	 */
+	function go(from, to) {
+		if (opts.filter && !opts.filter(path__default.basename(from))) return;
+
+		const stats = fs__default.statSync(from);
+
+		if (stats.isDirectory()) {
+			fs__default.readdirSync(from).forEach((file) => {
+				go(path__default.join(from, file), path__default.join(to, file));
+			});
+		} else {
+			mkdirp(path__default.dirname(to));
+
+			if (opts.replace) {
+				const data = fs__default.readFileSync(from, 'utf-8');
+				fs__default.writeFileSync(
+					to,
+					data.replace(
+						/** @type {RegExp} */ (regex),
+						(match, key) => /** @type {Record<string, string>} */ (opts.replace)[key]
+					)
+				);
+			} else {
+				fs__default.copyFileSync(from, to);
+			}
+
+			files.push(to === target ? posixify(path__default.basename(to)) : posixify(to).replace(prefix, ''));
+		}
 	}
+
+	go(source, target);
 
 	return files;
 }
@@ -283,24 +315,47 @@ function walk(cwd, dirs = false) {
 	return walk_dir(''), all_files;
 }
 
+/** @param {string} str */
+function posixify(str) {
+	return str.replace(/\\/g, '/');
+}
+
+const SVELTE_KIT = '.svelte-kit';
+
+// in `svelte-kit dev` and `svelte-kit preview`, we use a fake
+// asset path so that we can serve local assets while still
+// verifying that requests are correctly prefixed
+const SVELTE_KIT_ASSETS = '/_svelte_kit_assets';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path__default.dirname(__filename);
 
+const runtime = posixify_path(path__default.resolve(`${SVELTE_KIT}/runtime`))
+	;
+
+/** @param {string} str */
+function posixify_path(str) {
+	const parsed = path__default.parse(str);
+	return `/${parsed.dir.slice(parsed.root.length).split(path__default.sep).join('/')}/${parsed.base}`;
+}
+
 /** @param {string} dest */
 function copy_assets(dest) {
-	let prefix = '..';
-	do {
-		// we jump through these hoops so that this function
-		// works whether or not it's been bundled
-		const resolved = path__default.resolve(__dirname, `${prefix}/assets`);
+	{
+		let prefix = '..';
+		do {
+			// we jump through these hoops so that this function
+			// works whether or not it's been bundled
+			const resolved = path__default.resolve(__dirname, `${prefix}/assets`);
 
-		if (fs__default.existsSync(resolved)) {
-			copy(resolved, dest);
-			return;
-		}
+			if (fs__default.existsSync(resolved)) {
+				copy(resolved, dest);
+				return;
+			}
 
-		prefix = `../${prefix}`;
-	} while (true); // eslint-disable-line
+			prefix = `../${prefix}`;
+		} while (true); // eslint-disable-line
+	}
 }
 
 function noop() {}
@@ -310,8 +365,11 @@ function logger({ verbose }) {
 	/** @type {import('types/internal').Logger} */
 	const log = (msg) => console.log(msg.replace(/^/gm, '  '));
 
+	/** @param {string} msg */
+	const err = (msg) => console.error(msg.replace(/^/gm, '  '));
+
 	log.success = (msg) => log($.green(`✔ ${msg}`));
-	log.error = (msg) => log($.bold().red(msg));
+	log.error = (msg) => err($.bold().red(msg));
 	log.warn = (msg) => log($.bold().yellow(msg));
 
 	log.minor = verbose ? (msg) => log($.grey(msg)) : noop;
@@ -349,12 +407,32 @@ function resolve_entry(entry) {
 	return null;
 }
 
-/** @param {string} str */
-function posixify(str) {
-	return str.replace(/\\/g, '/');
+/** @param {import('./create_app/index.js').ManifestData} manifest_data */
+function get_mime_lookup(manifest_data) {
+	/** @type {Record<string, string>} */
+	const mime = {};
+
+	manifest_data.assets.forEach((asset) => {
+		if (asset.type) {
+			const ext = path__default.extname(asset.file);
+			mime[ext] = asset.type;
+		}
+	});
+
+	return mime;
 }
 
-/** @typedef {import('./types').ConfigDefinition} ConfigDefinition */
+/** @param {import('@sveltejs/kit').ValidatedConfig} config */
+function get_aliases(config) {
+	const alias = {
+		__GENERATED__: path__default.posix.resolve(`${SVELTE_KIT}/generated`),
+		$app: `${runtime}/app`,
+		$lib: config.kit.files.lib
+	};
+
+	return alias;
+}
+
 /** @typedef {import('./types').Validator} Validator */
 
 /** @type {Validator} */
@@ -412,22 +490,90 @@ const options = object(
 				return input;
 			}),
 
+			browser: object({
+				hydrate: boolean(true),
+				router: boolean(true)
+			}),
+
+			csp: object({
+				mode: list(['auto', 'hash', 'nonce']),
+				directives: object({
+					'child-src': string_array(),
+					'default-src': string_array(),
+					'frame-src': string_array(),
+					'worker-src': string_array(),
+					'connect-src': string_array(),
+					'font-src': string_array(),
+					'img-src': string_array(),
+					'manifest-src': string_array(),
+					'media-src': string_array(),
+					'object-src': string_array(),
+					'prefetch-src': string_array(),
+					'script-src': string_array(),
+					'script-src-elem': string_array(),
+					'script-src-attr': string_array(),
+					'style-src': string_array(),
+					'style-src-elem': string_array(),
+					'style-src-attr': string_array(),
+					'base-uri': string_array(),
+					sandbox: string_array(),
+					'form-action': string_array(),
+					'frame-ancestors': string_array(),
+					'navigate-to': string_array(),
+					'report-uri': string_array(),
+					'report-to': string_array(),
+					'require-trusted-types-for': string_array(),
+					'trusted-types': string_array(),
+					'upgrade-insecure-requests': boolean(false),
+					'require-sri-for': string_array(),
+					'block-all-mixed-content': boolean(false),
+					'plugin-types': string_array(),
+					referrer: string_array()
+				})
+			}),
+
 			files: object({
 				assets: string('static'),
-				hooks: string('src/hooks'),
-				lib: string('src/lib'),
-				routes: string('src/routes'),
-				serviceWorker: string('src/service-worker'),
-				template: string('src/app.html')
+				hooks: string(join('src', 'hooks')),
+				lib: string(join('src', 'lib')),
+				routes: string(join('src', 'routes')),
+				serviceWorker: string(join('src', 'service-worker')),
+				template: string(join('src', 'app.html'))
 			}),
 
 			floc: boolean(false),
 
-			host: string(null),
+			// TODO: remove this for the 1.0 release
+			headers: error(
+				(keypath) =>
+					`${keypath} has been removed. See https://github.com/sveltejs/kit/pull/3384 for details`
+			),
 
-			hostHeader: string(null),
+			// TODO: remove this for the 1.0 release
+			host: error(
+				(keypath) =>
+					`${keypath} has been removed. See https://github.com/sveltejs/kit/pull/3384 for details`
+			),
 
-			hydrate: boolean(true),
+			// TODO remove for 1.0
+			hydrate: error((keypath) => `${keypath} has been moved to config.kit.browser.hydrate`),
+
+			inlineStyleThreshold: number(0),
+
+			methodOverride: object({
+				parameter: string('_method'),
+				allowed: validate([], (input, keypath) => {
+					if (!Array.isArray(input) || !input.every((method) => typeof method === 'string')) {
+						throw new Error(`${keypath} must be an array of strings`);
+					}
+
+					if (input.map((i) => i.toUpperCase()).includes('GET')) {
+						throw new Error(`${keypath} cannot contain "GET"`);
+					}
+
+					return input;
+				})
+			}),
 
 			package: object({
 				dir: string('package'),
@@ -471,7 +617,9 @@ const options = object(
 			}),
 
 			prerender: object({
+				concurrency: number(1),
 				crawl: boolean(true),
+				createIndexFiles: boolean(true),
 				enabled: boolean(true),
 				entries: validate(['*'], (input, keypath) => {
 					if (!Array.isArray(input) || !input.every((page) => typeof page === 'string')) {
@@ -488,6 +636,7 @@ const options = object(
 
 					return input;
 				}),
+
 				// TODO: remove this for the 1.0 release
 				force: validate(undefined, (input, keypath) => {
 					if (typeof input !== undefined) {
@@ -500,6 +649,7 @@ const options = object(
 						);
 					}
 				}),
+
 				onError: validate('fail', (input, keypath) => {
 					if (typeof input === 'function') return input;
 					if (['continue', 'fail'].includes(input)) return input;
@@ -507,21 +657,32 @@ const options = object(
 						`${keypath} should be either a custom function or one of "continue" or "fail"`
 					);
 				}),
+
 				// TODO: remove this for the 1.0 release
-				pages: validate(undefined, (input, keypath) => {
-					if (typeof input !== undefined) {
-						throw new Error(`${keypath} has been renamed to \`entries\`.`);
-					}
-				})
+				pages: error((keypath) => `${keypath} has been renamed to \`entries\`.`)
 			}),
 
-			router: boolean(true),
+			// TODO: remove this for the 1.0 release
+			protocol: error(
+				(keypath) =>
+					`${keypath} has been removed. See https://github.com/sveltejs/kit/pull/3384 for details`
+			),
+
+			// TODO remove for 1.0
+			router: error((keypath) => `${keypath} has been moved to config.kit.browser.router`),
+
+			routes: fun((filepath) => !/(?:(?:^_|\/_)|(?:^\.|\/\.)(?!well-known))/.test(filepath)),
 
 			serviceWorker: object({
+				register: boolean(true),
 				files: fun((filename) => !/\.DS_STORE/.test(filename))
 			}),
 
-			ssr: boolean(true),
+			// TODO remove this for 1.0
+			ssr: error(
+				(keypath) =>
+					`${keypath} has been removed — use the handle hook instead: https://kit.svelte.dev/docs#hooks-handle'`
+			),
 
 			target: string(null),
 
@@ -618,6 +779,35 @@ function string(fallback, allow_empty = true) {
 }
 
 /**
+ * @param {string[] | undefined} [fallback]
+ * @returns {Validator}
+ */
+function string_array(fallback) {
+	return validate(fallback, (input, keypath) => {
+		if (input === undefined) return input;
+
+		if (!Array.isArray(input) || input.some((value) => typeof value !== 'string')) {
+			throw new Error(`${keypath} must be an array of strings, if specified`);
+		}
+
+		return input;
+	});
+}
+
+/**
+ * @param {number} fallback
+ * @returns {Validator}
+ */
+function number(fallback) {
+	return validate(fallback, (input, keypath) => {
+		if (typeof input !== 'number') {
+			throw new Error(`${keypath} should be a number, if specified`);
+		}
+		return input;
+	});
+}
+
+/**
  * @param {boolean} fallback
  * @returns {Validator}
  */
@@ -671,14 +861,21 @@ function assert_string(input, keypath) {
 	}
 }
 
-/** @typedef {import('./types').ConfigDefinition} ConfigDefinition */
+/** @param {(keypath?: string) => string} fn */
+function error(fn) {
+	return validate(undefined, (input, keypath) => {
+		if (input !== undefined) {
+			throw new Error(fn(keypath));
+		}
+	});
+}
 
 /**
  * @param {string} cwd
- * @param {import('types/config').ValidatedConfig} validated
+ * @param {import('types/config').ValidatedConfig} config
  */
-function validate_template(cwd, validated) {
-	const { template } = validated.kit.files;
+function load_template(cwd, config) {
+	const { template } = config.kit.files;
 	const relative = path__default.relative(cwd, template);
 
 	if (fs__default.existsSync(template)) {
@@ -692,13 +889,19 @@ function validate_template(cwd, validated) {
 	} else {
 		throw new Error(`${relative} does not exist`);
 	}
+
+	return fs__default.readFileSync(template, 'utf-8');
 }
 
 async function load_config({ cwd = process.cwd() } = {}) {
-	const config_file_esm = path__default.join(cwd, 'svelte.config.js');
-	const config_file = fs__default.existsSync(config_file_esm)
-		? config_file_esm
-		: path__default.join(cwd, 'svelte.config.cjs');
+	const config_file = path__default.join(cwd, 'svelte.config.js');
+
+	if (!fs__default.existsSync(config_file)) {
+		throw new Error(
+			'You need to create a svelte.config.js file. See https://kit.svelte.dev/docs#configuration'
+		);
+	}
+
 	const config = await import(url.pathToFileURL(config_file).href);
 
 	const validated = validate_config(config.default);
@@ -710,10 +913,6 @@ async function load_config({ cwd = process.cwd() } = {}) {
 	validated.kit.files.serviceWorker = path__default.resolve(cwd, validated.kit.files.serviceWorker);
 	validated.kit.files.template = path__default.resolve(cwd, validated.kit.files.template);
 
-	validate_template(cwd, validated);
-
-	// TODO check all the `files` exist when the config is loaded?
-
 	return validated;
 }
 
@@ -722,17 +921,9 @@ async function load_config({ cwd = process.cwd() } = {}) {
  * @returns {import('types/config').ValidatedConfig}
  */
 function validate_config(config) {
-	const type = typeof config;
-
-	if (type === 'undefined') {
+	if (typeof config !== 'object') {
 		throw new Error(
-			'Your config is missing default exports. Make sure to include "export default config;"'
-		);
-	}
-
-	if (type !== 'object') {
-		throw new Error(
-			`Unexpected config type "${type}", make sure your default export is an object.`
+			'svelte.config.js must have a configuration object as its default export. See https://kit.svelte.dev/docs#configuration'
 		);
 	}
 
@@ -754,52 +945,28 @@ function print_config_conflicts(conflicts, pathPrefix = '', scope) {
 	});
 }
 
-async function get_config() {
-	// TODO this is temporary, for the benefit of early adopters
-	if (existsSync('svelte.config.cjs')) {
-		// prettier-ignore
-		console.error($.bold().red(
-			'svelte.config.cjs should be renamed to svelte.config.js and converted to an ES module. See https://kit.svelte.dev/docs#configuration for an example'
-		));
-	}
-
-	if (existsSync('vite.config.js')) {
-		// prettier-ignore
-		console.error($.bold().red(
-			'Please remove vite.config.js and put Vite config in svelte.config.js: https://kit.svelte.dev/docs#configuration-vite'
-		));
-	}
-
-	try {
-		return await load_config();
-	} catch (err) {
-		const error = coalesce_to_error(err);
-		let message = error.message;
-
-		if (
-			has_error_code(error, 'MODULE_NOT_FOUND') &&
-			/Cannot find module svelte\.config\./.test(error.message)
-		) {
-			message = 'Missing svelte.config.js';
-		} else if (error.name === 'SyntaxError') {
-			message = 'Malformed svelte.config.js';
-		}
-
-		console.error($.bold().red(message));
-		if (error.stack) {
-			console.error($.grey(error.stack));
-		}
-		process.exit(1);
-	}
+/**
+ * @param {unknown} err
+ * @return {Error}
+ */
+function coalesce_to_error(err) {
+	return err instanceof Error ||
+		(err && /** @type {any} */ (err).name && /** @type {any} */ (err).message)
+		? /** @type {Error} */ (err)
+		: new Error(JSON.stringify(err));
 }
 
-/** @param {unknown} error */
-function handle_error(error) {
-	const err = coalesce_to_error(error);
-	console.log($.bold().red(`> ${err.message}`));
-	if (err.stack) {
-		console.log($.gray(err.stack));
+/** @param {unknown} e */
+function handle_error(e) {
+	const error = coalesce_to_error(e);
+
+	if (error.name === 'SyntaxError') throw error;
+
+	console.error($.bold().red(`> ${error.message}`));
+	if (error.stack) {
+		console.error($.gray(error.stack.split('\n').slice(1).join('\n')));
 	}
+
 	process.exit(1);
 }
 
@@ -822,53 +989,43 @@ async function launch(port, https) {
 	exec(`${cmd} ${https ? 'https' : 'http'}://localhost:${port}`);
 }
 
-const prog = sade('svelte-kit').version('1.0.0-next.203');
+const prog = sade('svelte-kit').version('1.0.0-next.251');
 
 prog
 	.command('dev')
 	.describe('Start a development server')
 	.option('-p, --port', 'Port')
-	.option('-h, --host', 'Host (only use this on trusted networks)')
-	.option('-H, --https', 'Use self-signed HTTPS certificate')
 	.option('-o, --open', 'Open a browser tab')
-	.action(async ({ port, host, https, open }) => {
-		process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-		const config = await get_config();
-
-		const { dev } = await import('./chunks/index.js');
-
+	.option('--host', 'Host (only use this on trusted networks)')
+	.option('--https', 'Use self-signed HTTPS certificate')
+	.option('-H', 'no longer supported, use --https instead') // TODO remove for 1.0
+	.action(async ({ port, host, https, open, H }) => {
 		try {
-			const watcher = await dev({ port, host, https, config });
+			if (H) throw new Error('-H is no longer supported — use --https instead');
 
-			watcher.on('stdout', (data) => {
-				process.stdout.write(data);
+			process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+			const config = await load_config();
+
+			const { dev } = await import('./chunks/index.js');
+
+			const cwd = process.cwd();
+
+			const { address_info, server_config } = await dev({
+				cwd,
+				port,
+				host,
+				https,
+				config
 			});
-
-			watcher.on('stderr', (data) => {
-				process.stderr.write(data);
-			});
-
-			if (!watcher.vite || !watcher.vite.httpServer) {
-				throw Error('Could not find server');
-			}
-			// we never start the server on a socket path, so address will be of type AddressInfo
-			const address_info = /** @type {import('net').AddressInfo} */ (
-				watcher.vite.httpServer.address()
-			);
-
-			const vite_config = config.kit.vite();
-
-			https = https || !!vite_config.server?.https;
-			open = open || !!vite_config.server?.open;
 
 			welcome({
 				port: address_info.port,
 				host: address_info.address,
-				https,
-				open,
-				loose: vite_config.server?.fs?.strict === false,
-				allow: watcher.allowed_directories(),
-				cwd: watcher.cwd
+				https: !!(https || server_config.https),
+				open: open || !!server_config.open,
+				loose: server_config.fs.strict === false,
+				allow: server_config.fs.allow,
+				cwd
 			});
 		} catch (error) {
 			handle_error(error);
@@ -880,10 +1037,10 @@ prog
 	.describe('Create a production build of your app')
 	.option('--verbose', 'Log more stuff', false)
 	.action(async ({ verbose }) => {
-		process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-		const config = await get_config();
-
 		try {
+			process.env.NODE_ENV = process.env.NODE_ENV || 'production';
+			const config = await load_config();
+
 			const { build } = await import('./chunks/index3.js');
 			const build_data = await build(config);
 
@@ -892,7 +1049,7 @@ prog
 			);
 
 			if (config.kit.adapter) {
-				const { adapt } = await import('./chunks/index4.js');
+				const { adapt } = await import('./chunks/index5.js');
 				await adapt(config, build_data, { verbose });
 
 				// this is necessary to close any open db connections, etc
@@ -914,18 +1071,21 @@ prog
 	.command('preview')
 	.describe('Serve an already-built app')
 	.option('-p, --port', 'Port', 3000)
-	.option('-h, --host', 'Host (only use this on trusted networks)', 'localhost')
-	.option('-H, --https', 'Use self-signed HTTPS certificate', false)
 	.option('-o, --open', 'Open a browser tab', false)
-	.action(async ({ port, host, https, open }) => {
-		await check_port(port);
-
-		process.env.NODE_ENV = process.env.NODE_ENV || 'production';
-		const config = await get_config();
-
-		const { preview } = await import('./chunks/index5.js');
-
+	.option('--host', 'Host (only use this on trusted networks)', 'localhost')
+	.option('--https', 'Use self-signed HTTPS certificate', false)
+	.option('-H', 'no longer supported, use --https instead') // TODO remove for 1.0
+	.action(async ({ port, host, https, open, H }) => {
 		try {
+			if (H) throw new Error('-H is no longer supported — use --https instead');
+
+			await check_port(port);
+
+			process.env.NODE_ENV = process.env.NODE_ENV || 'production';
+			const config = await load_config();
+
+			const { preview } = await import('./chunks/index6.js');
+
 			await preview({ port, host, config, https });
 
 			welcome({ port, host, https, open });
@@ -939,11 +1099,11 @@ prog
 	.describe('Create a package')
 	.option('-d, --dir', 'Destination directory', 'package')
 	.action(async () => {
-		const config = await get_config();
-
-		const { make_package } = await import('./chunks/index6.js');
-
 		try {
+			const config = await load_config();
+
+			const { make_package } = await import('./chunks/index7.js');
+
 			await make_package(config);
 		} catch (error) {
 			handle_error(error);
@@ -957,16 +1117,16 @@ async function check_port(port) {
 	if (await check(port)) {
 		return;
 	}
-	console.log($.bold().red(`Port ${port} is occupied`));
+	console.error($.bold().red(`Port ${port} is occupied`));
 	const n = await blame(port);
 	if (n) {
 		// prettier-ignore
-		console.log(
+		console.error(
 			`Terminate process ${$.bold(n)} or specify a different port with ${$.bold('--port')}\n`
 		);
 	} else {
 		// prettier-ignore
-		console.log(
+		console.error(
 			`Terminate the process occupying the port or specify a different port with ${$.bold('--port')}\n`
 		);
 	}
@@ -987,7 +1147,7 @@ async function check_port(port) {
 function welcome({ port, host, https, open, loose, allow, cwd }) {
 	if (open) launch(port, https);
 
-	console.log($.bold().cyan(`\n  SvelteKit v${'1.0.0-next.203'}\n`));
+	console.log($.bold().cyan(`\n  SvelteKit v${'1.0.0-next.251'}\n`));
 
 	const protocol = https ? 'https:' : 'http:';
 	const exposed = typeof host !== 'undefined' && host !== 'localhost' && host !== '127.0.0.1';
@@ -1024,4 +1184,4 @@ function welcome({ port, host, https, open, loose, allow, cwd }) {
 	console.log('\n');
 }
 
-export { $, resolve_entry as a, posixify as b, copy_assets as c, copy as d, logger as l, mkdirp as m, print_config_conflicts as p, rimraf as r, walk as w };
+export { $, SVELTE_KIT_ASSETS as S, SVELTE_KIT as a, runtime as b, coalesce_to_error as c, copy_assets as d, get_aliases as e, posixify as f, get_mime_lookup as g, rimraf as h, copy as i, logger as j, load_template as l, mkdirp as m, print_config_conflicts as p, resolve_entry as r, walk as w };

@@ -1,6 +1,7 @@
 import fs__default from 'fs';
 import path__default from 'path';
-import { m as mkdirp, b as posixify } from '../cli.js';
+import { s } from './misc.js';
+import { m as mkdirp, b as runtime, f as posixify } from '../cli.js';
 
 /**
  * Takes zero or more objects and returns a new object that has all the values
@@ -99,8 +100,6 @@ function write_if_changed(file, code) {
 	}
 }
 
-const s = JSON.stringify;
-
 /** @typedef {import('types/internal').ManifestData} ManifestData */
 
 /**
@@ -111,11 +110,10 @@ const s = JSON.stringify;
  * }} options
  */
 function create_app({ manifest_data, output, cwd = process.cwd() }) {
-	const dir = `${output}/generated`;
-	const base = path__default.relative(cwd, dir);
+	const base = path__default.relative(cwd, output);
 
-	write_if_changed(`${dir}/manifest.js`, generate_client_manifest(manifest_data, base));
-	write_if_changed(`${dir}/root.svelte`, generate_app(manifest_data));
+	write_if_changed(`${output}/manifest.js`, generate_client_manifest(manifest_data, base));
+	write_if_changed(`${output}/root.svelte`, generate_app(manifest_data));
 }
 
 /**
@@ -172,6 +170,7 @@ function generate_client_manifest(manifest_data, base) {
 					return `// ${route.a[route.a.length - 1]}\n\t\t[${tuple.join(', ')}]`;
 				}
 			})
+			.filter(Boolean)
 			.join(',\n\n\t\t')}
 	]`.replace(/^\t/gm, '');
 
@@ -212,11 +211,13 @@ function generate_app(manifest_data) {
 
 	while (l--) {
 		pyramid = `
-			<svelte:component this={components[${l}]} {...(props_${l} || {})}>
-				{#if components[${l + 1}]}
+			{#if components[${l + 1}]}
+				<svelte:component this={components[${l}]} {...(props_${l} || {})}>
 					${pyramid.replace(/\n/g, '\n\t\t\t\t\t')}
-				{/if}
-			</svelte:component>
+				</svelte:component>
+			{:else}
+				<svelte:component this={components[${l}]} {...(props_${l} || {})} />
+			{/if}
 		`
 			.replace(/^\t\t\t/gm, '')
 			.trim();
@@ -259,26 +260,12 @@ function generate_app(manifest_data) {
 		${pyramid.replace(/\n/g, '\n\t\t')}
 
 		{#if mounted}
-			<div id="svelte-announcer" aria-live="assertive" aria-atomic="true">
+			<div id="svelte-announcer" aria-live="assertive" aria-atomic="true" style="position: absolute; left: 0; top: 0; clip: rect(0 0 0 0); clip-path: inset(50%); overflow: hidden; white-space: nowrap; width: 1px; height: 1px">
 				{#if navigated}
 					{title}
 				{/if}
 			</div>
 		{/if}
-
-		<style>
-			#svelte-announcer {
-				position: absolute;
-				left: 0;
-				top: 0;
-				clip: rect(0 0 0 0);
-				clip-path: inset(50%);
-				overflow: hidden;
-				white-space: nowrap;
-				width: 1px;
-				height: 1px;
-			}
-		</style>
 	`);
 }
 
@@ -391,7 +378,7 @@ var mime = new Mime(standard, other);
  * @typedef {{
  *   content: string;
  *   dynamic: boolean;
- *   spread: boolean;
+ *   rest: boolean;
  * }} Part
  * @typedef {{
  *   basename: string;
@@ -410,12 +397,16 @@ const specials = new Set(['__layout', '__layout.reset', '__error']);
 /**
  * @param {{
  *   config: import('types/config').ValidatedConfig;
- *   output: string;
+ *   fallback?: string;
  *   cwd?: string;
  * }} opts
  * @returns {import('types/internal').ManifestData}
  */
-function create_manifest_data({ config, output, cwd = process.cwd() }) {
+function create_manifest_data({
+	config,
+	fallback = `${runtime}/components`,
+	cwd = process.cwd()
+}) {
 	/**
 	 * @param {string} file_name
 	 * @param {string} dir
@@ -431,8 +422,8 @@ function create_manifest_data({ config, output, cwd = process.cwd() }) {
 	/** @type {import('types/internal').RouteData[]} */
 	const routes = [];
 
-	const default_layout = posixify(path__default.relative(cwd, `${output}/components/layout.svelte`));
-	const default_error = posixify(path__default.relative(cwd, `${output}/components/error.svelte`));
+	const default_layout = posixify(path__default.relative(cwd, `${fallback}/layout.svelte`));
+	const default_error = posixify(path__default.relative(cwd, `${fallback}/error.svelte`));
 
 	/**
 	 * @param {string} dir
@@ -464,16 +455,15 @@ function create_manifest_data({ config, output, cwd = process.cwd() }) {
 				}
 			});
 
-			if (name[0] === '_') {
-				if (name[1] === '_' && !specials.has(name)) {
-					throw new Error(`Files and directories prefixed with __ are reserved (saw ${file})`);
-				}
-
-				return;
+			if (basename.startsWith('__') && !specials.has(name)) {
+				throw new Error(`Files and directories prefixed with __ are reserved (saw ${file})`);
 			}
 
-			if (basename[0] === '.' && basename !== '.well-known') return null;
 			if (!is_dir && !/^(\.[a-z0-9]+)+$/i.test(ext)) return null; // filter out tmp files etc
+
+			if (!config.kit.routes(file)) {
+				return;
+			}
 
 			const segment = is_dir ? basename : name;
 
@@ -483,10 +473,6 @@ function create_manifest_data({ config, output, cwd = process.cwd() }) {
 
 			if (count_occurrences('[', segment) !== count_occurrences(']', segment)) {
 				throw new Error(`Invalid route ${file} — brackets are unbalanced`);
-			}
-
-			if (/.+\[\.\.\.[^\]]+\]/.test(segment) || /\[\.\.\.[^\]]+\].+/.test(segment)) {
-				throw new Error(`Invalid route ${file} — rest parameter must be a standalone segment`);
 			}
 
 			const parts = get_parts(segment, file);
@@ -519,13 +505,13 @@ function create_manifest_data({ config, output, cwd = process.cwd() }) {
 						if (last_part.dynamic) {
 							last_segment.push({
 								dynamic: false,
-								spread: false,
+								rest: false,
 								content: item.route_suffix
 							});
 						} else {
 							last_segment[last_segment.length - 1] = {
 								dynamic: false,
-								spread: false,
+								rest: false,
 								content: `${last_part.content}${item.route_suffix}`
 							};
 						}
@@ -541,6 +527,18 @@ function create_manifest_data({ config, output, cwd = process.cwd() }) {
 
 			const params = parent_params.slice();
 			params.push(...item.parts.filter((p) => p.dynamic).map((p) => p.content));
+
+			// TODO seems slightly backwards to derive the simple segment representation
+			// from the more complex form, rather than vice versa — maybe swap it round
+			const simple_segments = segments.map((segment) => {
+				return {
+					dynamic: segment.some((part) => part.dynamic),
+					rest: segment.some((part) => part.rest),
+					content: segment
+						.map((part) => (part.dynamic ? `[${part.content}]` : part.content))
+						.join('')
+				};
+			});
 
 			if (item.is_dir) {
 				const layout_reset = find_layout('__layout.reset', item.file);
@@ -591,6 +589,7 @@ function create_manifest_data({ config, output, cwd = process.cwd() }) {
 
 				routes.push({
 					type: 'page',
+					segments: simple_segments,
 					pattern,
 					params,
 					path,
@@ -602,6 +601,7 @@ function create_manifest_data({ config, output, cwd = process.cwd() }) {
 
 				routes.push({
 					type: 'endpoint',
+					segments: simple_segments,
 					pattern,
 					file: item.file,
 					params
@@ -670,14 +670,16 @@ function comparator(a, b) {
 		if (!a_sub_part) return 1; // b is more specific, so goes first
 		if (!b_sub_part) return -1;
 
-		// if spread, order later
-		if (a_sub_part.spread && b_sub_part.spread) {
+		if (a_sub_part.rest && b_sub_part.rest) {
+			if (a.is_page !== b.is_page) {
+				return a.is_page ? 1 : -1;
+			}
 			// sort alphabetically
 			return a_sub_part.content < b_sub_part.content ? -1 : 1;
 		}
 
-		// If one is ...spread order it later
-		if (a_sub_part.spread !== b_sub_part.spread) return a_sub_part.spread ? 1 : -1;
+		// If one is ...rest order it later
+		if (a_sub_part.rest !== b_sub_part.rest) return a_sub_part.rest ? 1 : -1;
 
 		if (a_sub_part.dynamic !== b_sub_part.dynamic) {
 			return a_sub_part.dynamic ? 1 : -1;
@@ -719,7 +721,7 @@ function get_parts(part, file) {
 		result.push({
 			content,
 			dynamic,
-			spread: dynamic && /^\.{3}.+$/.test(content)
+			rest: dynamic && /^\.{3}.+$/.test(content)
 		});
 	});
 
@@ -733,31 +735,37 @@ function get_parts(part, file) {
 function get_pattern(segments, add_trailing_slash) {
 	const path = segments
 		.map((segment) => {
-			return segment[0].spread
-				? '(?:\\/(.*))?'
-				: '\\/' +
-						segment
-							.map((part) => {
-								return part.dynamic
-									? '([^/]+?)'
-									: // allow users to specify characters on the file system in an encoded manner
-									  part.content
-											.normalize()
-											// We use [ and ] to denote parameters, so users must encode these on the file
-											// system to match against them. We don't decode all characters since others
-											// can already be epressed and so that '%' can be easily used directly in filenames
-											.replace(/%5[Bb]/g, '[')
-											.replace(/%5[Dd]/g, ']')
-											// '#', '/', and '?' can only appear in URL path segments in an encoded manner.
-											// They will not be touched by decodeURI so need to be encoded here, so
-											// that we can match against them.
-											// We skip '/' since you can't create a file with it on any OS
-											.replace(/#/g, '%23')
-											.replace(/\?/g, '%3F')
-											// escape characters that have special meaning in regex
-											.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-							})
-							.join('');
+			if (segment.length === 1 && segment[0].rest) {
+				// special case — `src/routes/foo/[...bar]/baz` matches `/foo/baz`
+				// so we need to make the leading slash optional
+				return '(?:\\/(.*))?';
+			}
+
+			const parts = segment.map((part) => {
+				if (part.rest) return '(.*?)';
+				if (part.dynamic) return '([^/]+?)';
+
+				return (
+					part.content
+						// allow users to specify characters on the file system in an encoded manner
+						.normalize()
+						// We use [ and ] to denote parameters, so users must encode these on the file
+						// system to match against them. We don't decode all characters since others
+						// can already be epressed and so that '%' can be easily used directly in filenames
+						.replace(/%5[Bb]/g, '[')
+						.replace(/%5[Dd]/g, ']')
+						// '#', '/', and '?' can only appear in URL path segments in an encoded manner.
+						// They will not be touched by decodeURI so need to be encoded here, so
+						// that we can match against them.
+						// We skip '/' since you can't create a file with it on any OS
+						.replace(/#/g, '%23')
+						.replace(/\?/g, '%3F')
+						// escape characters that have special meaning in regex
+						.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+				);
+			});
+
+			return '\\/' + parts.join('');
 		})
 		.join('');
 

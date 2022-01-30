@@ -33,7 +33,6 @@ const config = {
     kit: {
         target: '#err',
         adapter: adapter(),
-        ssr: true,
         vite: {
             define: {
                 'process.env': process.env,

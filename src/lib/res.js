@@ -11,7 +11,8 @@ export const resFlag = {
 }
 
 async function getRes(ctx, name) {
-    const {page, fetch, session: sess, context} = ctx;
+    const {url: u, params, queryData, fetch, session: sess, context} = ctx;
+    const info = 'queryData' in ctx ? queryData : {url: u, params};
     const cfg = apis[name];
     if (!cfg) return {
         status: 404
@@ -26,9 +27,9 @@ async function getRes(ctx, name) {
         data,
         done,
         method = 'GET'
-    } = typeof cfg === 'function' ? cfg(page, sess, context) : cfg;
-    const p = typeof path === 'function' ? path(page, sess, context) : path;
-    let d = typeof data === 'function' ? data(page, sess, context) : data;
+    } = typeof cfg === 'function' ? cfg(info, sess, context) : cfg;
+    const p = typeof path === 'function' ? path(info, sess, context) : path;
+    let d = typeof data === 'function' ? data(info, sess, context) : data;
     let url = `${host}/${p}`;
     let err;
     const cf = {
@@ -38,7 +39,7 @@ async function getRes(ctx, name) {
 
     let s = null;
     if (before) {
-        const a = before(d, sess, page, a => s = a)
+        const a = before(d, sess, info, a => s = a)
         if (a !== undefined) d = a;
     }
     if (s) return s;
@@ -91,7 +92,7 @@ async function getRes(ctx, name) {
         }
         if (cache) {
             if (done) {
-                done(cache, page, sess, context)
+                done(cache, info, sess, context)
             }
             return {
                 status: 200,
@@ -127,12 +128,12 @@ async function getRes(ctx, name) {
         } catch (e) {
         }
         if (after) {
-            const a = after(r, o, page, sess)
+            const a = after(r, o, info, sess)
             if (a !== undefined) r = a;
         }
         if (o.status === 200) {
             if (done) {
-                done(r, page, sess, context)
+                done(r, info, sess, context)
             }
             o.props = {
                 d: r
@@ -167,7 +168,7 @@ async function getRes(ctx, name) {
 
 
 export const query = async (name, d, s) => {
-    const ctx = {fetch, page: d, session: s}
+    const ctx = {fetch, queryData: d, session: s}
     const res = await getRes(ctx, name);
     if (res.status === 200) {
         return res.props.d

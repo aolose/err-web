@@ -235,10 +235,10 @@ export function randNm(){
     return localStorage.nm = rndAr(b)+rndAr(c)
 }
 
-export  function redirectPage1({page:{path}}){
+export  function redirectPage1({url: pathname}){
     return {
         status:302,
-        redirect:path+"/1"
+        redirect: pathname+"/1"
     }
 }
 
