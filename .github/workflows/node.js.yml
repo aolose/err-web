@@ -1,15 +1,13 @@
 name: Node.js CI
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [ 16.x ]
+        node-version: [16.x]
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
@@ -17,11 +15,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+
       - run: npm install
-      - run: |
-          npm run build
+      - run: npm run build
+
       - name: Depoly
-      - uses: mdallasanta/ssh-scp-deploy@master
+        uses: mdallasanta/ssh-scp-deploy@master
         with:
           host: ${{ secrets.VPS_ADDR }}
           key: ${{ secrets.VPS_KEY }}
