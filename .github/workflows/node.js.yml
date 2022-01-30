@@ -31,6 +31,6 @@ jobs:
           before_script: |
             rm -rf /home/aolose/errWeb/build/*
           after_script: |
-            echo `{"name": "err-web","type": "module"}` >package.json
+            echo `{"type": "module"}` >package.json
             echo -e "${{ secrets.VPS_PWD }}\n" | sudo -S service err-web restart
 
