@@ -1,8 +1,10 @@
+<script context="module">
+    import SparkMD5 from 'spark-md5';
+</script>
 <script>
     import {jump} from '$lib/transition'
     import LD from '$lib/loading.svelte'
     import {fade} from 'svelte/transition'
-    import SparkMD5 from 'spark-md5';
     import {isLogin, msg, tok} from "$lib/store";
     import Tm from "$lib/typeMsg.svelte";
     import {onDestroy} from "svelte";

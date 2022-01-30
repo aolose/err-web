@@ -1430,6 +1430,13 @@ async function load_node({
 
 				opts.headers = new Headers(opts.headers);
 
+				// merge headers from request
+				for (const [key, value] of event.request.headers.entries()) {
+					if (!opts.headers.has(key)) {
+						opts.headers.append(key, value);
+					}
+				}
+
 				const resolved = resolve(event.url.pathname, requested.split('?')[0]);
 
 				/** @type {Response} */
@@ -1545,10 +1552,10 @@ async function load_node({
 							if (!opts.body || typeof opts.body === 'string') {
 								// prettier-ignore
 								fetched.push({
-										url: requested,
-										body: /** @type {string} */ (opts.body),
-										json: `{"status":${response.status},"statusText":${s(response.statusText)},"headers":${s(headers)},"body":"${escape_json_string_in_html(body)}"}`
-									});
+									url: requested,
+									body: /** @type {string} */ (opts.body),
+									json: `{"status":${response.status},"statusText":${s(response.statusText)},"headers":${s(headers)},"body":"${escape_json_string_in_html(body)}"}`
+								});
 							}
 
 							if (dependency) {

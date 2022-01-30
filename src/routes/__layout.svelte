@@ -2,7 +2,7 @@
     import Nav from '$lib/nav.svelte'
     import {bg} from "$lib/store";
     import {onDestroy} from "svelte";
-    import {host, resFlag} from "$lib/res";
+    import { resFlag} from "$lib/res";
     let b = ''
     onDestroy(bg.subscribe(g => {
         // b = g ? `background-image:url(${host}/r/${g})` : ''
