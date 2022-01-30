@@ -23,14 +23,15 @@ jobs:
         uses: kostya-ten/ssh-server-deploy@v4
         with:
           host: ${{ secrets.VPS_ADDR }}
-          private_key: ${{ secrets.VPS_KEY }}
-          username: ${{ secrets.VPS_USR }}
           port: ${{ secrets.VPS_PORT }}
+          username: ${{ secrets.VPS_USR }}
+          private_key: ${{ secrets.VPS_KEY }}
           scp_source: "build"
           scp_target: "~/errWeb/"
-          before_script: rm -rf ~/errWeb/*
+          before_script: |
+            ls -l
+            rm -rf ~/errWeb/*
           after_script: |
-            sudo -S service err-web restart<< EOF
-            ${{ secrets.VPS_PWD }}
-            EOF
+            ls -l 
+            echo ${{ secrets.VPS_PWD }} | sudo -S service err-web restart
 
