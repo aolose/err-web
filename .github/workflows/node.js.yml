@@ -26,12 +26,12 @@ jobs:
           port: ${{ secrets.VPS_PORT }}
           username: ${{ secrets.VPS_USR }}
           private_key: ${{ secrets.VPS_KEY }}
-          scp_source: "build"
-          scp_target: "~/errWeb/"
+          scp_source: "build/*"
+          scp_target: "/home/aolose/errWeb/build/"
           before_script: |
-            ls -l
-            rm -rf ~/errWeb/*
+            ls /home/aolose/errWeb/build -l
+            rm -rf /home/aolose/errWeb/build/*
           after_script: |
-            ls -l 
+            ls /home/aolose/errWeb/build -l 
             echo -e "${{ secrets.VPS_PWD }}\n" | sudo -S service err-web restart
 
