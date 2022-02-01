@@ -29,7 +29,7 @@ jobs:
           scp_source: "build/*"
           scp_target: "/home/aolose/errWeb/build/"
           before_script: |
-            rm -rf /home/aolose/errWeb/build/*
+            cd /home/aolose/errWeb/build/&&rm -rf client/* server/*  *.js  prerendered/*
           after_script: |
             echo '{"type":"module","dependencies": {"browser-image-compression": "1.0.17","cookie": "^0.4.1","highlight.js": "^11.4.0","marked": ">=4.0.12","spark-md5": "^3.0.2","viewerjs": "^1.10.2"}}' >/home/aolose/errWeb/build/package.json
             cd "/home/aolose/errWeb/build/"  && npm install && echo -e "${{ secrets.VPS_PWD }}\n" | sudo -S service err-web restart
