@@ -25,8 +25,8 @@ export async function externalFetch({url,headers,rawBody,method}) {
 
 
 /** @type {import('@sveltejs/kit').GetSession} */
-export async function getSession({request:{headers}}) {
-    const cks = cookie.parse(headers.cookie || '')
+export async function getSession( {request:{headers}}) {
+    const cks = cookie.parse(headers.get("cookie") || '')
     const tk = cks['session_id']
     return {
         token: tk

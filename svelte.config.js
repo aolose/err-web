@@ -1,4 +1,3 @@
-/** @type {import('@sveltejs/kit').Config} */
 import preprocess from 'svelte-preprocess';
 import adapter from '@sveltejs/adapter-node';
 
@@ -32,12 +31,7 @@ const config = {
     preprocess: preprocess(),
     kit: {
         target: '#err',
-        adapter: adapter(),
-        vite: {
-            define: {
-                'process.env': process.env,
-            },
-        },
+        adapter: adapter()
     }
 };
 
