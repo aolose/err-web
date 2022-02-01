@@ -23,14 +23,14 @@
         const o = {...baseItem}
         listStore.set([o, ...$listStore])
         curStore.set({...o});
-        if(onAdd)onAdd()
+        if (onAdd) onAdd()
         await tick()
         initEdit.set(1)
     }
 
     async function search() {
         ld = 1
-        res = await query(api, 1, sc) || []
+        res = await query(api, [1, sc]) || []
         sc1 = sc
         ld = 0
     }
@@ -38,10 +38,10 @@
     async function go(x) {
         ld = 1
         page = x
-        res = await query(api, x, sc1)
+        res = await query(api, [x, sc1])||[]
         ld = 0
         await tick()
-        if(sct)sct.scrollTop=0
+        if (sct) sct.scrollTop = 0
     }
 
     $:{
@@ -57,7 +57,7 @@
         //     const m = ($listStore || []).find(a => a.id === $curStore.id)
         //     if (!m) mix = [$curStore].concat($listStore)
         // }
-        mix=mix.filter(a=>a&&'id' in a)
+        mix = mix.filter(a => a && 'id' in a)
     }
     go(1)
     let sct;

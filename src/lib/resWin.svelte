@@ -56,14 +56,14 @@
     }))
 
     async function search() {
-        loadList(await query('lsRes', 1, sc))
+        loadList(await query('lsRes', [1, sc]))
         sc1 = sc
     }
 
     async function go(x) {
         delLd = 0
         cur = x
-        loadList(await query('lsRes', x, sc1))
+        loadList(await query('lsRes', [x, sc1]))
     }
 
     function loadList(res) {

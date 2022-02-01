@@ -35,27 +35,28 @@
     }
 
     async function search() {
-        loadList(await query('lsMg', 1, {
-            id: on ? $post.id : undefined,
-            text: sc
-        }))
+        loadList(await query('lsMg', [1, {
+                id: on ? $post.id : undefined,
+                text: sc
+            }]
+        ))
         sc1 = sc
     }
 
     async function go(x) {
         ld = 0
         cur = x
-        loadList(await query('lsMg', x, {
+        loadList(await query('lsMg', [x, {
             id: on ? $post.id : undefined,
             text: sc1
-        }))
+        }]))
     }
 
     async function ch() {
-        loadList(await query('lsMg', 1, {
+        loadList(await query('lsMg', [1, {
             id: on ? $post.id : undefined,
             text: sc
-        }))
+        }]))
     }
 
     function del() {

@@ -5,7 +5,7 @@ import {tip} from "$lib/popMsg.svelte";
 
 export const apis = {
     logs: {
-        path: a => `log/${a}`,
+        path: ([a]) => `log/${a}`,
         before() {
             return {c: 10}
         },
@@ -16,13 +16,13 @@ export const apis = {
         cacheTime: 3
     },
     delCm: {
-        path: (id) => `c/${id}`,
+        path: id => `c/${id}`,
         method: 'DELETE',
     },
     cmDel: {
         path: 'c',
         method: 'DELETE',
-        before(a, id) {
+        before(id) {
             return {id: id.filter(a => a).join()}
         },
         done(a, id) {
@@ -33,14 +33,14 @@ export const apis = {
     cm: {
         path: 'c',
         method: 'POST',
-        before(a, c) {
+        before(c) {
             return c
         }
     },
     pwd: {
         path: 'sys/acc',
         method: 'POST',
-        before(a, c) {
+        before(c) {
             return enc(...c)
         },
         done() {
@@ -53,7 +53,7 @@ export const apis = {
     login: {
         path: 'auth',
         method: 'POST',
-        before(a, c) {
+        before(c) {
             return c
         }
     },
@@ -72,7 +72,7 @@ export const apis = {
     delRes: {
         path: 'res',
         method: 'DELETE',
-        before(a, id) {
+        before(id) {
             return {id: id.filter(a => a).join()}
         },
         done(a, id) {
@@ -91,8 +91,8 @@ export const apis = {
         path: ({id, name}) => `res/${id}/${name}`,
     },
     lsRes: {
-        path: a => `res/${a}`,
-        before(_, s) {
+        path: ([a]) => `res/${a}`,
+        before([_, s]) {
             const o = {k: s, c: 15}
             if (get(bannerMod)) o.img = 1
             return o
@@ -100,9 +100,9 @@ export const apis = {
         cacheTime: 3
     },
     lsMg: {
-        path: a => `c/${a}`,
+        path: ([a]) => `c/${a}`,
         cacheTime: 10,
-        before(_, s) {
+        before([_, s]) {
             const o = {}
             if (s) {
                 const {id, text} = s;
@@ -113,7 +113,7 @@ export const apis = {
         }
     },
     lsBk: {
-        path: a => `ft`,
+        path: () => `ft`,
         after(a, {status} = {}) {
             if (status === 200) {
                 a.forEach(o => o.st = ('0000' + (+o.st).toString(2))
@@ -127,9 +127,9 @@ export const apis = {
         cacheTime: 3
     },
     addBk: {
-        path: a => `ft`,
+        path: () => `ft`,
         method: 'POST',
-        before(a,  c = {}) {
+        before(c = {}) {
             return {
                 ...c,
                 at: !!c.at,
@@ -139,9 +139,9 @@ export const apis = {
         },
     },
     ediBk: {
-        path: a => `ft`,
+        path: () => `ft`,
         method: 'PATCH',
-        before(a,  c = {}) {
+        before(c = {}) {
             return {
                 ...c,
                 at: !!c.at,
@@ -165,20 +165,20 @@ export const apis = {
         }
     },
     edit: {
-        before(_, s) {
+        before([_, s]) {
             return {k: s, count: 8}
         },
-        path: (a) => `edit/${a}`,
+        path: ([a]) => `edit/${a}`,
         cacheTime: 3
     },
     post: {
-        path: ({params: {slug}}) => `post/${slug}`,
+        path: (_, {params: {slug}}) => `post/${slug}`,
         cacheTime: 3600 * 24
     },
     savePost: {
         path: 'edit',
         method: 'PUT',
-        data: a => {
+        before: a => {
             return {
                 id: a.id,
                 title: a.title,
@@ -193,7 +193,6 @@ export const apis = {
     pubPost: {
         path: 'edit',
         method: 'POST',
-        data: a => a,
     },
     unPub: {
         path: id => `edit/${id}`,
@@ -204,7 +203,7 @@ export const apis = {
         cacheTime: 60,
     },
     tagPosts: {
-        path: ({params: {page, name} = {}}) => {
+        path: (_, {params: {page, name} = {}}) => {
             if (!page) page = 1;
             return `tag/${name}/${page}`
         },
@@ -250,7 +249,7 @@ export const apis = {
             }
         },
         cacheTime: 60 * 10,
-        path: ({params: {page} = {}}) => {
+        path: (_, {params: {page} = {}}) => {
             if (!page) page = 1;
             return `posts/${page}`
         },

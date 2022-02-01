@@ -42,7 +42,7 @@
 
     async function search() {
         ld = 1
-        loadList(await query(api, 1, sc))
+        loadList(await query(api, [1, sc]))
         sc1 = sc
     }
 
@@ -50,7 +50,7 @@
         act=0
         ld = 1
         cur = x
-        loadList(await query(api, x, sc1))
+        loadList(await query(api, [x, sc1]))
     }
 
     let act=0;

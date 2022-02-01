@@ -10,9 +10,9 @@ export const resFlag = {
     useCache: 0
 }
 
-async function getRes(ctx, name) {
-    const {url: u, params, queryData, fetch, context} = ctx;
-    const info = 'queryData' in ctx ? queryData : {url: u, params};
+async function getRes(ctx={}, name) {
+    const {url: u, params, data, fetch} = ctx;
+    const info = {url: u, params};
     const cfg = apis[name];
     if (!cfg) return {
         status: 404
@@ -24,12 +24,10 @@ async function getRes(ctx, name) {
         storage: sto = 0,
         after,
         cacheTime,
-        data,
         done,
         method = 'GET'
-    } = typeof cfg === 'function' ? cfg(info, context) : cfg;
-    const p = typeof path === 'function' ? path(info, context) : path;
-    let d = typeof data === 'function' ? data(info, context) : data;
+    } = cfg;
+    const p = typeof path === 'function' ? path(data, info) : path;
     let url = `${host}/${p}`;
     let err;
     const cf = {
@@ -38,6 +36,7 @@ async function getRes(ctx, name) {
     }
 
     let s = null;
+    let d = data
     if (before) {
         const a = before(d, info, a => s = a)
         if (a !== undefined) d = a;
@@ -92,7 +91,7 @@ async function getRes(ctx, name) {
         }
         if (cache) {
             if (done) {
-                done(cache, info, context)
+                done(cache, data)
             }
             return {
                 status: 200,
@@ -133,7 +132,7 @@ async function getRes(ctx, name) {
         }
         if (o.status === 200) {
             if (done) {
-                done(r, info, context)
+                done(r, data)
             }
             o.props = {
                 d: r
@@ -167,8 +166,8 @@ async function getRes(ctx, name) {
 }
 
 
-export const query = async (name, d, s) => {
-    const ctx = {fetch, queryData: d}
+export const query = async (name, data) => {
+    const ctx = {fetch, data}
     const res = await getRes(ctx, name);
     if (res.status === 200) {
         return res.props.d

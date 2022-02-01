@@ -15,7 +15,7 @@
             });
             if (taskUpdater) {
                 taskUpdater.onerror = e => {
-                    console.log("msg connect err:", e)
+                    // console.log("msg connect err:", e)
                 }
                 taskUpdater.onmessage = ({data}) => {
                     const [key, p, t, e, s] = data.split(",")

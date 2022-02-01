@@ -86,7 +86,6 @@
             errorCatch(r.error)
         } else {
             po = 'successfully deleted!'
-            debugger
             if ('function' === typeof change) change()
         }
     }
