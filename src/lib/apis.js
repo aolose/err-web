@@ -6,7 +6,7 @@ import {tip} from "$lib/popMsg.svelte";
 export const apis = {
     logs: {
         path: a => `log/${a}`,
-        before(_, s) {
+        before() {
             return {c: 10}
         },
         cacheTime: 2
@@ -22,7 +22,7 @@ export const apis = {
     cmDel: {
         path: 'c',
         method: 'DELETE',
-        before(a, b, id) {
+        before(a, id) {
             return {id: id.filter(a => a).join()}
         },
         done(a, id) {
@@ -33,14 +33,14 @@ export const apis = {
     cm: {
         path: 'c',
         method: 'POST',
-        before(a, b, c) {
+        before(a, c) {
             return c
         }
     },
     pwd: {
         path: 'sys/acc',
         method: 'POST',
-        before(a, b, c) {
+        before(a, c) {
             return enc(...c)
         },
         done() {
@@ -53,20 +53,13 @@ export const apis = {
     login: {
         path: 'auth',
         method: 'POST',
-        before(a, b, c) {
+        before(a, c) {
             return c
         }
     },
     auth: {
         method: 'POST',
         path: 'auth',
-        before(_, s, a, st) {
-            if (s.token) {
-                return s.token
-            } else st({
-                status: 200
-            })
-        },
         after(r, o) {
             if (o.status === 200) {
                 isLogin.set(1)
@@ -79,7 +72,7 @@ export const apis = {
     delRes: {
         path: 'res',
         method: 'DELETE',
-        before(a, b, id) {
+        before(a, id) {
             return {id: id.filter(a => a).join()}
         },
         done(a, id) {
@@ -121,9 +114,6 @@ export const apis = {
     },
     lsBk: {
         path: a => `ft`,
-        before(_, s) {
-
-        },
         after(a, {status} = {}) {
             if (status === 200) {
                 a.forEach(o => o.st = ('0000' + (+o.st).toString(2))
@@ -139,7 +129,7 @@ export const apis = {
     addBk: {
         path: a => `ft`,
         method: 'POST',
-        before(a, b, c = {}) {
+        before(a,  c = {}) {
             return {
                 ...c,
                 at: !!c.at,
@@ -151,7 +141,7 @@ export const apis = {
     ediBk: {
         path: a => `ft`,
         method: 'PATCH',
-        before(a, b, c = {}) {
+        before(a,  c = {}) {
             return {
                 ...c,
                 at: !!c.at,

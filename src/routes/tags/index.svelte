@@ -17,17 +17,17 @@
 <div class="o">
     <Ph>Tags</Ph>
     <div class="v">
-        <div class="ls">
-            {#each d as tag,i}
-                <a
-                        on:mouseenter={e=>bubbles(e.target)}
-                        href={`/tag/${tag.name}/1`}
-                        style={`background:${getColor(i)}`}
-                >
+    <div class="ls">
+        {#each d as tag,i}
+            <a
+                    on:mouseenter={e=>bubbles(e.target)}
+                    href={`/tag/${tag.name}/1`}
+                    style={`background:${getColor(i)}`}
+            >
                     <span>{tag.name}
                     </span></a>
-            {/each}
-        </div>
+        {/each}
+    </div>
     </div>
 
 </div>
@@ -37,6 +37,7 @@
     flex-direction: column;
     height: 100%;
   }
+
   .cc {
     padding: 60px 0 20px;
     position: relative;
@@ -62,6 +63,7 @@
   }
 
   a {
+    display: block;
     min-width: 100px;
     text-align: center;
     font-size: 14px;
@@ -85,14 +87,19 @@
   }
 
   .v {
-    width: 90%;
-    margin: 0 auto;
+    width: 100%;
+    padding: 0 5% ;
+    margin: 0 auto 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: inherit;
+    overflow: auto;
   }
 
   .ls {
     flex: 1;
     max-width: 800px;
-    overflow: hidden;
+    align-content: flex-start;
     display: flex;
     flex-wrap: wrap;
   }

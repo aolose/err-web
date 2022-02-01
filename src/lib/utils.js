@@ -356,3 +356,30 @@ export function bubbles(btn, click) {
         bs.forEach(next);
     });
 }
+
+
+export const upDownScroller =(fn)=>{
+    let e = 0, t;
+    let stop = 0;
+    let a =0
+    let tm
+    return function (x) {
+        const tr = x.target;
+        if (tr === t) {
+            const v = t.scrollTop - e
+            if (Math.abs(v) > 10) {
+                const z = v > 0 ? 1 : 0
+                if (z !== a && !stop) {
+                    a = z
+                    fn(z)
+                    stop = 1
+                    tm = setTimeout(() => stop = 0, 300)
+                }
+                e = t.scrollTop;
+            }
+        } else {
+            t = tr
+            e = t.scrollTop
+        }
+    }
+}

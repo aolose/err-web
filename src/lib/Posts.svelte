@@ -5,7 +5,11 @@
     import {tick} from "svelte";
     import Nav from "./pag.svelte"
     import {browser} from "$app/env";
-   import Ph from './hd.svelte'
+    import Ph from './hd.svelte'
+    import UpDownScroll from "$lib/UpDownScroll.svelte";
+
+    let a = 0
+
     async function scTop() {
         await tick()
         if (sc) {
@@ -28,11 +32,14 @@
     let ls = []
     $:ls = d.ls || []
 </script>
+<UpDownScroll bind:down={a}/>
 <svelte:window on:sveltekit:navigation-end={scTop}/>
 <Canvas type={1}/>
 <div class="o">
-    <Ph><slot></slot></Ph>
-    <div class="t" bind:this={sc}>
+    <Ph>
+        <slot></slot>
+    </Ph>
+    <div class="t" bind:this={sc} class:v={a}>
         <Ctx>
             <div class="c">
                 {#each ls as p,i (p.updated)}
@@ -41,15 +48,17 @@
             </div>
         </Ctx>
     </div>
-    <div class="n">
-       <div class="nn">
-           <Nav total={total} cur={cur} url={'/'+name} length="2" tm="1"/>
-       </div>
+    <div class="n" class:v={a}>
+        <div class="nn">
+            <Nav total={total} cur={cur} url={'/'+name} length="2" tm="1"/>
+        </div>
     </div>
 </div>
 <style lang="scss">
+  @import "./break";
+
   $w: 15px;
-  .nn{
+  .nn {
     width: 90%;
     margin: 0 auto;
     display: flex;
@@ -62,6 +71,7 @@
     overflow: auto;
     padding: 10px 0;
     margin-bottom: 60px;
+    transition: .3s ease-in-out;
   }
 
 
@@ -73,16 +83,17 @@
     bottom: 0;
     left: 0;
     right: 0;
-    overflow-y: auto;
   }
 
   .n {
+    transition: .3s ease-in-out;
     height: 60px;
     position: absolute;
     z-index: 10;
     bottom: 0;
     left: 0;
     right: 0;
+    transform: translate3d(0,0,0);
   }
 
   .c {
@@ -91,5 +102,16 @@
     display: flex;
     flex-wrap: wrap;
     align-content: baseline;
+  }
+
+  .v {
+    @include s() {
+      &.t {
+        margin-bottom: 10px;
+      }
+      &.n {
+        transform: translate3d(0,50px,0);
+      }
+    }
   }
 </style>
