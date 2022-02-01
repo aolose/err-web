@@ -2,8 +2,18 @@ import wrk from './up?url';
 import SparkMD5 from 'spark-md5'
 import {host} from './res'
 import imageCompression from 'browser-image-compression';
-import {isLogin, tok, upLoadInfo, upLoadSeq} from "$lib/store";
+import {isLogin, upLoadInfo, upLoadSeq} from "$lib/store";
 import {goto} from "$app/navigation";
+
+export const tok = {
+    v: '',
+    get() {
+        return this.v
+    },
+    set(a) {
+        this.v = a
+    }
+}
 
 export const logout = () => {
     fetch(host+'/ot', {
@@ -12,8 +22,8 @@ export const logout = () => {
         method: 'GET',
     }).then(res => {
         if (res.ok) {
-            isLogin.set(0)
             tok.set('')
+            isLogin.set(0)
         }
     }).catch(e => {
         console.error(e)

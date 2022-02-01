@@ -5,7 +5,7 @@
     import {jump} from '$lib/transition'
     import LD from '$lib/loading.svelte'
     import {fade} from 'svelte/transition'
-    import {isLogin, msg, tok} from "$lib/store";
+    import {isLogin, msg} from "$lib/store";
     import Tm from "$lib/typeMsg.svelte";
     import {onDestroy} from "svelte";
     import {enc} from "$lib/utils";

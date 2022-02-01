@@ -7,8 +7,9 @@
     import {upload} from './utils'
     import {onDestroy, tick} from "svelte";
     import {slide} from './transition'
-    import {bannerMod, extraHis, post, resList, tok, upLoadSeq, winAct} from "$lib/store";
+    import {bannerMod, extraHis, post, resList, upLoadSeq, winAct} from "$lib/store";
     import {query} from "$lib/res";
+    import {tok} from "$lib/utils.js";
 
     export let ipt
     let delLd = 0
@@ -122,7 +123,7 @@
             <input type="file"
                    accept={$bannerMod?"image/*": "*/*"}
                    on:change={function (){
-                upload.call(this,$tok)
+                upload.call(this,tok.get())
                 showTsk=1
             }} multiple/>
         </div>

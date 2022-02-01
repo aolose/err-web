@@ -8,7 +8,6 @@ export const qaList = writable([]);
 export const resList = writable([]);
 export const tips = writable([]);
 export const msg = writable("");
-export const tok = writable("");
 export const pubUrl = writable("");
 export const initEdit = writable(0);
 export const extraHis = writable([]);
@@ -17,17 +16,6 @@ export const qa = writable({})
 export const mk = writable({})
 export const qState = writable({})
 export const view = writable(0)
-qState.init = () => {
-    qState.update(() => {
-        return {
-            pending: 0,
-            a: "",
-            q: "question preview",
-            e: ""
-        }
-    })
-}
-qState.init()
 export const winAct = writable(0)
 export const bg = writable('')
 export const tags = writable([])

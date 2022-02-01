@@ -1,6 +1,7 @@
 import cookie from 'cookie';
 import {browser} from "$app/env";
-import {tok} from "$lib/store.js";
+import {tok} from "$lib/utils.js";
+
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
@@ -11,6 +12,10 @@ export async function handle({ event, resolve }) {
 
 /** @type {import('@sveltejs/kit').ExternalFetch} */
 export async function externalFetch({url,headers,rawBody,method}) {
+    const tk =tok.get();
+    if(!headers.has('cookie')&&tk){
+        headers.set('cookie','session_id='+tk)
+    }
     return await fetch(new Request(
         browser ? url :
             url.replace(

@@ -1,7 +1,5 @@
 import {apis} from "$lib/apis";
-import {logout} from './utils'
-import {get} from "svelte/store";
-import {tok} from "$lib/store";
+import {logout, tok} from './utils'
 import {browser} from "$app/env";
 
 export const host = import.meta.env.VITE_API_CLI;
@@ -101,7 +99,7 @@ async function getRes(ctx={}, name) {
     }
     let re
     await new Promise((resolve) => {
-        const t = get(tok)
+        const t = tok.get()
         if (t) {
             (cf.headers = (cf.headers || {})).token = t
         }
