@@ -39,8 +39,8 @@
   }
 
   .ph {
+    transform: translate3d(0,0,0);
     position: relative;
-
     &.s {
       @include s() {
         .cc {

@@ -72,6 +72,7 @@
     padding: 10px 0;
     margin-bottom: 60px;
     transition: .3s ease-in-out;
+    transform: translate3d(0,0,0);
   }
 
 

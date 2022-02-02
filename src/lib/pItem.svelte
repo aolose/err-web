@@ -103,9 +103,15 @@
 
       .f {
         opacity: .5;
+        @include s(){
+          opacity: 1;
+        }
       }
 
       .ms {
+        @include s(){
+          display: none;
+        }
         transform: translate3d(0, 0, 0);
       }
     }
