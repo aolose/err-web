@@ -1,4 +1,4 @@
-import {writable,} from 'svelte/store';
+import {writable} from 'svelte/store';
 
 export const bannerMod = writable(0);
 export const artList = writable([]);
@@ -20,6 +20,7 @@ export const winAct = writable(0)
 export const bg = writable('')
 export const tags = writable([])
 export const isLogin = writable(0)
+export const token = writable(0)
 export const upLoadSeq = writable({})
 export const upLoadInfo = writable({})
 const sq = [];

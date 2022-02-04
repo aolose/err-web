@@ -1,4 +1,4 @@
-import {bannerMod, isLogin, mgList, qa, qaList, qState, resList, tags} from "$lib/store";
+import {bannerMod, isLogin, mgList, qa, qaList, qState, resList, tags, token} from "$lib/store";
 import {get} from "svelte/store";
 import {enc} from "./utils";
 import {tip} from "$lib/popMsg.svelte";

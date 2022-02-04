@@ -5,7 +5,7 @@
     import {jump} from '$lib/transition'
     import LD from '$lib/loading.svelte'
     import {fade} from 'svelte/transition'
-    import {isLogin, msg} from "$lib/store";
+    import {isLogin, msg, token} from "$lib/store";
     import Tm from "$lib/typeMsg.svelte";
     import {onDestroy} from "svelte";
     import {enc} from "$lib/utils";
@@ -36,7 +36,7 @@
         if (!error) {
             w = 0
             isLogin.set(1)
-            tok.set(t)
+            token.set(t);
         } else {
             if (/^w:/.test(error)) {
                 wt = +error.substr(2)

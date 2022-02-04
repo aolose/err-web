@@ -4,16 +4,8 @@ import {host} from './res'
 import imageCompression from 'browser-image-compression';
 import {isLogin, upLoadInfo, upLoadSeq} from "$lib/store";
 import {goto} from "$app/navigation";
+import {token} from "$lib/store.js";
 
-export const tok = {
-    v: '',
-    get() {
-        return this.v
-    },
-    set(a) {
-        this.v = a
-    }
-}
 
 export const logout = () => {
     fetch(host+'/ot', {
@@ -22,7 +14,7 @@ export const logout = () => {
         method: 'GET',
     }).then(res => {
         if (res.ok) {
-            tok.set('')
+            token.set('');
             isLogin.set(0)
         }
     }).catch(e => {

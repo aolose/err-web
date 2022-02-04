@@ -9,7 +9,7 @@
     import {slide} from './transition'
     import {bannerMod, extraHis, post, resList, upLoadSeq, winAct} from "$lib/store";
     import {query} from "$lib/res";
-    import {tok} from "$lib/utils.js";
+    import {token} from "$lib/store";
 
     export let ipt
     let delLd = 0
@@ -123,7 +123,8 @@
             <input type="file"
                    accept={$bannerMod?"image/*": "*/*"}
                    on:change={function (){
-                upload.call(this,tok.get())
+                       debugger;
+                upload.call(this,$token)
                 showTsk=1
             }} multiple/>
         </div>
