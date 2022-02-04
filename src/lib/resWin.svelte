@@ -123,7 +123,6 @@
             <input type="file"
                    accept={$bannerMod?"image/*": "*/*"}
                    on:change={function (){
-                       debugger;
                 upload.call(this,$token)
                 showTsk=1
             }} multiple/>
@@ -188,6 +187,7 @@
 </SWin>
 <style lang="scss">
   @import "./break";
+
   .nv {
     margin-top: 10px;
   }
@@ -257,7 +257,7 @@
     background-size: 60% auto;
     cursor: pointer;
     opacity: .7;
-    @include s(){
+    @include s() {
 
     }
 
