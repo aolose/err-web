@@ -15,8 +15,8 @@ export const load = res('auth')
     import {resFlag} from "$lib/res";
     import {isLogin,token} from "$lib/store";
     resFlag.useCache = true
-    session.subscribe(a=>{
-        token.set(a)
+    session.subscribe(({tk}={})=>{
+        token.set(tk)
     })
 </script>
 <svelte:head>
