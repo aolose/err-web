@@ -68,15 +68,15 @@
 
   .t {
     position: absolute;
-    top: 10px;
+    top: 40px;
     bottom: 10px;
     left: 0;
     right: 0;
     overflow: auto;
-    padding: 100px 0 0;
+    padding: 70px 0 0;
     transition: .3s ease-in-out;
     transform: translate3d(0, 0, 0);
-    clip-path: inset(100px 0px 45px 0 round 8px);
+    clip-path: inset(70px 0px 45px 0);
   }
 
 
