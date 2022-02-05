@@ -7,16 +7,18 @@
     import Ph from '../../lib/hd.svelte'
     import Canvas from '../../lib/whi/ctx.svelte'
     import {bubbles, getColor} from "$lib/utils.js";
-
+    import UpDownScroll from "$lib/UpDownScroll.svelte";
+    let a =0
     export let d = []
 </script>
 <svelte:head>
     <title>Err - tags</title>
 </svelte:head>
+<UpDownScroll bind:down={a}/>
 <Canvas type={2}/>
 <div class="o">
-    <Ph>Tags</Ph>
-    <div class="v">
+    <Ph bind:shrink={a}>Tags</Ph>
+    <div class="v" class:s={a}>
     <div class="ls">
         {#each d as tag,i}
             <a
@@ -32,6 +34,7 @@
 
 </div>
 <style lang="scss">
+  @import "../../lib/break";
   .o {
     display: flex;
     flex-direction: column;
@@ -87,13 +90,16 @@
   }
 
   .v {
-    width: 100%;
-    padding: 0 5% ;
-    margin: 0 auto 20px;
-    flex: 1;
-    display: flex;
-    flex-direction: inherit;
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    left: 0;
+    right: 0;
     overflow: auto;
+    padding: 100px 0 0;
+    transition: .3s ease-in-out;
+    transform: translate3d(0,0,0);
+    clip-path: polygon(0 100px,100% 100px,100% 100%, 0 100%);
   }
 
   .ls {
@@ -102,5 +108,10 @@
     align-content: flex-start;
     display: flex;
     flex-wrap: wrap;
+  }
+  .s{
+    @include s(){
+      clip-path: polygon(0 30px,100% 30px,100% 100%, 0 100%);
+    }
   }
 </style>

@@ -36,7 +36,7 @@
 <svelte:window on:sveltekit:navigation-end={scTop}/>
 <Canvas type={1}/>
 <div class="o">
-    <Ph>
+    <Ph bind:shrink={a}>
         <slot></slot>
     </Ph>
     <div class="t" bind:this={sc} class:v={a}>
@@ -67,12 +67,16 @@
   }
 
   .t {
-    flex: 1;
+    position: absolute;
+    top: 10px;
+    bottom: 50px;
+    left: 0;
+    right: 0;
     overflow: auto;
-    padding: 10px 0;
-    margin-bottom: 60px;
+    padding: 100px 0 0;
     transition: .3s ease-in-out;
     transform: translate3d(0,0,0);
+    clip-path: polygon(0 100px,100% 100px,100% 100%, 0 100%);
   }
 
 
@@ -95,6 +99,9 @@
     left: 0;
     right: 0;
     transform: translate3d(0,0,0);
+    @include s() {
+      height: 50px;
+    }
   }
 
   .c {
@@ -108,7 +115,8 @@
   .v {
     @include s() {
       &.t {
-        margin-bottom: 10px;
+        bottom: 50px;
+        clip-path: polygon(0 30px,100% 30px,100% 100%, 0 100%);
       }
       &.n {
         transform: translate3d(0,50px,0);

@@ -1,10 +1,8 @@
 <script>
     import {fade} from "svelte/transition";
-    import UpDownScroll from "$lib/UpDownScroll.svelte";
-    let a = 0
+   export let shrink = 0
 </script>
-<UpDownScroll bind:down={a}/>
-<div class="ph" class:s={a} transition:fade>
+<div class="ph" class:s={shrink} transition:fade>
     <div class="cc">
         <h1>
             <slot></slot>
@@ -27,7 +25,7 @@
       margin: 0;
       font-size: 34px;
       position: absolute;
-      transform: translate3d(20px, 60px, 0);
+      transform: translate3d(10px, 60px, 0);
       color: #000;
       font-weight: 200;
       text-transform: uppercase;
@@ -47,7 +45,7 @@
           height: 40px;
 
           h1 {
-            transform: translate3d(20px, 30px, 0);
+            transform: translate3d(10px, 30px, 0);
             font-size: 20px;
             opacity: 0;
           }
