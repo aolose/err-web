@@ -91,15 +91,15 @@
 
   .v {
     position: absolute;
-    top: 40px;
+    top: 30px;
     bottom: 10px;
-    left: 0;
-    right: 0;
+    left: 50%;
+    width: 90%;
+    transform: translate3d(-50%,0,0);
     overflow: auto;
-    padding: 70px 0 0;
+    padding: 80px 0 0;
     transition: .3s ease-in-out;
-    transform: translate3d(0,0,0);
-    clip-path: inset(70px 0px 10px 0 round 8px);
+    clip-path: inset(80px 0px 10px 0 round 8px);
   }
 
   .ls {
