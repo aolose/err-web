@@ -34,8 +34,18 @@
         const i = p || 1
         lsLd = 1
         const re = await query('cmLs', [id, i])
-        if (re.ls) {
-            ls = re.ls
+        const {ls: ss, r} = re
+        ls = ss || []
+        if (ls.length) {
+            if (r) {
+                r.forEach(a => {
+                    ls.forEach(c => {
+                        if (c.i === a.t) {
+                            c.r = (c.r || []).concat(a)
+                        }
+                    })
+                })
+            }
             cur = re.cur
             total = re.total
             setTimeout(() => {
@@ -148,7 +158,7 @@
         <Ld tm={1} act={ld} text="committing"/>
     </div>
     <div class="ls">
-        {#each ls as {i, a, n, t, o, c} (i)}
+        {#each ls as {i, r, a, n, t, o, c} (i)}
             <div class="m" class:s={o} transition:slide|local>
                 {#if (o)}
                     <i on:click={()=>del(i)} class="del"></i>
@@ -162,6 +172,13 @@
                     <span>{timeFmt(t)}</span>
                 </div>
             </div>
+            {#each (r || []) as {z, c, i: v}(v)}
+                <div class="rp">
+                    <label>admin </label>
+                    <span>{timeFmt(z)}</span>
+                    <p>{c}</p>
+                </div>
+            {/each}
         {/each}
         <Ld act={lsLd} tm={1}/>
     </div>
@@ -285,6 +302,41 @@
           background-color: #fff;
         }
       }
+    }
+  }
+
+  .rp {
+    overflow: hidden;
+    position: relative;
+    padding: 0 10px 5px;
+    border-radius: 3px;
+    border: 1px solid #dfe7e8;
+    margin: -10px 0 20px 80px;
+
+    label {
+      color: #9facbd;
+      text-align: left;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      background: rgba(67, 117, 217, 0.04);
+      padding: 1px 10px 3px;
+      position: absolute;
+    }
+
+    p {
+      color: #8496ad;
+      font-size: 12px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+    }
+
+    span {
+      font-size: 11px;
+      color: #a1a4a6;
+      bottom: 1px;
+      right: 5px;
+      position: absolute;
     }
   }
 

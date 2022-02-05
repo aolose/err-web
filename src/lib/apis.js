@@ -30,6 +30,16 @@ export const apis = {
             mgList.update(m => m.filter(({i}) => id.indexOf(i) === -1))
         }
     },
+    reply:{
+        path: 'c/r',
+        method: 'POST',
+    },
+    replyDel:{
+        path: ([to,id]) => `c/r/${to}/${id}`,
+        method: 'DELETE',
+        before:()=>0
+    },
+
     cm: {
         path: 'c',
         method: 'POST',
@@ -89,6 +99,7 @@ export const apis = {
     rnRes: {
         method: 'PATCH',
         path: ({id, name}) => `res/${id}/${name}`,
+        before:()=>0
     },
     lsRes: {
         path: ([a]) => `res/${a}`,
@@ -153,6 +164,7 @@ export const apis = {
     delBk: {
         path: a => `ft/${a}`,
         method: 'DELETE',
+        before:()=>0
     },
     loadTags: {
         path: 'tag/ls',
@@ -189,6 +201,7 @@ export const apis = {
     delPost: {
         path: (id) => `edit/${id}`,
         method: 'DELETE',
+        before:()=>0
     },
     pubPost: {
         path: 'edit',
@@ -197,6 +210,7 @@ export const apis = {
     unPub: {
         path: id => `edit/${id}`,
         method: 'PATCH',
+        before:()=>0
     },
     tags: {
         path: 'tag/all',
