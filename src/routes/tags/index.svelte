@@ -97,7 +97,7 @@
     width: 90%;
     transform: translate3d(-50%,0,0);
     overflow: auto;
-    padding: 80px 0 0;
+    padding: 100px 0 0;
     transition: .3s ease-in-out;
     clip-path: inset(80px 0px 10px 0 round 8px);
   }
