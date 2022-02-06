@@ -19,7 +19,7 @@
         }
     }
 
-    let sc
+    let sc, oh = 0, ih = 0
     export let name
     $:{
         if (browser) {
@@ -36,19 +36,17 @@
 <svelte:window on:sveltekit:navigation-end={scTop}/>
 <Canvas type={1}/>
 <div class="o">
-    <Ph bind:shrink={a}>
-        <slot></slot>
-    </Ph>
-    <div class="t" bind:this={sc} class:v={a}>
+    <Ph bind:shrink={a}><slot></slot></Ph>
+    <div class="t" bind:this={sc} class:v={a} bind:offsetHeight={oh}>
         <Ctx>
-            <div class="c">
+            <div class="c" bind:offsetHeight={ih}>
                 {#each ls as p,i (p.updated)}
                     <Item p={p} n={i}/>
                 {/each}
             </div>
         </Ctx>
     </div>
-    <div class="n" class:v={a}>
+    <div class="n" class:v={ih>oh&&!a}>
         <div class="nn">
             <Nav total={total} cur={cur} url={'/'+name} length="2" tm="1"/>
         </div>
@@ -76,7 +74,7 @@
     padding: 80px 0 0;
     transition: .3s ease-in-out;
     transform: translate3d(0, 0, 0);
-    clip-path: inset(80px 0px 45px 0);
+    clip-path: inset(80px 0 0 0);
   }
 
 
@@ -115,7 +113,7 @@
   .v {
     @include s() {
       &.t {
-        clip-path: inset(0px 0px 10px 0 round 8px);
+        clip-path: inset(0px 0px 40px 0);
       }
       &.n {
         transform: translate3d(0, 50px, 0);
