@@ -10,7 +10,7 @@ export const resFlag = {
     useCache: 0
 }
 
-async function getRes(ctx={}, name) {
+async function getRes(ctx = {}, name) {
     const {url: u, params, data, fetch} = ctx;
     const info = {url: u, params};
     const cfg = apis[name];
@@ -21,6 +21,7 @@ async function getRes(ctx={}, name) {
         fail,
         path,
         before,
+        skipCache,
         storage: sto = 0,
         after,
         cacheTime,
@@ -67,7 +68,7 @@ async function getRes(ctx={}, name) {
     if (browser) {
         store = [localStorage, sessionStorage][sto]
     }
-    if (cacheTime) {
+    if (cacheTime && (!skipCache || !skipCache(d))) {
         let str = p
         if (d) {
             str = str + JSON.stringify(d);

@@ -79,7 +79,7 @@
                     $post.saved = n.saved
                     syncList(n, old)
                 }
-            })
+            }, 4e3)
         } else {
             lock = 0
             pid = p.id || 0
