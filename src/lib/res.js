@@ -59,7 +59,8 @@ async function getRes(ctx = {}, name) {
                 if (v !== undefined)
                     u.push(`${k}=${encodeURI(v)}`)
             })
-            url += '?' + u.join('&')
+            const pms = u.join('&')
+            if(pms)url += '?' + pms
         }
     }
     let cache;
